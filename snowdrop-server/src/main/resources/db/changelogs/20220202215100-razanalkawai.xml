@@ -1,0 +1,156 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+    <changeSet id="20220202215100" author="razanalkawai">
+        <createTable tableName="users">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true" />
+            </column>
+            <column name="user_name" type="text">
+                <constraints nullable="false" />
+            </column>
+            <column name="email" type="text" />
+            <column name="password_hash" type="char(64)"/>
+            <column name="total_points" type="int">
+                <constraints nullable="false" />
+            </column>
+            <column name="auth_token" type="char(32)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+
+        <createTable tableName="plants">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"
+                         nullable="false"
+                         unique="true" />
+            </column>
+            <column name="plant_name" type="text">
+                <constraints nullable="true" />
+            </column>
+            <column name="scientific_name" type="text">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+
+        <createTable tableName="posts">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true" />
+            </column>
+            <column name="sender_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post_title" type="char(128)">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="upload_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="text">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="upvotes" type="int">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="downvotes" type="int">
+                <constraints nullable="false"></constraints>
+            </column>
+        </createTable>
+
+        <createTable tableName="tags">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true" />
+            </column>
+            <column name="plant_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tag_name" type="char(64)">
+                <constraints nullable="false"></constraints>
+            </column>
+        </createTable>
+
+        <createTable tableName="comments">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true" />
+            </column>
+            <column name="sender_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="text">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="upload_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="upvotes" type="int">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="downvotes" type="int">
+                <constraints nullable="false"></constraints>
+            </column>
+        </createTable>
+
+        <createTable tableName="user_plant_mappings">
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="plant_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sunlight" type="text"></column>
+            <column name="water" type="text"></column>
+            <column name="temperature" type="float"></column>
+            <column name="fertilizer" type="text"></column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="posts"
+                                 baseColumnNames="sender_id"
+                                 constraintName="fk_posts_sender_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="posts"
+                                 baseColumnNames="tag_id"
+                                 constraintName="fk_posts_tag_id"
+                                 referencedTableName="tags"
+                                 referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="tags"
+                                 baseColumnNames="plant_id"
+                                 constraintName="fk_tags_plant_id"
+                                 referencedTableName="plants"
+                                 referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="comments"
+                                 baseColumnNames="sender_id"
+                                 constraintName="fk_comments_sender_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="comments"
+                                 baseColumnNames="parent_id"
+                                 constraintName="fk_comments_parent_id"
+                                 referencedTableName="posts"
+                                 referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="user_plant_mappings"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_mappings_user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="user_plant_mappings"
+                                 baseColumnNames="plant_id"
+                                 constraintName="fk_mappings_plant_id"
+                                 referencedTableName="plants"
+                                 referencedColumnNames="id" />
+    </changeSet>
+</databaseChangeLog>
