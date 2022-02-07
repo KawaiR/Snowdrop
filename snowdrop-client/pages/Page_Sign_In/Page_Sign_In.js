@@ -47,7 +47,7 @@ const Page_Sign_In  = ({navigation}) => {
 			<Image style = {noneModeStyles._Philodendron_Image} source = {require("../../assets/philodendron.png")}/>
 			<Image style = {noneModeStyles._Left_Leaf_Image} source = {require("../../assets/leftleaf.png")}/>
 			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../../assets/rightleaf.png")}/>
-			<View style = {noneModeStyles._Sign_Up_Navigation_Button}>
+			<View style = {noneModeStyles._Optional_Navigation_Button}>
 				<Text style = {noneModeStyles._Optional_Page_Description}>
 					Don’t have an account?
 				</Text>
@@ -200,7 +200,7 @@ const noneModeStyles = StyleSheet.create({
 		height: pxRD(258,height,base_height),
 		backgroundColor: "white",
 	},
-	_Sign_Up_Navigation_Button: {
+	_Optional_Navigation_Button: {
 		display: "flex",
 		flexDirection: "row",
 		position: "absolute",
