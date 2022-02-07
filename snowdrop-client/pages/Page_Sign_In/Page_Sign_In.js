@@ -1,19 +1,26 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, Image, ScrollView, TextInput, StyleSheet, Animated, Dimensions, Vibration, Alert, KeyboardAvoidingView, Platform} from "react-native";
 import { TouchableOpacity, PixelRatio } from "react-native";
-// import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
-import {Lato_400Regular} from '@expo-google-fonts/lato';
+import {Lato_400Regular, Lato_700Bold} from '@expo-google-fonts/lato';
+
+const {
+	width,
+	height,
+} = Dimensions.get("window");
+
+const base_width = 414;
+const base_height = 896;
+
+const color_title = "#005500";
+const color_description = "#898C7B";
+const color_main_button = "white";
+const color_opt_button = "#007AFF";
 
 
-function pxRD (px) {
-	const {
-		width,
-		height,
-	} = Dimensions.get("window");
-
-	return Math.round(PixelRatio.roundToNearestPixel(height * px / 896));
+function pxRD (px, cur_screen, base) {
+	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
 }
 
 const Page_Sign_In  = ({navigation}) => {
@@ -25,6 +32,7 @@ const Page_Sign_In  = ({navigation}) => {
 	let [fontsLoaded] = useFonts({
 		Alata_400Regular,
 		Lato_400Regular,
+		Lato_700Bold,
 	});
 	if (!fontsLoaded) {
 		return <AppLoading/>
@@ -33,6 +41,12 @@ const Page_Sign_In  = ({navigation}) => {
 	<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{height: Dimensions.get("window").height}}>
 	<ScrollView bounces={false} showsVerticalScrollIndicator={false} style={{height: Dimensions.get("window").height}}>
 		<View style = {noneModeStyles._Page}    >
+			
+			<Image style = {noneModeStyles._Cactus_Image} source = {require("../../assets/cactus.png")}/>
+			<Image style = {noneModeStyles._Monstera_Image} source = {require("../../assets/monstera.png")}/>
+			<Image style = {noneModeStyles._Philodendron_Image} source = {require("../../assets/philodendron.png")}/>
+			<Image style = {noneModeStyles._Left_Leaf_Image} source = {require("../../assets/leftleaf.png")}/>
+			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../../assets/rightleaf.png")}/>
 			<View style = {noneModeStyles._Sign_Up_Navigation_Button}>
 				<Text style = {noneModeStyles._Optional_Page_Description}>
 					Don’t have an account?
@@ -41,11 +55,18 @@ const Page_Sign_In  = ({navigation}) => {
 					Sign Up
 				</Text>
 			</View>
-			<TouchableOpacity style = {noneModeStyles._Main_Navigation_Button}    >
+			<View style = {noneModeStyles._White_Box}/>
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Google_Button]}    >
+				<Text style = {noneModeStyles._Main_Button_Description}   >
+					Continue with Google
+				</Text>
+			</TouchableOpacity>
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Email_Button]}    >
 				<Text style = {noneModeStyles._Main_Button_Description}   >
 					Sign In
 				</Text>
 			</TouchableOpacity>
+			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Email_Line]}></View>
 			<TextInput
 				onChangeText={onChangePassword}
 				value={password}
@@ -55,6 +76,7 @@ const Page_Sign_In  = ({navigation}) => {
 			<Text style = {noneModeStyles._Forgot_Password_Navigation_Button} onPress={() => navigation.navigate('Page_Forgot_Password')}  >
 				Forgot Password?
 			</Text>
+			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Password_Line]}></View>
 			<TextInput
 				autoFocus={true}
 				onChangeText={onChangeEmail}
@@ -62,181 +84,183 @@ const Page_Sign_In  = ({navigation}) => {
 				placeholder="Email"
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Email_Location]}
 			/>
-
-
-			<View style = {noneModeStyles._Icon_Frame}>
-				<Image style = {noneModeStyles._Icon_Image} source = {require("./assets/icon_circle.png")}/>
-				<Text  style = {noneModeStyles._App_Name}>SNOWDROP</Text>
-			</View>
 			<Text style = {noneModeStyles._Title_Description}   >
 				Welcome back,{'\n'}Sign in to continue with your journey
 			</Text>
-			
+			<View style = {noneModeStyles._Icon_Frame}>
+				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/icon_circle.png")}/>
+				<Text  style = {noneModeStyles._App_Name}>SNOWDROP</Text>
+			</View>
 		</View>
 	</ScrollView>
 	</KeyboardAvoidingView>
 )}
 export default Page_Sign_In
 
-const noneModeStyles = StyleSheet.create({
+const noneModeStyles = StyleSheet.create({	
 	_Page: { 
 		width: Dimensions.get("window").width,
 		height: Dimensions.get("window").height,
 		backgroundColor:"#EDEECB",
 	},
-	_Snowdrop_Image: { 
-		width: "auto",
-		height: "auto",
-		opacity: 0.3,
+	_Icon_Frame: {
 		position: "absolute",
-		left: 0,
-		top: 0,
-		bottom: 0,
-		right: 0,
+		alignSelf:"center",
+		top: pxRD(50,height,base_height),
+		height: pxRD(192,height,base_height),
+		width: pxRD(241,width,base_width),
 	},
-	_Sign_Up_Navigation_Button: {
-		width: "auto",
-		height: "auto",
-		display: "flex",
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "center",
-		position: "absolute",
-		right: "4.83091787%",
-		left: "4.83091787%",
-		top: "89.28571429%",
-		bottom: "3.34821429%",
-		paddingRight: "2.41545894%",
-		paddingLeft: "2.41545894%",
-		paddingTop: "1.11607143%",
-		paddingBottom: "1.11607143%",
-	},
-	_Optional_Page_Description: {
-		width: "auto",
-		height: "auto",
-		flexShrink: 0,
-		marginRight: "2.41545894%",
-		color: "rgba(60, 60, 67, 0.6)",
-		fontSize: 15,
-		fontWeight: "400",
-		// fontFamily: "SF Pro Display",
-		letterSpacing: -0.24,
-		textAlign: "center",
-	},
-	_Optional_Button_Description: {
-		width: "auto",
-		height: "auto",
-		flexShrink: 0,
-		color: "rgb(0, 122, 255)",
-		fontSize: 15,
-		fontWeight: "600",
-		// fontFamily: "SF Pro Text",
-		letterSpacing: -0.24,
-		textAlign: "center",
-	},
-	_Main_Navigation_Button: { 
-		display: "flex",
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		paddingRight: "19.3236715%",
-		paddingLeft: "19.3236715%",
-		paddingTop: "2.23214286%",
-		paddingBottom: "2.23214286%",
-		
-		position: "absolute",
-		right: "20.77294686%",
-		left: "20.53140097%",
-		top: "79.79910714%",
-		bottom: "12.946429%",
-		
-		backgroundColor: "rgba(0, 122, 255, 0.6)",
-		borderRightWidth: 4,
-		borderLeftWidth: 4,
-		borderTopWidth: 4,
-		borderBottomWidth: 4,
-		borderStyle: "solid",
-		borderColor: "rgb(0, 0, 0)",
-		borderRadius: 14,
-	},
-	_Main_Button_Description: { 
-		width: "auto",
-		height: "auto",
-		flexShrink: 0,
-		color: "rgb(255, 255, 255)",
-		fontSize: 17,
-		fontWeight: "600",
-		// fontFamily: "SF Pro Text",
-		letterSpacing: -0.408,
-		textAlign: "center",
-	},
-	_Forgot_Password_Navigation_Button: { 
-		width: "auto",
-		height: "auto",
-		position: "absolute",
-		right: "9.6618357488%",
-		top: "45.2008928571%",
-		color: "rgb(0, 122, 255)",
-		fontSize: 15,
-		fontWeight: "600",
-		// fontFamily: "SF Pro Text",
-		letterSpacing: -0.24,
-		textAlign: "right",
-	},
-	_Text_Field: { 
-		width: "87.92%",
-		height: "6.36%",
+	_Icon_Image: {
 		alignSelf: "center",
-		display: "flex",
-		flexDirection: "column",
-		position: "absolute",
-		paddingTop: 16,
-		paddingRight: 8,
-		paddingBottom: 8,
-		paddingLeft: 8,
-		borderBottomWidth: 2,
-		borderBottomColor: "rgba(0,0,0,0.4)"
+		aspectRatio: 1,
+		height: pxRD(140,height,base_height),
+		marginTop: pxRD(10,height,base_height),
 	},
-	_Email_Location: { 
-		top: "35.6026785714%",
-	},
-	_Password_Location: { 
-		top: "43.0803571429%",
+	_App_Name: {
+		alignSelf: "center",
+		alignContent: "center",
+		textAlign: "center",
+		fontSize: pxRD(36,height,base_height),
+		fontFamily: "Alata_400Regular",
+		color: color_title,
 	},
 	_Title_Description: { 
 		position: "absolute",
 		alignSelf: "center",
-		width: "87.92%",
-		height: "6.36%",
-		top: "28.125%",
-		bottom: "65.51339286%",
-		fontSize: pxRD(14),
+		top: pxRD(252,height,base_height),
+		width: pxRD(364,width,base_width),
+		height: pxRD(57,height,base_height),
+		fontSize: pxRD(14,height,base_height),
 		fontFamily: "Lato_400Regular",
 		textAlign: "center",
-		color: "#898C7B",
+		color: color_description,
 	},
-	_Icon_Frame: {
+	_Text_Field: { 
 		position: "absolute",
-		alignSelf:"center",
-		height: "21.43%",
-		width: "58.21%",
-		top: "5.58035714%",
-	},
-	_App_Name: {
-		width: "91.70%",
-		marginHorizontal: "4.14937759%",
 		alignSelf: "center",
-		alignContent: "center",
+		width: pxRD(344,width,base_width),
+		height: pxRD(57,height,base_height),
+	},
+	_Text_Field_Line: {
+		position: "absolute",
+		alignSelf: "center",
+		width: pxRD(344,width,base_width),
+		height: pxRD(2,height,base_height),
+		backgroundColor: color_description,
+	},
+	_Email_Line: {
+		top: pxRD(364,height,base_height),
+	},
+	_Password_Line: {
+		top: pxRD(431,height,base_height),
+	},
+	_Email_Location: { 
+		top: pxRD(319,height,base_height),
+	},
+	_Password_Location: { 
+		top: pxRD(386,height,base_height),
+	},
+	_Forgot_Password_Navigation_Button: { 
+		position: "absolute",
+		alignSelf: "center",
+		width: pxRD(344,width,base_width),
+		top: pxRD(405,height,base_height),
+		fontSize: pxRD(15,height,base_height),
+		fontFamily: "Lato_700Bold",
+		textAlign: "right",
+		color: color_opt_button,
+	},
+	_Main_Navigation_Button: { 
+		position: "absolute",
+		alignSelf: "center",
+		alignItems: "center",
+		justifyContent: "center",
+		height: pxRD(37,height,base_height),
+		width: pxRD(344,width,base_width),
+		borderRadius: 30,
+	},
+	_Main_Button_Description: { 
+		fontSize: pxRD(17,height,base_height),
+		fontWeight: "600",
 		textAlign: "center",
-		color: "#005500",
-		fontSize: pxRD(36),
-		fontFamily: "Alata_400Regular",
+		color: "white",
 	},
-	_Icon_Image: {
-		height: "72.9%",
-		marginHorizontal: "4.14937759%",
+	_Email_Button: { 
+		top: pxRD(463,height,base_height),
+		backgroundColor: "#A4C400",
+	},
+	_Google_Button: {
+		top: pxRD(530,height,base_height),
+		backgroundColor: "#FF000099",
+	},
+	_White_Box: {
 		alignSelf: "center",
-		aspectRatio: 1,
+		top: pxRD(319,height,base_height),
+		width: pxRD(364,width,base_width),
+		height: pxRD(258,height,base_height),
+		backgroundColor: "white",
+	},
+	_Sign_Up_Navigation_Button: {
+		display: "flex",
+		flexDirection: "row",
+		position: "absolute",
+		alignSelf: "center",
+		justifyContent: "center",
+		width: pxRD(364,width,base_width),
+		height: pxRD(58,height,base_height),
+		top: pxRD(587,height,base_height),
+	},
+	_Optional_Page_Description: {
+		marginRight: pxRD(5,width,base_width),
+		fontSize: pxRD(15,height,base_height),
+		fontWeight: "400",
+		color: color_description,
+	},
+	_Optional_Button_Description: {
+		fontWeight: "600",
+		fontSize: pxRD(15,height,base_height),
+		letterSpacing: pxRD(-0.24,width,base_width),
+		color: color_opt_button,
+	},
+	_Cactus_Image: {
+		position: "absolute",
+		resizeMode: "contain",
+		height: pxRD(210,height,base_height),
+		width: pxRD(180,width,base_width),
+		top: pxRD(709,height,base_height),
+		left: pxRD(-47,width,base_width),
+	},
+	_Monstera_Image: {
+		position: "absolute",
+		resizeMode: "contain",
+		height: pxRD(199,height,base_height),
+		width: pxRD(198,width,base_width),
+		top: pxRD(710,height,base_height),
+		left: pxRD(271,width,base_width),
+	},
+	_Philodendron_Image: {
+		position: "absolute",
+		resizeMode: "contain",
+		width: pxRD(98,width,base_width),
+		height: pxRD(103,height,base_height),
+		top: pxRD(801,height,base_height),
+		left: pxRD(263,width,base_width),
+	},
+	_Left_Leaf_Image: {
+		position: "absolute",
+		resizeMode: "contain",
+		width: pxRD(150,width,base_width),
+		height: pxRD(150,height,base_height),
+		top: pxRD(168,height,base_height),
+		left: pxRD(-62,width,base_width),
+	},
+	_Right_Leaf_Image: {
+		position: "absolute",
+		resizeMode: "contain",
+		width: pxRD(150,width,base_width),
+		height: pxRD(150,height,base_height),
+		top: pxRD(182,height,base_height),
+		left: pxRD(320,width,base_width),
 	}
 })
 
