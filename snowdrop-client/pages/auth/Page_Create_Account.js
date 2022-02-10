@@ -23,11 +23,12 @@ function pxRD (px, cur_screen, base) {
 	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
 }
 
-const Page_Forgot_Password  = ({navigation}) => {
+const Page_Create_Account  = ({navigation}) => {
 	useEffect(() => {
 	}, []);
 	const [email, onChangeEmail] = React.useState("");
-	const [code, onChangeCode] = React.useState("");
+	const [password, onChangePassword] = React.useState("");
+	const [username, onChangeUsername] = React.useState("");
 	
 	let [fontsLoaded] = useFonts({
 		Alata_400Regular,
@@ -42,33 +43,38 @@ const Page_Forgot_Password  = ({navigation}) => {
 	<ScrollView bounces={false} showsVerticalScrollIndicator={false} style={{height: Dimensions.get("window").height}}>
 		<View style = {noneModeStyles._Page}    >
 			
-			<Image style = {noneModeStyles._Cactus_Image} source = {require("../assets/cactus.png")}/>
-			<Image style = {noneModeStyles._Monstera_Image} source = {require("../assets/monstera.png")}/>
-			<Image style = {noneModeStyles._Philodendron_Image} source = {require("../assets/philodendron.png")}/>
-			<Image style = {noneModeStyles._Left_Leaf_Image} source = {require("../assets/leftleaf.png")}/>
-			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../assets/rightleaf.png")}/>
+			<Image style = {noneModeStyles._Cactus_Image} source = {require("../../assets/background/cactus.png")}/>
+			<Image style = {noneModeStyles._Monstera_Image} source = {require("../../assets/background/monstera.png")}/>
+			<Image style = {noneModeStyles._Philodendron_Image} source = {require("../../assets/background/philodendron.png")}/>
+			<Image style = {noneModeStyles._Left_Leaf_Image} source = {require("../../assets/background/leftleaf.png")}/>
+			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../../assets/background/rightleaf.png")}/>
 			<View style = {noneModeStyles._Optional_Navigation_Button}>
 				<Text style = {noneModeStyles._Optional_Page_Description}>
-					Remember the password?
+				Remember the password?
 				</Text>
 				<Text style = {noneModeStyles._Optional_Button_Description} onPress={() => navigation.navigate('Page_Sign_In')}>
 					Sign In
 				</Text>
 			</View>
 			<View style = {noneModeStyles._White_Box}/>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Submit_Button]} onPress={() => navigation.navigate('Page_Password_Reset')}>
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Google_Button]}    >
 				<Text style = {noneModeStyles._Main_Button_Description}   >
-					Submit
+					Continue with Google
 				</Text>
 			</TouchableOpacity>
-			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Verification_Code_Line]}></View>
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Email_Button]}    >
+				<Text style = {noneModeStyles._Main_Button_Description}   >
+					Sign Up
+				</Text>
+			</TouchableOpacity>
+			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Password_Line]}></View>
 			<TextInput
 				autoCapitalized='none'
 				autoCorrect={false}
-				onChangeText={onChangeCode}
-				value={code}
-				placeholder="One Time Verification Code"
-				style = {[noneModeStyles._Text_Field,noneModeStyles._Verification_Code_Location]}
+				onChangeText={onChangePassword}
+				value={password}
+				placeholder="Password"
+				style = {[noneModeStyles._Text_Field,noneModeStyles._Password_Location]}
 			/>
 			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Email_Line]}></View>
 			<TextInput
@@ -80,23 +86,26 @@ const Page_Forgot_Password  = ({navigation}) => {
 				placeholder="Email"
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Email_Location]}
 			/>
-			<View style = {noneModeStyles._Send_Code_Button}>
-				<Text style={noneModeStyles._Send_Code_Button_Text}   >{/*onPress={() => }*/}
-					Send Code
-				</Text>
-			</View>
+			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Username_Line]}></View>
+			<TextInput
+				autoFocus={true}
+				onChangeText={onChangeUsername}
+				value={username}
+				placeholder="Username"
+				style = {[noneModeStyles._Text_Field,noneModeStyles._Username_Location]}
+			/>
 			<Text style = {noneModeStyles._Title_Description}   >
-				Forgot your password,{'\n'}Don't worry! We will help you recover it.
+				Welcome aboard,{'\n'}Create an account to start your journey
 			</Text>
 			<View style = {noneModeStyles._Icon_Frame}>
-				<Image style = {noneModeStyles._Icon_Image} source = {require("../assets/icon_circle_black.png")}/>
+				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle.png")}/>
 				<Text  style = {noneModeStyles._App_Name}>SNOWDROP</Text>
 			</View>
 		</View>
 	</ScrollView>
 	</KeyboardAvoidingView>
 )}
-export default Page_Forgot_Password
+export default Page_Create_Account
 
 const noneModeStyles = StyleSheet.create({	
 	_Page: { 
@@ -149,31 +158,23 @@ const noneModeStyles = StyleSheet.create({
 		height: pxRD(2,height,base_height),
 		backgroundColor: color_description,
 	},
-	_Email_Line: {
+	_Username_Line: {
 		top: pxRD(364,height,base_height),
 	},
-	_Verification_Code_Line: {
+	_Email_Line: {
 		top: pxRD(431,height,base_height),
 	},
-	_Email_Location: { 
+	_Password_Line: {
+		top: pxRD(498,height,base_height),
+	},
+	_Username_Location: { 
 		top: pxRD(319,height,base_height),
 	},
-	_Verification_Code_Location: { 
+	_Email_Location: { 
 		top: pxRD(386,height,base_height),
 	},
-	_Send_Code_Button: { 
-		position: "absolute",
-		alignSelf: "center",
-		width: pxRD(344,width,base_width),
-		top: pxRD(338,height,base_height),
-	},
-	_Send_Code_Button_Text: { 
-		position: "absolute",
-		alignSelf: "flex-end",
-		fontSize: pxRD(15,height,base_height),
-		fontFamily: "Lato_700Bold",
-		textAlign: "right",
-		color: color_opt_button,
+	_Password_Location: { 
+		top: pxRD(453,height,base_height),
 	},
 	_Main_Navigation_Button: { 
 		position: "absolute",
@@ -190,15 +191,19 @@ const noneModeStyles = StyleSheet.create({
 		textAlign: "center",
 		color: "white",
 	},
-	_Submit_Button: { 
-		top: pxRD(463,height,base_height),
+	_Email_Button: { 
+		top: pxRD(530,height,base_height),
 		backgroundColor: "#A4C400",
+	},
+	_Google_Button: {
+		top: pxRD(597,height,base_height),
+		backgroundColor: "#FF000099",
 	},
 	_White_Box: {
 		alignSelf: "center",
 		top: pxRD(319,height,base_height),
 		width: pxRD(364,width,base_width),
-		height: pxRD(191,height,base_height),
+		height: pxRD(325,height,base_height),
 		backgroundColor: "white",
 	},
 	_Optional_Navigation_Button: {
@@ -209,7 +214,7 @@ const noneModeStyles = StyleSheet.create({
 		justifyContent: "center",
 		width: pxRD(364,width,base_width),
 		height: pxRD(58,height,base_height),
-		top: pxRD(520,height,base_height),
+		top: pxRD(654,height,base_height),
 	},
 	_Optional_Page_Description: {
 		marginRight: pxRD(5,width,base_width),
@@ -264,3 +269,4 @@ const noneModeStyles = StyleSheet.create({
 		left: pxRD(320,width,base_width),
 	}
 })
+

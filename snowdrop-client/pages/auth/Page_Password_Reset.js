@@ -42,11 +42,11 @@ const Page_Password_Reset  = ({navigation}) => {
 	<ScrollView bounces={false} showsVerticalScrollIndicator={false} style={{height: Dimensions.get("window").height}}>
 		<View style = {noneModeStyles._Page}    >
 			
-			<Image style = {noneModeStyles._Cactus_Image} source = {require("../assets/cactus.png")}/>
-			<Image style = {noneModeStyles._Monstera_Image} source = {require("../assets/monstera.png")}/>
-			<Image style = {noneModeStyles._Philodendron_Image} source = {require("../assets/philodendron.png")}/>
-			<Image style = {noneModeStyles._Left_Leaf_Image} source = {require("../assets/leftleaf.png")}/>
-			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../assets/rightleaf.png")}/>
+			<Image style = {noneModeStyles._Cactus_Image} source = {require("../../assets/background/cactus.png")}/>
+			<Image style = {noneModeStyles._Monstera_Image} source = {require("../../assets/background/monstera.png")}/>
+			<Image style = {noneModeStyles._Philodendron_Image} source = {require("../../assets/background/philodendron.png")}/>
+			<Image style = {noneModeStyles._Left_Leaf_Image} source = {require("../../assets/background/leftleaf.png")}/>
+			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../../assets/background/rightleaf.png")}/>
 			<View style = {noneModeStyles._Optional_Navigation_Button}>
 				<Text style = {noneModeStyles._Optional_Page_Description}>
 					Remember the password?
@@ -84,7 +84,7 @@ const Page_Password_Reset  = ({navigation}) => {
 				Create an new password,{'\n'}Recover your account to continue.
 			</Text>
 			<View style = {noneModeStyles._Icon_Frame}>
-				<Image style = {noneModeStyles._Icon_Image} source = {require("../assets/icon_circle_light.png")}/>
+				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle_light.png")}/>
 				<Text  style = {noneModeStyles._App_Name}>SNOWDROP</Text>
 			</View>
 		</View>
