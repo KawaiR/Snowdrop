@@ -3,8 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Page_Create_Account from "./pages/Page_Create_Account.js";
 import Page_Sign_In from "./pages/Page_Sign_In.js";
-import Page_Password_Reset from "./pages/Page_Password_Reset/Page_Password_Reset.js";
-import Page_Forgot_Password from "./pages/Page_Forgot_Password/Page_Forgot_Password.js";
+import Page_Password_Reset from "./pages/Page_Password_Reset.js";
+import Page_Forgot_Password from "./pages/Page_Forgot_Password.js";
 
 const Stack = createNativeStackNavigator();
 

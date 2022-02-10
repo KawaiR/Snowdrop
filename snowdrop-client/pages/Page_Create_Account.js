@@ -50,7 +50,7 @@ const Page_Create_Account  = ({navigation}) => {
 			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../assets/rightleaf.png")}/>
 			<View style = {noneModeStyles._Optional_Navigation_Button}>
 				<Text style = {noneModeStyles._Optional_Page_Description}>
-					Don’t have an account?
+				Remember the password?
 				</Text>
 				<Text style = {noneModeStyles._Optional_Button_Description} onPress={() => navigation.navigate('Page_Sign_In')}>
 					Sign In
@@ -69,6 +69,8 @@ const Page_Create_Account  = ({navigation}) => {
 			</TouchableOpacity>
 			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Password_Line]}></View>
 			<TextInput
+				autoCapitalized='none'
+				autoCorrect={false}
 				onChangeText={onChangePassword}
 				value={password}
 				placeholder="Password"
@@ -76,6 +78,8 @@ const Page_Create_Account  = ({navigation}) => {
 			/>
 			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Email_Line]}></View>
 			<TextInput
+				autoCapitalized='none'
+				autoCorrect={false}
 				autoFocus={true}
 				onChangeText={onChangeEmail}
 				value={email}
