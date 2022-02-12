@@ -4,6 +4,8 @@ import { TouchableOpacity, PixelRatio } from "react-native";
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import {Lato_400Regular, Lato_700Bold} from '@expo-google-fonts/lato';
+import * as Google from 'expo-google-app-auth';
+
 
 const {
 	width,
@@ -13,15 +15,14 @@ const {
 const base_width = 414;
 const base_height = 896;
 
+function pxRD (px, cur_screen, base) {
+	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
+}
+
 const color_title = "#005500";
 const color_description = "#898C7B";
 const color_main_button = "white";
 const color_opt_button = "#007AFF";
-
-
-function pxRD (px, cur_screen, base) {
-	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
-}
 
 const Page_Sign_In  = ({navigation}) => {
 	useEffect(() => {
@@ -29,6 +30,26 @@ const Page_Sign_In  = ({navigation}) => {
 	const [email, onChangeEmail] = React.useState("");
 	const [password, onChangePassword] = React.useState("");
 	
+	async function signInWithGoogleAsync() {
+		try {
+			const result = await Google.logInAsync({
+			androidClientId: "1057168519364-q6ubd34uinifouhjccbfa17nsgngvhgn.apps.googleusercontent.com",
+			iosClientId: "1057168519364-13l42e2uflp9m7898h7vvug7hogr9cjt.apps.googleusercontent.com",
+			scopes: ['profile', 'email'],
+			});
+	
+			if (result.type === 'success') {
+				global.isEmail = false;
+				global.accessToken = result.accessToken;
+				navigation.navigate("Page_Profile_Google_Account")
+			} else {
+				return { cancelled: true };
+			}
+		} catch (e) {
+			return { error: true };
+		}
+	}
+
 	let [fontsLoaded] = useFonts({
 		Alata_400Regular,
 		Lato_400Regular,
@@ -56,8 +77,8 @@ const Page_Sign_In  = ({navigation}) => {
 				</Text>
 			</View>
 			<View style = {noneModeStyles._White_Box}/>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Google_Button]}    >
-				<Text style = {noneModeStyles._Main_Button_Description}   >
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Google_Button]} onPress={()=>signInWithGoogleAsync()}   >
+				<Text style = {noneModeStyles._Main_Button_Description}  >
 					Continue with Google
 				</Text>
 			</TouchableOpacity>
