@@ -111,8 +111,15 @@
             <column name="plant_id" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="sunlight" type="text"></column>
-            <column name="water" type="text"></column>
+            <column name="nickname" type="char(32)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="sunlight" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="water" type="int">
+                <constraints nullable="false"/>
+            </column>
             <column name="temperature" type="float"></column>
             <column name="fertilizer" type="text"></column>
         </createTable>
