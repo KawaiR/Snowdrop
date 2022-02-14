@@ -19,14 +19,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    String username;
+    String userName;
     String email;
     String passwordHash;
 
     int totalPoints;
+    String authToken;
 
     @OneToMany(mappedBy = "owner")
-    private List<Plant> plants;
+    private List<PlantCare> plants;
 
     @OneToMany(mappedBy = "poster")
     private List<Post> posts;

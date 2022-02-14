@@ -20,18 +20,18 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    String title;
-    LocalDateTime date;
+    LocalDateTime uploadDate;
     String content;
 
     int totalScore;
-    int upVotes;
-    int downVotes;
+    int upvotes;
+    int downvotes;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     User commenter;
 
-    //TODO: ONE-TO-MANY MAPPING BETWEEN PARENT COMMENT OR POST
-
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    Post parent;
 }

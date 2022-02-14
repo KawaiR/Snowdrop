@@ -7,22 +7,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "plants")
+@Table(name = "user_plant_mappings")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Plant {
+public class PlantCare {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    String plantName;
-    String scientificName;
+    String nickname;
+    double temperature;
+    int sunlight;
+    int water;
+    String fertilizer;
 
-    @OneToMany(mappedBy = "entry")
-    List<PlantCare> caredFor;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    User owner;
+
+    @JsonIgnore
+    @ManyToOne
+    Plant entry;
 }

@@ -9,5 +9,5 @@ public class SnowdropServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(SnowdropServerApplication.class, args);
     }
-
 }
+

@@ -27,12 +27,8 @@
                          nullable="false"
                          unique="true" />
             </column>
-            <column name="plant_name" type="text">
-                <constraints nullable="true" />
-            </column>
-            <column name="scientific_name" type="text">
-                <constraints nullable="true" />
-            </column>
+            <column name="plant_name" type="char(128)"></column>
+            <column name="scientific_name" type="char(128)"></column>
         </createTable>
 
         <createTable tableName="posts">
@@ -60,6 +56,9 @@
                 <constraints nullable="false"></constraints>
             </column>
             <column name="downvotes" type="int">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="total_score" type="int">
                 <constraints nullable="false"></constraints>
             </column>
         </createTable>
@@ -105,6 +104,11 @@
         </createTable>
 
         <createTable tableName="user_plant_mappings">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true" />
+            </column>
             <column name="user_id" type="int">
                 <constraints nullable="false"/>
             </column>
