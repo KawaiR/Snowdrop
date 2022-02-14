@@ -19,8 +19,13 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
+    @Column(name="tag_name")
     String tagName;
 
     @OneToMany(mappedBy = "tag")
     private List<Post> posts;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "plant_id", referencedColumnName = "id")
+    private Plant plant;
 }

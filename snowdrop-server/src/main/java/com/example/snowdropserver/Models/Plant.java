@@ -20,9 +20,11 @@ public class Plant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
+    @Column(name="plant_name")
     String plantName;
+    @Column(name="scientific_name")
     String scientificName;
 
-    @OneToMany(mappedBy = "entry")
+    @OneToMany(mappedBy = "plant")
     List<PlantCare> caredFor;
 }

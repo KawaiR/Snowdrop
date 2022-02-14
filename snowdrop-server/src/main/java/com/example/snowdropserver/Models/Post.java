@@ -21,17 +21,20 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
+    @Column(name="post_title")
     String postTitle;
+    @Column(name = "upload_date")
     LocalDateTime uploadDate;
     String content;
 
+    @Column(name="total_score")
     int totalScore;
     int upvotes;
     int downvotes;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    User poster;
+    User sender;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

@@ -20,16 +20,19 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
+    @Column(name="upload_date")
     LocalDateTime uploadDate;
     String content;
 
+    @Column(name="total_score")
     int totalScore;
+
     int upvotes;
     int downvotes;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    User commenter;
+    User sender;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

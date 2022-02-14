@@ -27,9 +27,9 @@ public class PlantCare {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    User owner;
+    User user;
 
     @JsonIgnore
     @ManyToOne
-    Plant entry;
+    Plant plant;
 }

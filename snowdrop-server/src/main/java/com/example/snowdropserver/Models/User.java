@@ -19,20 +19,27 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
+    @Column(name="user_name")
     String userName;
+
     String email;
+
+    @Column(name = "password_hash")
     String passwordHash;
 
+    @Column(name="total_points")
     int totalPoints;
+
+    @Column(name="auth_token")
     String authToken;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "user")
     private List<PlantCare> plants;
 
-    @OneToMany(mappedBy = "poster")
+    @OneToMany(mappedBy = "sender")
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "commenter")
+    @OneToMany(mappedBy = "sender")
     private List<Comment> comments;
 
 }

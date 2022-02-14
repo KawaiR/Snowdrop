@@ -11,8 +11,10 @@
             <column name="user_name" type="text">
                 <constraints nullable="false" />
             </column>
-            <column name="email" type="text" />
-            <column name="password_hash" type="char(64)"/>
+            <column name="email" type="text" >
+                <constraints nullable="true"></constraints>
+            </column>
+            <column name="password_hash" type="char(64)"></column>
             <column name="total_points" type="int">
                 <constraints nullable="false" />
             </column>
@@ -99,6 +101,9 @@
                 <constraints nullable="false"></constraints>
             </column>
             <column name="downvotes" type="int">
+                <constraints nullable="false"></constraints>
+            </column>
+            <column name="total_score" type="int">
                 <constraints nullable="false"></constraints>
             </column>
         </createTable>
