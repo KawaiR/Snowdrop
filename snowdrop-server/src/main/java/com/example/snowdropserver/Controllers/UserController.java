@@ -1,6 +1,7 @@
 package com.example.snowdropserver.Controllers;
 
 import com.example.snowdropserver.Models.Domains.AddUserDomain;
+import com.example.snowdropserver.Models.Domains.LoginDomain;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +36,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public AddUserDomain addUser(@RequestBody AddUserDomain user) {
         return userService.addUser(user);
+    }
+
+    @PostMapping(value = "/login")
+    public String login(@RequestBody LoginDomain loginDomain) {
+        return userService.login(loginDomain);
     }
 }
