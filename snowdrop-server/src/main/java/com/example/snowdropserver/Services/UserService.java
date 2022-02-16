@@ -2,6 +2,7 @@ package com.example.snowdropserver.Services;
 
 import com.example.snowdropserver.Exceptions.DuplicateEmailException;
 import com.example.snowdropserver.Exceptions.DuplicateUsernameException;
+import com.example.snowdropserver.Exceptions.PasswordTooShortException;
 import com.example.snowdropserver.Models.Domains.AddUserDomain;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Repositories.UserRepository;
@@ -38,6 +39,11 @@ public class UserService {
         if (check_email_exists(userDomain.getEmail())) {
             System.out.println("email found");
             throw new DuplicateEmailException();
+        }
+
+        if (userDomain.getPasswordHash().length() < 8) {
+            System.out.println("length is less than 8 characters");
+            throw new PasswordTooShortException();
         }
 
         // hash password before storing it into the database

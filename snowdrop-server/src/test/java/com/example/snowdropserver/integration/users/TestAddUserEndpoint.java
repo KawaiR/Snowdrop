@@ -38,4 +38,12 @@ public class TestAddUserEndpoint {
                 "successfulPassword",
                 400);
     }
+
+    @Test
+    public void createUserShortPassword() throws Exception {
+        TestingUtils.createUserAndExpect("someUsername",
+                "someUsername@test.com",
+                "test",
+                400);
+    }
 }
