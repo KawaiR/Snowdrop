@@ -30,8 +30,8 @@ public class User {
     @Column(name="total_points")
     int totalPoints;
 
-    @Column(name="auth_token")
-    String authToken;
+    @Column(name="auth_token_hash")
+    String authTokenHash;
 
     @OneToMany(mappedBy = "user")
     private List<PlantCare> plants;
