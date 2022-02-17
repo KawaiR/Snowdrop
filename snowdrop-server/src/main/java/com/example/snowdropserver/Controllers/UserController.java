@@ -42,4 +42,9 @@ public class UserController {
     public String login(@RequestBody LoginDomain loginDomain) {
         return userService.login(loginDomain);
     }
+
+    @PostMapping(value = "/{email}/forgot-password")
+    public void forgotPassword(@PathVariable String email) {
+        userService.forgotPassword(email);
+    }
 }
