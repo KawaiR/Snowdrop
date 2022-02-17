@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -20,17 +21,27 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    String title;
-    LocalDateTime date;
+    @Column(name="post_title")
+    String postTitle;
+    @Column(name = "upload_date")
+    LocalDateTime uploadDate;
     String content;
 
+    @Column(name="total_score")
     int totalScore;
-    int upVotes;
-    int downVotes;
+    int upvotes;
+    int downvotes;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    User poster;
+    User sender;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    Tag tag;
+
+    @OneToMany(mappedBy = "parent")
+    List<Comment> children;
 
     //TODO: ONE-TO-MANY MAPPING between tags and posts
 

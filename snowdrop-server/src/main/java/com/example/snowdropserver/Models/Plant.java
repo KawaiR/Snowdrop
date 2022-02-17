@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "plants")
@@ -19,17 +20,11 @@ public class Plant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    String nickname;
-    String name;
+    @Column(name="plant_name")
+    String plantName;
+    @Column(name="scientific_name")
     String scientificName;
 
-    double temperature;
-    int sunlight;
-    int water;
-    String fertilizer;
-
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    User owner;
+    @OneToMany(mappedBy = "plant")
+    List<PlantCare> caredFor;
 }

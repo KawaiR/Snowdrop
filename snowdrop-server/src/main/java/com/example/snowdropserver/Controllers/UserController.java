@@ -1,11 +1,12 @@
 package com.example.snowdropserver.Controllers;
 
+import com.example.snowdropserver.Models.Domains.AddUserDomain;
+import com.example.snowdropserver.Models.Domains.LoginDomain;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +28,23 @@ public class UserController {
         // Have the logic in UserService
         // Ideally, UserController should just control the request mappings
         return userService.getAllUsers();
+    }
+
+    // @PostMapping maps the HTTP put requests on the endpoint to this method
+    // it calls the service method and ultimately adds the user to the database
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public AddUserDomain addUser(@RequestBody AddUserDomain user) {
+        return userService.addUser(user);
+    }
+
+    @PostMapping(value = "/login")
+    public String login(@RequestBody LoginDomain loginDomain) {
+        return userService.login(loginDomain);
+    }
+
+    @PostMapping(value = "/{email}/forgot-password")
+    public void forgotPassword(@PathVariable String email) {
+        userService.forgotPassword(email);
     }
 }

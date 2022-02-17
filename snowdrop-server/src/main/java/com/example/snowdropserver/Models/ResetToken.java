@@ -6,26 +6,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.time.LocalDateTime;
+
 
 @Entity
-@Table(name = "tags")
+@Table(name = "reset_tokens")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tag {
+public class ResetToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @Column(name="tag_name")
-    String tagName;
+    @Column(name="hashed_token")
+    String hashedToken;
 
-    @OneToMany(mappedBy = "tag")
-    private List<Post> posts;
+    @Column(name="expiry_date")
+    LocalDateTime expiryDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "plant_id", referencedColumnName = "id")
-    private Plant plant;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    User user;
 }

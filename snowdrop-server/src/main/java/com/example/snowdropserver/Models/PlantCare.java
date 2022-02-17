@@ -7,34 +7,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "user_plant_mappings")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
+public class PlantCare {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @Column(name="upload_date")
-    LocalDateTime uploadDate;
-    String content;
-
-    @Column(name="total_score")
-    int totalScore;
-
-    int upvotes;
-    int downvotes;
+    String nickname;
+    double temperature;
+    int sunlight;
+    int water;
+    String fertilizer;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    User sender;
+    User user;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    Post parent;
+    @ManyToOne
+    Plant plant;
 }
