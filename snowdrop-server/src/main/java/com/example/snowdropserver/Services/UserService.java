@@ -3,15 +3,19 @@ package com.example.snowdropserver.Services;
 import com.example.snowdropserver.Exceptions.*;
 import com.example.snowdropserver.Models.Domains.AddUserDomain;
 import com.example.snowdropserver.Models.Domains.LoginDomain;
+import com.example.snowdropserver.Models.ResetToken;
 import com.example.snowdropserver.Models.User;
+import com.example.snowdropserver.Repositories.ResetTokenRepository;
 import com.example.snowdropserver.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import com.google.common.hash.Hashing;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -19,14 +23,18 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final ResetTokenRepository resetTokenRepository;
+    private final JavaMailSender javaMailSender;
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
 
     // this autowired annotation is magic that will link the correct repository into this constructor to make the service
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, JavaMailSender javaMailSender) {
         this.userRepository = userRepository;
+        this.resetTokenRepository = resetTokenRepository;
+        this.javaMailSender = javaMailSender;
     }
 
     public List<User> getAllUsers() {
@@ -100,6 +108,42 @@ public class UserService {
 
             return authToken;
         }
+    }
+
+    public void forgotPassword(String email) {
+        System.out.println(email);
+
+        // check if user exists
+        Optional<User> maybeUser = userRepository.getByEmail(email);
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("Email not registered.");
+            throw new EmailNotFoundException();
+        }
+
+        User user = maybeUser.get();
+
+        int resetTokenPin = (int) (Math.random() * 100000);
+
+        // hash before storing in database for increased security
+        String hashedToken = hash(Integer.toString(resetTokenPin));
+
+        ResetToken resetToken = ResetToken.builder().
+                hashedToken(hashedToken).
+                expiryDate(LocalDateTime.now().plusMinutes(10)).
+                user(user).
+                build();
+
+        resetTokenRepository.save(resetToken);
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(user.getEmail());
+        simpleMailMessage.setSubject("[SNOWDROP PLANT APP] Forgot your password?");
+        simpleMailMessage.setText("Here's the pin to sign into your account:" + resetTokenPin);
+        simpleMailMessage.setFrom("snowdrop.plantapp@gmail.com");
+        javaMailSender.send(simpleMailMessage);
+
+        System.out.println("Successfully sent email.");
     }
 
     public boolean check_username_exists(String username) {
