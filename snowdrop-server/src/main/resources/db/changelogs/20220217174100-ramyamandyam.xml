@@ -9,12 +9,13 @@
         <modifyDataType columnName="scientific_name"
                         newDataType="varchar(2000)"
                         tableName="plants"/>
-        <loadData encoding="UTF-8"
-                  relativeToChangelogFile="true"
-                  file="Common names and scientific names.csv"
-                  schemaName="snowdrop"
-                  separator=","
-                  tableName="plants">
+        <loadUpdateData encoding="UTF-8"
+                        relativeToChangelogFile="true"
+                        file="Common names and scientific names.csv"
+                        schemaName="snowdrop"
+                        separator=","
+                        tableName="plants"
+                        primaryKey="id">
             <column name="id"
                     type="skip"/>
             <column header="Symbol"
@@ -29,7 +30,7 @@
             <column header="Scientific Name with Author"
                     name="scientific_name"
                     type="varchar"/>
-        </loadData>
+        </loadUpdateData>
     </changeSet>
 
 </databaseChangeLog>
