@@ -2,6 +2,7 @@ package com.example.snowdropserver.Services;
 
 import com.example.snowdropserver.Exceptions.*;
 import com.example.snowdropserver.Models.Domains.AddUserDomain;
+import com.example.snowdropserver.Models.Domains.ChangeForgottenDomain;
 import com.example.snowdropserver.Models.Domains.LoginDomain;
 import com.example.snowdropserver.Models.ResetToken;
 import com.example.snowdropserver.Models.User;
@@ -10,9 +11,11 @@ import com.example.snowdropserver.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.google.common.hash.Hashing;
 
+import javax.swing.text.html.Option;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -139,11 +142,54 @@ public class UserService {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(user.getEmail());
         simpleMailMessage.setSubject("[SNOWDROP PLANT APP] Forgot your password?");
-        simpleMailMessage.setText("Here's the pin to sign into your account:" + resetTokenPin);
+        simpleMailMessage.setText("Here's the pin to sign into your account: " + resetTokenPin);
         simpleMailMessage.setFrom("snowdrop.plantapp@gmail.com");
         javaMailSender.send(simpleMailMessage);
 
         System.out.println("Successfully sent email.");
+    }
+
+    public void updateForgottenPassword(String email,
+                                        ChangeForgottenDomain changeForgottenDomain) {
+        // check the email exists
+        if (!check_email_exists(email)) {
+            throw new EmailNotFoundException();
+        }
+
+        // get the user with this email
+        User user = userRepository.findAllByEmail(email).get(0);
+
+        // check if the reset token entered is valid
+        Optional<ResetToken> maybeResetToken = resetTokenRepository.
+                findByHashedTokenAndUser(hash(changeForgottenDomain.getResetToken()), user);
+
+        // throw error if not found
+        if (!maybeResetToken.isPresent()) {
+            throw new InvalidResetToken();
+        }
+
+        // retrieve token from database
+        ResetToken resetToken = maybeResetToken.get();
+
+        // remove reset token from database
+        resetTokenRepository.delete(resetToken);
+        user.setPasswordHash(hash(changeForgottenDomain.getNewPassword()));
+
+        // update user info in database
+        userRepository.save(user);
+        System.out.println("Password updated!");
+
+    }
+
+    @Scheduled(fixedRate = 60000)
+    public void removeExpiredTokens() {
+        List<ResetToken> expiredTokens = resetTokenRepository.findByExpiryDate(LocalDateTime.now());
+
+        for (ResetToken resetToken : expiredTokens) {
+            resetTokenRepository.delete(resetToken);
+        }
+
+        System.out.println("Routine pin removal was performed at: " + LocalDateTime.now());
     }
 
     public boolean check_username_exists(String username) {

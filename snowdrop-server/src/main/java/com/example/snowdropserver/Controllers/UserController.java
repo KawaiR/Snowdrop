@@ -1,6 +1,7 @@
 package com.example.snowdropserver.Controllers;
 
 import com.example.snowdropserver.Models.Domains.AddUserDomain;
+import com.example.snowdropserver.Models.Domains.ChangeForgottenDomain;
 import com.example.snowdropserver.Models.Domains.LoginDomain;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Services.UserService;
@@ -46,5 +47,10 @@ public class UserController {
     @PostMapping(value = "/{email}/forgot-password")
     public void forgotPassword(@PathVariable String email) {
         userService.forgotPassword(email);
+    }
+
+    @PostMapping(value = "/{email}/update-password")
+    public void updateForgottenPassword(@PathVariable String email, @RequestBody ChangeForgottenDomain changeForgottenDomain) {
+        userService.updateForgottenPassword(email, changeForgottenDomain);
     }
 }
