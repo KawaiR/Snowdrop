@@ -23,7 +23,7 @@ const color_opt_button = "#007AFF";
 function pxRD (px, cur_screen, base) {
 	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
 }
-
+console.log("test");
 const Page_Create_Account  = ({navigation}) => {
 	useEffect(() => {
 	}, []);
@@ -49,6 +49,29 @@ const Page_Create_Account  = ({navigation}) => {
 			}
 		} catch (e) {
 			return { error: true };
+		}
+	}
+
+	async function createAccountAsync() {
+		try {
+			let response = await fetch(`http://localhost:8080/users`, {
+				method: "POST",
+				headers: {
+				// Accept: "application/json",
+				"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+				email: email,
+				passwordHash: password,
+				username: username,
+				}),
+			})
+			.then((response) => response.json())
+			.then((state) => this.setState(state));
+			console.log(response);
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
 		}
 	}
 
@@ -84,7 +107,7 @@ const Page_Create_Account  = ({navigation}) => {
 					Continue with Google
 				</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Email_Button]}    >
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Email_Button]} onPress={()=>createAccountAsync()}   >
 				<Text style = {noneModeStyles._Main_Button_Description}   >
 					Sign Up
 				</Text>
