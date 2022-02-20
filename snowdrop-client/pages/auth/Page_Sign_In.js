@@ -40,6 +40,7 @@ const Page_Sign_In  = ({navigation}) => {
 	
 			if (result.type === 'success') {
 				global.isEmail = false;
+				global.googleResult = result;
 				global.accessToken = result.accessToken;
 				navigation.navigate("Page_Profile_Google_Account")
 			} else {
