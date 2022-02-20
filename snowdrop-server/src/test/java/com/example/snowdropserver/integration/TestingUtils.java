@@ -2,6 +2,7 @@ package com.example.snowdropserver.integration;
 
 import com.example.snowdropserver.Models.Domains.AddUserDomain;
 import com.example.snowdropserver.Models.Domains.LoginDomain;
+import com.example.snowdropserver.Models.Domains.UpdatePasswordDomain;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -70,6 +71,34 @@ public class TestingUtils {
 
 
         System.out.println("**** MAKING LOGIN REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+    }
+
+    public static void updatePasswordAndExpect(String email, String oldPassword,
+                                               String newPassword, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/users/" + email + "/update-password");
+
+        UpdatePasswordDomain updatePasswordDomain = UpdatePasswordDomain.builder()
+                .newPassword(newPassword)
+                .oldPassword(oldPassword)
+                .build();
+
+        System.out.println(updatePasswordDomain);
+
+        String json = objectMapper.writeValueAsString(updatePasswordDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING UPDATE PASSWORD REQUEST ****");
         CloseableHttpResponse response = client.execute(httpPost);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();

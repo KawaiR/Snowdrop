@@ -4,6 +4,7 @@ import com.example.snowdropserver.Exceptions.*;
 import com.example.snowdropserver.Models.Domains.AddUserDomain;
 import com.example.snowdropserver.Models.Domains.ChangeForgottenDomain;
 import com.example.snowdropserver.Models.Domains.LoginDomain;
+import com.example.snowdropserver.Models.Domains.UpdatePasswordDomain;
 import com.example.snowdropserver.Models.ResetToken;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Repositories.ResetTokenRepository;
@@ -151,13 +152,15 @@ public class UserService {
 
     public void updateForgottenPassword(String email,
                                         ChangeForgottenDomain changeForgottenDomain) {
-        // check the email exists
-        if (!check_email_exists(email)) {
+        // check if user exists
+        Optional<User> maybeUser = userRepository.getByEmail(email);
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("Email not registered.");
             throw new EmailNotFoundException();
         }
 
-        // get the user with this email
-        User user = userRepository.findAllByEmail(email).get(0);
+        User user = maybeUser.get();
 
         // check if the reset token entered is valid
         Optional<ResetToken> maybeResetToken = resetTokenRepository.
@@ -165,6 +168,7 @@ public class UserService {
 
         // throw error if not found
         if (!maybeResetToken.isPresent()) {
+            System.out.println("Token entered is invalid or expired.");
             throw new InvalidResetToken();
         }
 
@@ -181,6 +185,30 @@ public class UserService {
 
     }
 
+    // Assumes old password was validated prior to this function call
+    public void updatePassword(String email, UpdatePasswordDomain updatePasswordDomain) {
+        // check if user exists
+        Optional<User> maybeUser = userRepository.getByEmail(email);
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("Email not registered.");
+            throw new EmailNotFoundException();
+        }
+
+        User user = maybeUser.get();
+
+        if (!validate_password(email, updatePasswordDomain.getOldPassword())) {
+            System.out.println("Password entered is invalid");
+            throw new InvalidPasswordException();
+        }
+
+        user.setPasswordHash(hash(updatePasswordDomain.getNewPassword()));
+
+        // update user info in database
+        userRepository.save(user);
+        System.out.println("Password updated!");
+    }
+
     @Scheduled(fixedRate = 60000)
     public void removeExpiredTokens() {
         List<ResetToken> expiredTokens = resetTokenRepository.findByExpiryDate(LocalDateTime.now());
@@ -195,6 +223,11 @@ public class UserService {
     public boolean check_username_exists(String username) {
         List<User> users = userRepository.findAllByUserName(username);
         return !users.isEmpty();
+    }
+
+    public boolean validate_password(String email, String password) {
+        User user = userRepository.findAllByEmail(email).get(0);
+        return user.getPasswordHash().equals(hash(password));
     }
 
 
