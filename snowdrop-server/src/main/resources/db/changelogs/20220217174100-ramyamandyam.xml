@@ -1,0 +1,36 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="20220217174100" author="ramyamandyam">
+        <modifyDataType columnName="plant_name"
+                        newDataType="varchar(2000)"
+                        tableName="plants"/>
+        <modifyDataType columnName="scientific_name"
+                        newDataType="varchar(2000)"
+                        tableName="plants"/>
+        <loadUpdateData encoding="UTF-8"
+                        relativeToChangelogFile="true"
+                        file="Common names and scientific names.csv"
+                        schemaName="snowdrop"
+                        separator=","
+                        tableName="plants"
+                        primaryKey="id">
+            <column name="id"
+                    type="skip"/>
+            <column header="Symbol"
+                    type="skip"/>
+            <column header="Synonym Symbol"
+                    type="skip"/>
+            <column header="Family"
+                    type="skip"/>
+            <column header="Common Name"
+                    name="plant_name"
+                    type="varchar"/>
+            <column header="Scientific Name with Author"
+                    name="scientific_name"
+                    type="varchar"/>
+        </loadUpdateData>
+    </changeSet>
+
+</databaseChangeLog>
