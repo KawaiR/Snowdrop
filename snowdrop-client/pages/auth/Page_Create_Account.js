@@ -27,6 +27,7 @@ console.log("test");
 const Page_Create_Account  = ({navigation}) => {
 	useEffect(() => {
 	}, []);
+	const [title, onChangeTitle] = React.useState("Welcome aboard,\nCreate an account to start your journey");
 	const [email, onChangeEmail] = React.useState("");
 	const [password, onChangePassword] = React.useState("");
 	const [username, onChangeUsername] = React.useState("");
@@ -68,13 +69,10 @@ const Page_Create_Account  = ({navigation}) => {
 			})
 			.then((response) => response.json())
 			.then((result) => {
-				console.log(result);
-				console.log(result.status);
 				console.log(result.email);
-				console.log(result.passwordHash);
 				console.log(result.userName);
-				if (result.status == "404") {
-
+				if (result.status == "400") {
+					onChangeTitle(result.message);
 				} else {
 					global.isEmail = true;
 					global.email = email;
@@ -153,7 +151,7 @@ const Page_Create_Account  = ({navigation}) => {
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Username_Location]}
 			/>
 			<Text style = {noneModeStyles._Title_Description}   >
-				Welcome aboard,{'\n'}Create an account to start your journey
+				{title}
 			</Text>
 			<View style = {noneModeStyles._Icon_Frame}>
 				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle.png")}/>
