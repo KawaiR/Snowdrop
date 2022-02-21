@@ -3,6 +3,7 @@ package com.example.snowdropserver.integration;
 import com.example.snowdropserver.Models.Domains.AddUserDomain;
 import com.example.snowdropserver.Models.Domains.LoginDomain;
 import com.example.snowdropserver.Models.Domains.UpdatePasswordDomain;
+import com.example.snowdropserver.Models.Domains.ValidateResetTokenDomain;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -99,6 +100,28 @@ public class TestingUtils {
 
 
         System.out.println("**** MAKING UPDATE PASSWORD REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+    }
+
+    public static void validateTokenAndExpect(ValidateResetTokenDomain resetTokenDomain, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/users/validate-reset-token");
+
+        System.out.println(resetTokenDomain);
+
+        String json = objectMapper.writeValueAsString(resetTokenDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING VALIDATE TOKEN REQUEST REQUEST ****");
         CloseableHttpResponse response = client.execute(httpPost);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();

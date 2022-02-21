@@ -44,7 +44,7 @@ public class TestForgotPassword {
         HttpPost httpPost = new HttpPost("http://localhost:8080/users/razankawai99@gmail.com/update-forgot-password");
 
         ChangeForgottenDomain changeForgottenDomain = ChangeForgottenDomain.builder()
-                .resetToken("81270")
+                .resetToken("69531")
                 .newPassword("updatePasswordSuccess")
                 .build();
 
