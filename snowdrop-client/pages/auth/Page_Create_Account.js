@@ -54,6 +54,9 @@ const Page_Create_Account  = ({navigation}) => {
 
 	async function createAccountAsync() {
 		try {
+			// console.log(email)
+			// console.log(password)
+			// console.log(username)
 			let response = await fetch(`http://localhost:8080/users`, {
 				method: "POST",
 				headers: {
@@ -63,12 +66,18 @@ const Page_Create_Account  = ({navigation}) => {
 				body: JSON.stringify({
 				email: email,
 				passwordHash: password,
-				username: username,
+				userName: username,
 				}),
 			})
 			.then((response) => response.json())
-			.then((state) => this.setState(state));
-			console.log(response);
+			.then((result) => {
+				console.log(result);
+				console.log(result.status);
+				console.log(result.email);
+				console.log(result.passwordHash);
+				console.log(result.userName);
+			});
+			// console.log(response)
 		} catch (err) {
 			console.log("Fetch didnt work.");
 			console.log(err);
