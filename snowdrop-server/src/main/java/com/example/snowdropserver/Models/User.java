@@ -33,6 +33,16 @@ public class User {
     @Column(name="auth_token_hash")
     String authTokenHash;
 
+    // Google OAuth specific fields
+    @Column(name="access_token_hash")
+    String accessTokenHash;
+
+    @Column(name="id_token")
+    String idToken;
+
+    @Column(name="refresh_token")
+    String refreshToken;
+
     @OneToMany(mappedBy = "user")
     private List<PlantCare> plants;
 
