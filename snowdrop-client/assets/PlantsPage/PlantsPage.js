@@ -24,6 +24,8 @@ const PlantsPage  = ({navigation}) => {
 		<View style={styles.cardList}>
             <Card.Title
                 style={styles.card}
+                titleStyle={styles.cardText}
+                subtitleStyle={styles.cardText}
                 title="Card Title"
                 subtitle="Card Subtitle"
                 left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}

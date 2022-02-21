@@ -24,15 +24,16 @@ export default StyleSheet.create({
         width: width,
         backgroundColor: green,
         flexDirection: "row",
-        height: height * 0.078125, // 70/defaultH
+        height: height * 0.078125,
     },
     ovalBg:{
         alignSelf: 'center',
         width: width / 4,
-        height: height * 0.234374, // 210/defaultH
-        backgroundColor: blue,
+        height: height * (430 / defaultH - .078125), // 210/defaultH
+        //backgroundColor: blue,
         borderBottomLeftRadius: 90,
         borderBottomRightRadius: 90,
+        marginBottom: height * 0.03,
         transform: [{ scaleX: 4 }],
     },
     plantsView: {
@@ -51,12 +52,36 @@ export default StyleSheet.create({
     },
     plantsImage: {
         //justifyContent: 'flex-end',
-        //marginLeft: width * 0.1,
-        width: width * 0.6,
-        height: width * 0.6,
+        // width: width * 0.6,
+        // height: width * 0.6,
+        // width: '400%',
+        // height: undefined,
+        // aspectRatio: 1,
+        // resizeMode: 'cover',
+        alignSelf: 'center',
+        width: width,
+        height: height * (430 / defaultH - .078125), // 210/defaultH
+        //backgroundColor: blue,
+        borderBottomLeftRadius: 90,
+        borderBottomRightRadius: 90,
+        //transform: [{ scaleX: 4 }],
+    },
+    upcomingView: {
+        alignSelf: 'center',
+        backgroundColor: 'white',
+        width: width * 390 / defaultW,
+        borderRadius: 15,
+        marginBottom: height * 27 / defaultH,
+    },
+    upcomingText: {
+        fontSize: 24,
+        fontWeight: '500',
+        marginLeft: width * 15 / defaultW,
+        marginTop: height * 20 / defaultH,
+        marginBottom: height * 22 / defaultH,
     },
     cardList: {
-        marginVertical: height * 0.05,
+        //marginBottom: height * 0.05,
     },
     card: {
         alignSelf: 'center',
@@ -64,16 +89,17 @@ export default StyleSheet.create({
         width: width * 0.91787,
         height: height * 0.1060,
         borderRadius: 25,
+        marginBottom: height * 11 / defaultH,
     },
-    cardImage: {
-        width: width * 0.18,
-        height: width * 0.18,
-        backgroundColor: 'white',
-        borderColor: '#D3D3D3',
-        borderWidth: 1,
+    cardTitle: {
+        justifyContent: 'center',
+        flex: 1,
+    },
+    cardLeft: {
+        //marginHorizontal: 500,
     },
     cardText: {
-        marginLeft: width * 0.07,
+        marginLeft: width * 0.06,
     },
     fab: {
         position: 'absolute',
