@@ -24,69 +24,30 @@ function pxRD (px, cur_screen, base) {
 	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
 }
 console.log("test");
-const Page_Create_Account  = ({navigation}) => {
+const Page_Create_Username  = ({navigation}) => {
 	useEffect(() => {
 	}, []);
-	const [email, onChangeEmail] = React.useState("");
-	const [password, onChangePassword] = React.useState("");
-	const [username, onChangeUsername] = React.useState("");
-	
-	async function signInWithGoogleAsync() {
+
+	async function signOutWithGoogleAsync() {
 		try {
-			const result = await Google.logInAsync({
+			const result = await Google.logOutAsync({
+            accessToken: token,
 			androidClientId: "1057168519364-q6ubd34uinifouhjccbfa17nsgngvhgn.apps.googleusercontent.com",
 			iosClientId: "1057168519364-13l42e2uflp9m7898h7vvug7hogr9cjt.apps.googleusercontent.com",
-			scopes: ['profile', 'email'],
 			});
-	
-			if (result.type === 'success') {
-				global.isEmail = false;
-				global.accessToken = result.accessToken;
-				global.idToken = result.idToken;
-				global.refreshToken = result.refreshToken;
-				navigation.navigate("Page_Profile_Google_Account")
-			} else {
-				return { cancelled: true };
-			}
+            onChangeToken("LogOut Successful");
+            global.isEmail = undefined;
+            global.accessToken = undefined;
+			global.idToken = undefined;
+			global.refreshToken = undefined;
+			global.username = undefined;
+            navigation.navigate("Page_Sign_In")
 		} catch (e) {
-			return { error: true };
+			onChangeToken("Error")
 		}
 	}
 
-	async function createAccountAsync() {
-		try {
-			let response = await fetch(`http://localhost:8080/users`, {
-				method: "POST",
-				headers: {
-				"Content-Type": "application/json; charset=utf-8",
-				},
-				body: JSON.stringify({
-				email: email,
-				passwordHash: password,
-				userName: username,
-				}),
-			})
-			.then((response) => response.json())
-			.then((result) => {
-				console.log(result);
-				console.log(result.status);
-				console.log(result.email);
-				console.log(result.passwordHash);
-				console.log(result.userName);
-				if (result.status == "404") {
-
-				} else {
-					global.isEmail = true;
-					global.email = email;
-					global.username = username;
-					navigation.navigate("Page_Profile_Email_Account");
-				}
-			});
-		} catch (err) {
-			console.log("Fetch didnt work.");
-			console.log(err);
-		}
-	}
+	const [username, onChangeUsername] = React.useState("");
 
 	let [fontsLoaded] = useFonts({
 		Alata_400Regular,
@@ -106,44 +67,18 @@ const Page_Create_Account  = ({navigation}) => {
 			<Image style = {noneModeStyles._Philodendron_Image} source = {require("../../assets/background/philodendron.png")}/>
 			<Image style = {noneModeStyles._Left_Leaf_Image} source = {require("../../assets/background/leftleaf.png")}/>
 			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../../assets/background/rightleaf.png")}/>
-			<View style = {noneModeStyles._Optional_Navigation_Button}>
-				<Text style = {noneModeStyles._Optional_Page_Description}>
-				Remember the password?
-				</Text>
-				<Text style = {noneModeStyles._Optional_Button_Description} onPress={() => navigation.navigate('Page_Sign_In')}>
-					Sign In
-				</Text>
-			</View>
+
 			<View style = {noneModeStyles._White_Box}/>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Google_Button]} onPress={()=>signInWithGoogleAsync()} >
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Cancel_Button]} onPress={()=>signOutWithGoogleAsync()} >
 				<Text style = {noneModeStyles._Main_Button_Description}   >
-					Continue with Google
+					Cancel
 				</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Email_Button]} onPress={()=>createAccountAsync()}   >
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._SignUp_Button]} onPress={()=>createAccountAsync()}   >
 				<Text style = {noneModeStyles._Main_Button_Description}   >
-					Sign Up
+					Continue
 				</Text>
 			</TouchableOpacity>
-			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Password_Line]}></View>
-			<TextInput
-				autoCapitalized='none'
-				autoCorrect={false}
-				onChangeText={onChangePassword}
-				value={password}
-				placeholder="Password"
-				style = {[noneModeStyles._Text_Field,noneModeStyles._Password_Location]}
-			/>
-			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Email_Line]}></View>
-			<TextInput
-				autoCapitalized='none'
-				autoCorrect={false}
-				autoFocus={true}
-				onChangeText={onChangeEmail}
-				value={email}
-				placeholder="Email"
-				style = {[noneModeStyles._Text_Field,noneModeStyles._Email_Location]}
-			/>
 			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Username_Line]}></View>
 			<TextInput
 				autoFocus={true}
@@ -153,7 +88,7 @@ const Page_Create_Account  = ({navigation}) => {
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Username_Location]}
 			/>
 			<Text style = {noneModeStyles._Title_Description}   >
-				Welcome aboard,{'\n'}Create an account to start your journey
+				Welcome aboard,{'\n'}Create an username to start your journey
 			</Text>
 			<View style = {noneModeStyles._Icon_Frame}>
 				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle.png")}/>
@@ -163,7 +98,7 @@ const Page_Create_Account  = ({navigation}) => {
 	</ScrollView>
 	</KeyboardAvoidingView>
 )}
-export default Page_Create_Account
+export default Page_Create_Username
 
 const noneModeStyles = StyleSheet.create({	
 	_Page: { 
@@ -228,12 +163,6 @@ const noneModeStyles = StyleSheet.create({
 	_Username_Location: { 
 		top: pxRD(319,height,base_height),
 	},
-	_Email_Location: { 
-		top: pxRD(386,height,base_height),
-	},
-	_Password_Location: { 
-		top: pxRD(453,height,base_height),
-	},
 	_Main_Navigation_Button: { 
 		position: "absolute",
 		alignSelf: "center",
@@ -249,43 +178,22 @@ const noneModeStyles = StyleSheet.create({
 		textAlign: "center",
 		color: "white",
 	},
-	_Email_Button: { 
-		top: pxRD(530,height,base_height),
+	_SignUp_Button: { 
+		top: pxRD(396,height,base_height),
 		backgroundColor: "#A4C400",
 	},
-	_Google_Button: {
-		top: pxRD(597,height,base_height),
+	_Cancel_Button: {
+		top: pxRD(463,height,base_height),
 		backgroundColor: "#FF000099",
 	},
 	_White_Box: {
 		alignSelf: "center",
 		top: pxRD(319,height,base_height),
 		width: pxRD(364,width,base_width),
-		height: pxRD(325,height,base_height),
+		height: pxRD(191,height,base_height),
 		backgroundColor: "white",
 	},
-	_Optional_Navigation_Button: {
-		display: "flex",
-		flexDirection: "row",
-		position: "absolute",
-		alignSelf: "center",
-		justifyContent: "center",
-		width: pxRD(364,width,base_width),
-		height: pxRD(58,height,base_height),
-		top: pxRD(654,height,base_height),
-	},
-	_Optional_Page_Description: {
-		marginRight: pxRD(5,width,base_width),
-		fontSize: pxRD(15,height,base_height),
-		fontWeight: "400",
-		color: color_description,
-	},
-	_Optional_Button_Description: {
-		fontWeight: "600",
-		fontSize: pxRD(15,height,base_height),
-		letterSpacing: pxRD(-0.24,width,base_width),
-		color: color_opt_button,
-	},
+	
 	_Cactus_Image: {
 		position: "absolute",
 		resizeMode: "contain",
