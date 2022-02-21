@@ -1,12 +1,8 @@
 package com.example.snowdropserver.Controllers;
 
-import com.example.snowdropserver.Models.Domains.AddUserDomain;
-import com.example.snowdropserver.Models.Domains.ChangeForgottenDomain;
-import com.example.snowdropserver.Models.Domains.LoginDomain;
-import com.example.snowdropserver.Models.Domains.UpdatePasswordDomain;
+import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Services.UserService;
-import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +50,11 @@ public class UserController {
     @PostMapping(value = "/{email}/update-forgot-password")
     public void updateForgottenPassword(@PathVariable String email, @RequestBody ChangeForgottenDomain changeForgottenDomain) {
         userService.updateForgottenPassword(email, changeForgottenDomain);
+    }
+
+    @PostMapping(value = "/validate-reset-token")
+    public void validate_reset_token(@RequestBody ValidateResetTokenDomain resetTokenDomain) {
+        userService.validate_reset_token(resetTokenDomain);
     }
 
     @PostMapping(value = "/{email}/update-password")

@@ -1,10 +1,7 @@
 package com.example.snowdropserver.Services;
 
 import com.example.snowdropserver.Exceptions.*;
-import com.example.snowdropserver.Models.Domains.AddUserDomain;
-import com.example.snowdropserver.Models.Domains.ChangeForgottenDomain;
-import com.example.snowdropserver.Models.Domains.LoginDomain;
-import com.example.snowdropserver.Models.Domains.UpdatePasswordDomain;
+import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.ResetToken;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Repositories.ResetTokenRepository;
@@ -228,6 +225,34 @@ public class UserService {
     public boolean validate_password(String email, String password) {
         User user = userRepository.findAllByEmail(email).get(0);
         return user.getPasswordHash().equals(hash(password));
+    }
+
+    public boolean validate_reset_token(ValidateResetTokenDomain resetTokenDomain) {
+        System.out.println(resetTokenDomain);
+        System.out.println();
+
+        System.out.println(hash(resetTokenDomain.getResetToken()));
+        System.out.println(resetTokenRepository.findAll());
+
+        Optional<User> maybeUser = userRepository.getByEmail(resetTokenDomain.getEmail());
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("Email not registered.");
+            throw new EmailNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        // check if the reset token entered is valid
+        Optional<ResetToken> maybeResetToken = resetTokenRepository.
+                findByHashedTokenAndUser(hash(resetTokenDomain.getResetToken()), user);
+
+        // throw error if not found
+        if (!maybeResetToken.isPresent()) {
+            System.out.println("Token entered is invalid or expired.");
+            throw new InvalidResetToken();
+        }
+
+        return true;
     }
 
 

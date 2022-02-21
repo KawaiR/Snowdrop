@@ -25,6 +25,9 @@ public class Plant {
     @Column(name="scientific_name")
     String scientificName;
 
+    @Column(name = "plant_image")
+    String plantImage;
+
     @OneToMany(mappedBy = "plant")
     List<PlantCare> caredFor;
 }
