@@ -193,7 +193,12 @@ public class UserService {
 
         User user = maybeUser.get();
 
-        if (!validate_password(updatePasswordDomain.getEmail(), updatePasswordDomain.getOldPassword())) {
+        ValidatePasswordDomain validatePasswordDomain = ValidatePasswordDomain.builder()
+                .password(updatePasswordDomain.getOldPassword())
+                .email(updatePasswordDomain.getEmail())
+                .build();
+
+        if (!validate_password(validatePasswordDomain)) {
             System.out.println("Password entered is invalid");
             throw new InvalidPasswordException();
         }
@@ -221,9 +226,24 @@ public class UserService {
         return !users.isEmpty();
     }
 
-    public boolean validate_password(String email, String password) {
-        User user = userRepository.findAllByEmail(email).get(0);
-        return user.getPasswordHash().equals(hash(password));
+    public boolean validate_password(ValidatePasswordDomain validatePasswordDomain) {
+        Optional<User> maybeUser = userRepository.getByEmail(validatePasswordDomain.getEmail());
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("Email not registered.");
+            throw new EmailNotFoundException();
+        }
+
+        User user = maybeUser.get();
+
+        String hashedPassword = hash(validatePasswordDomain.getPassword());
+
+        if (!user.getPasswordHash().equals(hashedPassword)) {
+            System.out.println("Incorrect password.");
+            throw new InvalidPasswordException();
+        }
+
+        return true;
     }
 
     public boolean validate_reset_token(ValidateResetTokenDomain resetTokenDomain) {
