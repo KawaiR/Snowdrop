@@ -27,6 +27,7 @@ const color_opt_button = "#007AFF";
 const Page_Sign_In  = ({navigation}) => {
 	useEffect(() => {
 	}, []);
+	const [title, onChangeTitle] = React.useState("Welcome back,\nSign in to continue with your journey");
 	const [email, onChangeEmail] = React.useState("");
 	const [password, onChangePassword] = React.useState("");
 	
@@ -48,6 +49,39 @@ const Page_Sign_In  = ({navigation}) => {
 			}
 		} catch (e) {
 			return { error: true };
+		}
+	}
+
+	async function signInAsync() {
+		try {
+			let response = await fetch(`http://localhost:8080/users/login`, {
+				method: "POST",
+				headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+				email: email,
+				password: password,
+				}),
+			})
+			.then((response) => {
+				if (response.status == 400) {
+					onChangeTitle(result.message);
+				}
+				else if (response.status == 200) {
+					response.json().then((result) => {
+						global.isEmail = true;
+						global.email = email;
+						global.authTokenHash = result.authTokenHash;
+						global.userName = result.userName;
+						navigation.navigate("Page_Profile_Email_Account");
+					});
+				}
+			})
+			
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
 		}
 	}
 
@@ -83,7 +117,7 @@ const Page_Sign_In  = ({navigation}) => {
 					Continue with Google
 				</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Email_Button]}    >
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Email_Button]}  onPress={()=>signInAsync()}  >
 				<Text style = {noneModeStyles._Main_Button_Description}   >
 					Sign In
 				</Text>
@@ -113,7 +147,7 @@ const Page_Sign_In  = ({navigation}) => {
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Email_Location]}
 			/>
 			<Text style = {noneModeStyles._Title_Description}   >
-				Welcome back,{'\n'}Sign in to continue with your journey
+				{title}
 			</Text>
 			<View style = {noneModeStyles._Icon_Frame}>
 				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle.png")}/>

@@ -26,9 +26,38 @@ function pxRD (px, cur_screen, base) {
 const Page_Forgot_Password  = ({navigation}) => {
 	useEffect(() => {
 	}, []);
+	const [title, onChangeTitle] = React.useState("Forgot your password,\nDon't worry! We will help you recover it.");
 	const [email, onChangeEmail] = React.useState("");
 	const [code, onChangeCode] = React.useState("");
 	
+	async function sendCode() {
+		try {
+			let response = await fetch(`http://localhost:8080/users/`+email+`/forgot-password`, {
+				method: "POST",
+				headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+				}),
+			})
+			.then((response) => {
+				if (response.status == 400) {
+					onChangeTitle(result.message);
+				}
+				else if (response.status == 404) {
+					onChangeTitle("Please Enter Your Email!")
+				}
+				else if (response.status == 200) {
+					onChangeTitle("Please Check your Email.\nFor the Verification Code.")
+				}
+			})
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+	}
+
+
 	let [fontsLoaded] = useFonts({
 		Alata_400Regular,
 		Lato_400Regular,
@@ -81,12 +110,12 @@ const Page_Forgot_Password  = ({navigation}) => {
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Email_Location]}
 			/>
 			<View style = {noneModeStyles._Send_Code_Button}>
-				<Text style={noneModeStyles._Send_Code_Button_Text}   >{/*onPress={() => }*/}
+				<Text style={noneModeStyles._Send_Code_Button_Text}  onPress={() => sendCode()} >
 					Send Code
 				</Text>
 			</View>
 			<Text style = {noneModeStyles._Title_Description}   >
-				Forgot your password,{'\n'}Don't worry! We will help you recover it.
+				{title}
 			</Text>
 			<View style = {noneModeStyles._Icon_Frame}>
 				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle_black.png")}/>

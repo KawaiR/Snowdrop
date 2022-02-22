@@ -23,7 +23,7 @@ const color_opt_button = "#007AFF";
 function pxRD (px, cur_screen, base) {
 	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
 }
-console.log("test");
+
 const Page_Create_Account  = ({navigation}) => {
 	useEffect(() => {
 	}, []);
@@ -45,6 +45,7 @@ const Page_Create_Account  = ({navigation}) => {
 				global.accessToken = result.accessToken;
 				global.idToken = result.idToken;
 				global.refreshToken = result.refreshToken;
+
 				navigation.navigate("Page_Profile_Google_Account")
 			} else {
 				return { cancelled: true };
@@ -63,23 +64,24 @@ const Page_Create_Account  = ({navigation}) => {
 				},
 				body: JSON.stringify({
 				email: email,
-				passwordHash: password,
+				password: password,
 				userName: username,
 				}),
 			})
-			.then((response) => response.json())
-			.then((result) => {
-				console.log(result.email);
-				console.log(result.userName);
-				if (result.status == "400") {
+			.then((response) => {
+				if (response.status == 400) {
 					onChangeTitle(result.message);
-				} else {
-					global.isEmail = true;
-					global.email = email;
-					global.username = username;
-					navigation.navigate("Page_Profile_Email_Account");
 				}
-			});
+				else if (response.status == 200) {
+					response.json().then((result) => {
+						global.isEmail = true;
+						global.email = email;
+						global.authTokenHash = result.authTokenHash;
+						global.userName = result.userName;
+						navigation.navigate("Page_Profile_Email_Account");
+					});
+				}
+			})
 		} catch (err) {
 			console.log("Fetch didnt work.");
 			console.log(err);

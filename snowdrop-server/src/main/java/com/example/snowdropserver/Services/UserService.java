@@ -1,10 +1,7 @@
 package com.example.snowdropserver.Services;
 
 import com.example.snowdropserver.Exceptions.*;
-import com.example.snowdropserver.Models.Domains.AddUserDomain;
-import com.example.snowdropserver.Models.Domains.ChangeForgottenDomain;
-import com.example.snowdropserver.Models.Domains.LoginDomain;
-import com.example.snowdropserver.Models.Domains.UpdatePasswordDomain;
+import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.ResetToken;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Repositories.ResetTokenRepository;
@@ -47,7 +44,7 @@ public class UserService {
     }
 
     // Adds a user to the database
-    public AddUserDomain addUser(AddUserDomain userDomain) {
+    public AuthConfirmDomain addUser(AddUserDomain userDomain) {
         if (check_username_exists(userDomain.getUserName())) {
             System.out.println("username found");
             throw new DuplicateUsernameException();
@@ -58,19 +55,23 @@ public class UserService {
             throw new DuplicateEmailException();
         }
 
-        if (userDomain.getPasswordHash().length() < 8) {
+        if (userDomain.getPassword().length() < 8) {
             System.out.println("length is less than 8 characters");
             throw new PasswordTooShortException();
         }
 
         // hash password before storing it into the database
-        String passwordSha256hash = hash(userDomain.getPasswordHash());
+        String passwordSha256hash = hash(userDomain.getPassword());
+
+        // main idea to associate a token with each login for better security
+        String authToken = generateNewToken();
+        String authTokenHash = hash(authToken);
 
         User user = User.builder()
                 .email(userDomain.getEmail())
                 .passwordHash(passwordSha256hash)
                 .userName(userDomain.getUserName())
-                .authTokenHash(null)
+                .authTokenHash(authTokenHash)
                 .comments(null)
                 .totalPoints(0)
                 .plants(null)
@@ -80,15 +81,14 @@ public class UserService {
         userRepository.save(user); // will save into database
 
         // value returned will interact with the front-end
-        return AddUserDomain.builder()
-                .email(user.getEmail())
-                .passwordHash(user.getPasswordHash())
+        return AuthConfirmDomain.builder()
+                .authTokenHash(authTokenHash)
                 .userName(user.getUserName())
                 .build();
 
     }
 
-    public String login(LoginDomain loginDomain) {
+    public AuthConfirmDomain login(LoginDomain loginDomain) {
         Optional<User> maybeUser = userRepository.getByEmail(loginDomain.getEmail());
 
         if (!maybeUser.isPresent()) {
@@ -110,7 +110,10 @@ public class UserService {
 
             userRepository.save(user);
 
-            return authToken;
+            return AuthConfirmDomain.builder()
+                    .authTokenHash(authTokenHash)
+                    .userName(user.getUserName())
+                    .build();
         }
     }
 

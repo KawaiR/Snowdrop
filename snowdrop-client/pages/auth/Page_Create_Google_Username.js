@@ -24,10 +24,10 @@ function pxRD (px, cur_screen, base) {
 	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
 }
 console.log("test");
-const Page_Create_Username  = ({navigation}) => {
+const Page_Create_Google_Username  = ({navigation}) => {
 	useEffect(() => {
 	}, []);
-
+	const [token, onChangeToken] = React.useState(global.accessToken);
 	async function signOutWithGoogleAsync() {
 		try {
 			const result = await Google.logOutAsync({
@@ -42,6 +42,14 @@ const Page_Create_Username  = ({navigation}) => {
 			global.refreshToken = undefined;
 			global.username = undefined;
             navigation.navigate("Page_Sign_In")
+		} catch (e) {
+			onChangeToken("Error")
+		}
+	}
+
+	async function createAccountAsync() {
+		try {
+			
 		} catch (e) {
 			onChangeToken("Error")
 		}
@@ -98,7 +106,7 @@ const Page_Create_Username  = ({navigation}) => {
 	</ScrollView>
 	</KeyboardAvoidingView>
 )}
-export default Page_Create_Username
+export default Page_Create_Google_Username
 
 const noneModeStyles = StyleSheet.create({	
 	_Page: { 
