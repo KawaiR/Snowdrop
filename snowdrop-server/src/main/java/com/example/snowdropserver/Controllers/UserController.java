@@ -33,12 +33,12 @@ public class UserController {
     // it calls the service method and ultimately adds the user to the database
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AddUserDomain addUser(@RequestBody AddUserDomain user) {
+    public AuthConfirmDomain addUser(@RequestBody AddUserDomain user) {
         return userService.addUser(user);
     }
 
     @PostMapping(value = "/login")
-    public String login(@RequestBody LoginDomain loginDomain) {
+    public AuthConfirmDomain login(@RequestBody LoginDomain loginDomain) {
         return userService.login(loginDomain);
     }
 
