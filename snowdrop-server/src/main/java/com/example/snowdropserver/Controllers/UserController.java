@@ -42,9 +42,9 @@ public class UserController {
         return userService.login(loginDomain);
     }
 
-    @PostMapping(value = "/{email}/forgot-password")
-    public void forgotPassword(@PathVariable String email) {
-        userService.forgotPassword(email);
+    @PostMapping(value = "/forgot-password")
+    public void forgotPassword(@RequestBody SendResetTokenDomain sendResetTokenDomain) {
+        userService.forgotPassword(sendResetTokenDomain);
     }
 
     @PostMapping(value = "/update-forgot-password")
