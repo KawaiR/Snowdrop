@@ -8,6 +8,7 @@ import lombok.Value;
 @Builder
 @AllArgsConstructor
 public class UpdatePasswordDomain {
+    String email;
     String oldPassword;
     String newPassword;
 }

@@ -81,9 +81,10 @@ public class TestingUtils {
                                                String newPassword, int expectedStatusCode) throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
 
-        HttpPost httpPost = new HttpPost(baseUrl + "/users/" + email + "/update-password");
+        HttpPost httpPost = new HttpPost(baseUrl + "/users/update-password");
 
         UpdatePasswordDomain updatePasswordDomain = UpdatePasswordDomain.builder()
+                .email(email)
                 .newPassword(newPassword)
                 .oldPassword(oldPassword)
                 .build();

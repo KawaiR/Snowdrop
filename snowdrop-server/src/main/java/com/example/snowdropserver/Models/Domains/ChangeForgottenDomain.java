@@ -8,6 +8,7 @@ import lombok.Value;
 @Builder
 @AllArgsConstructor
 public class ChangeForgottenDomain {
+    String email;
     String newPassword;
     String resetToken;
 }
