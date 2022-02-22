@@ -27,7 +27,7 @@ public class TestingUtils {
         AddUserDomain userDomain = AddUserDomain.builder()
                 .userName(username)
                 .email(email)
-                .passwordHash(password)
+                .password(password)
                 .build();
 
         System.out.println(userDomain);
