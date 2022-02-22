@@ -7,8 +7,7 @@ import lombok.Value;
 @Value
 @Builder
 @AllArgsConstructor
-public class UpdatePasswordDomain {
+public class ValidateResetTokenDomain {
     String email;
-    String oldPassword;
-    String newPassword;
+    String resetToken;
 }

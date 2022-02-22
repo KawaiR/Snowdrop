@@ -153,10 +153,9 @@ public class UserService {
         System.out.println("Successfully sent email.");
     }
 
-    public void updateForgottenPassword(String email,
-                                        ChangeForgottenDomain changeForgottenDomain) {
+    public void updateForgottenPassword(ChangeForgottenDomain changeForgottenDomain) {
         // check if user exists
-        Optional<User> maybeUser = userRepository.getByEmail(email);
+        Optional<User> maybeUser = userRepository.getByEmail(changeForgottenDomain.getEmail());
 
         if (!maybeUser.isPresent()) {
             System.out.println("Email not registered.");
@@ -189,9 +188,9 @@ public class UserService {
     }
 
     // Assumes old password was validated prior to this function call
-    public void updatePassword(String email, UpdatePasswordDomain updatePasswordDomain) {
+    public void updatePassword(UpdatePasswordDomain updatePasswordDomain) {
         // check if user exists
-        Optional<User> maybeUser = userRepository.getByEmail(email);
+        Optional<User> maybeUser = userRepository.getByEmail(updatePasswordDomain.getEmail());
 
         if (!maybeUser.isPresent()) {
             System.out.println("Email not registered.");
@@ -200,7 +199,7 @@ public class UserService {
 
         User user = maybeUser.get();
 
-        if (!validate_password(email, updatePasswordDomain.getOldPassword())) {
+        if (!validate_password(updatePasswordDomain.getEmail(), updatePasswordDomain.getOldPassword())) {
             System.out.println("Password entered is invalid");
             throw new InvalidPasswordException();
         }
@@ -231,6 +230,34 @@ public class UserService {
     public boolean validate_password(String email, String password) {
         User user = userRepository.findAllByEmail(email).get(0);
         return user.getPasswordHash().equals(hash(password));
+    }
+
+    public boolean validate_reset_token(ValidateResetTokenDomain resetTokenDomain) {
+        System.out.println(resetTokenDomain);
+        System.out.println();
+
+        System.out.println(hash(resetTokenDomain.getResetToken()));
+        System.out.println(resetTokenRepository.findAll());
+
+        Optional<User> maybeUser = userRepository.getByEmail(resetTokenDomain.getEmail());
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("Email not registered.");
+            throw new EmailNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        // check if the reset token entered is valid
+        Optional<ResetToken> maybeResetToken = resetTokenRepository.
+                findByHashedTokenAndUser(hash(resetTokenDomain.getResetToken()), user);
+
+        // throw error if not found
+        if (!maybeResetToken.isPresent()) {
+            System.out.println("Token entered is invalid or expired.");
+            throw new InvalidResetToken();
+        }
+
+        return true;
     }
 
 

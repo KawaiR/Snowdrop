@@ -41,10 +41,11 @@ public class TestForgotPassword {
     public void updatePasswordSuccess() throws Exception {
 
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost("http://localhost:8080/users/razankawai99@gmail.com/update-forgot-password");
+        HttpPost httpPost = new HttpPost("http://localhost:8080/users/update-forgot-password");
 
         ChangeForgottenDomain changeForgottenDomain = ChangeForgottenDomain.builder()
-                .resetToken("81270")
+                .email("razankawai99@gmail.com")
+                .resetToken("96786")
                 .newPassword("updatePasswordSuccess")
                 .build();
 

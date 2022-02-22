@@ -3,8 +3,6 @@ package com.example.snowdropserver.Controllers;
 import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Services.UserService;
-import liquibase.pro.packaged.P;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,12 +33,12 @@ public class UserController {
     // it calls the service method and ultimately adds the user to the database
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AuthConfirmDomain addUser(@RequestBody AddUserDomain user) {
+    public AddUserDomain addUser(@RequestBody AddUserDomain user) {
         return userService.addUser(user);
     }
 
     @PostMapping(value = "/login")
-    public AuthConfirmDomain login(@RequestBody LoginDomain loginDomain) {
+    public String login(@RequestBody LoginDomain loginDomain) {
         return userService.login(loginDomain);
     }
 
@@ -49,13 +47,18 @@ public class UserController {
         userService.forgotPassword(email);
     }
 
-    @PostMapping(value = "/{email}/update-forgot-password")
-    public void updateForgottenPassword(@PathVariable String email, @RequestBody ChangeForgottenDomain changeForgottenDomain) {
-        userService.updateForgottenPassword(email, changeForgottenDomain);
+    @PostMapping(value = "/update-forgot-password")
+    public void updateForgottenPassword(@RequestBody ChangeForgottenDomain changeForgottenDomain) {
+        userService.updateForgottenPassword(changeForgottenDomain);
     }
 
-    @PostMapping(value = "/{email}/update-password")
-    public void updatePassword(@PathVariable String email, @RequestBody UpdatePasswordDomain updatePasswordDomain) {
-        userService.updatePassword(email, updatePasswordDomain);
+    @PostMapping(value = "/validate-reset-token")
+    public void validate_reset_token(@RequestBody ValidateResetTokenDomain resetTokenDomain) {
+        userService.validate_reset_token(resetTokenDomain);
+    }
+
+    @PostMapping(value = "/update-password")
+    public void updatePassword(@RequestBody UpdatePasswordDomain updatePasswordDomain) {
+        userService.updatePassword(updatePasswordDomain);
     }
 }
