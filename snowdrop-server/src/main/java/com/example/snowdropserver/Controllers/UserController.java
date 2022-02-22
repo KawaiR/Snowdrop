@@ -47,9 +47,9 @@ public class UserController {
         userService.forgotPassword(email);
     }
 
-    @PostMapping(value = "/{email}/update-forgot-password")
-    public void updateForgottenPassword(@PathVariable String email, @RequestBody ChangeForgottenDomain changeForgottenDomain) {
-        userService.updateForgottenPassword(email, changeForgottenDomain);
+    @PostMapping(value = "/update-forgot-password")
+    public void updateForgottenPassword(@RequestBody ChangeForgottenDomain changeForgottenDomain) {
+        userService.updateForgottenPassword(changeForgottenDomain);
     }
 
     @PostMapping(value = "/validate-reset-token")
@@ -57,8 +57,8 @@ public class UserController {
         userService.validate_reset_token(resetTokenDomain);
     }
 
-    @PostMapping(value = "/{email}/update-password")
-    public void updatePassword(@PathVariable String email, @RequestBody UpdatePasswordDomain updatePasswordDomain) {
-        userService.updatePassword(email, updatePasswordDomain);
+    @PostMapping(value = "/update-password")
+    public void updatePassword(@RequestBody UpdatePasswordDomain updatePasswordDomain) {
+        userService.updatePassword(updatePasswordDomain);
     }
 }

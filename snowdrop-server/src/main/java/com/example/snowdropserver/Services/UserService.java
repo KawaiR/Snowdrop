@@ -147,10 +147,9 @@ public class UserService {
         System.out.println("Successfully sent email.");
     }
 
-    public void updateForgottenPassword(String email,
-                                        ChangeForgottenDomain changeForgottenDomain) {
+    public void updateForgottenPassword(ChangeForgottenDomain changeForgottenDomain) {
         // check if user exists
-        Optional<User> maybeUser = userRepository.getByEmail(email);
+        Optional<User> maybeUser = userRepository.getByEmail(changeForgottenDomain.getEmail());
 
         if (!maybeUser.isPresent()) {
             System.out.println("Email not registered.");
@@ -183,9 +182,9 @@ public class UserService {
     }
 
     // Assumes old password was validated prior to this function call
-    public void updatePassword(String email, UpdatePasswordDomain updatePasswordDomain) {
+    public void updatePassword(UpdatePasswordDomain updatePasswordDomain) {
         // check if user exists
-        Optional<User> maybeUser = userRepository.getByEmail(email);
+        Optional<User> maybeUser = userRepository.getByEmail(updatePasswordDomain.getEmail());
 
         if (!maybeUser.isPresent()) {
             System.out.println("Email not registered.");
@@ -194,7 +193,7 @@ public class UserService {
 
         User user = maybeUser.get();
 
-        if (!validate_password(email, updatePasswordDomain.getOldPassword())) {
+        if (!validate_password(updatePasswordDomain.getEmail(), updatePasswordDomain.getOldPassword())) {
             System.out.println("Password entered is invalid");
             throw new InvalidPasswordException();
         }
