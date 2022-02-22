@@ -33,7 +33,7 @@ public class TestValidateResetToken {
     public void validateTokenSuccess() throws Exception {
         ValidateResetTokenDomain validateResetTokenDomain = ValidateResetTokenDomain.builder()
                 .email("razankawai99@gmail.com")
-                .resetToken("50243")
+                .resetToken("14416")
                 .build();
         TestingUtils.validateTokenAndExpect(validateResetTokenDomain,
                 200);

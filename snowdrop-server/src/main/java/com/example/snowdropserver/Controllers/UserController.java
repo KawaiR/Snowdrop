@@ -57,6 +57,11 @@ public class UserController {
         userService.validate_reset_token(resetTokenDomain);
     }
 
+    @PostMapping(value = "/validate-password")
+    public void validate_password(@RequestBody ValidatePasswordDomain validatePasswordDomain) {
+        userService.validate_password(validatePasswordDomain);
+    }
+
     @PostMapping(value = "/update-password")
     public void updatePassword(@RequestBody UpdatePasswordDomain updatePasswordDomain) {
         userService.updatePassword(updatePasswordDomain);
