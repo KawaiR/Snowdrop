@@ -26,23 +26,6 @@ export default StyleSheet.create({
         flexDirection: "row",
         height: height * 0.078125,
     },
-    ovalBg:{
-        alignSelf: 'center',
-        width: width / 4,
-        height: height * (430 / defaultH - .078125), // 210/defaultH
-        //backgroundColor: blue,
-        borderBottomLeftRadius: 90,
-        borderBottomRightRadius: 90,
-        marginBottom: height * 0.03,
-        transform: [{ scaleX: 4 }],
-    },
-    plantsView: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        transform: [{ scaleX: 1/4 }],
-    },
     plantsText: {
         justifyContent: 'flex-start',
         color: 'white',
@@ -58,6 +41,7 @@ export default StyleSheet.create({
         // height: undefined,
         // aspectRatio: 1,
         // resizeMode: 'cover',
+        marginBottom: height * 0.03,
         alignSelf: 'center',
         width: width,
         height: height * (430 / defaultH - .078125), // 210/defaultH

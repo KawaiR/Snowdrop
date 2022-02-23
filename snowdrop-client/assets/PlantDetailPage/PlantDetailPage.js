@@ -18,6 +18,7 @@ const PlantDetailPage  = ({navigation}) => {
 
     const waterYes = () => {
         setWaterVisible(false);
+        // add
     }
     const waterrNo = () => {
         setWaterVisible(false);
@@ -38,11 +39,7 @@ const PlantDetailPage  = ({navigation}) => {
         <Appbar.Action icon="brightness-5" color="white" style={{marginLeft: 'auto'}}/>
     </Appbar.Header>
 	<ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
-        <View style={styles.ovalBg}>
-            <View style={styles.plantsView}>
-                <Image style={styles.plantsImage} source={require('snowdrop-client/assets/plant-image.jpeg')}></Image>
-            </View>
-        </View>
+        <Image style={styles.plantsImage} source={require('snowdrop-client/assets/plant-image.jpeg')}></Image>
         <View style={styles.upcomingView}>
             <Text style={styles.upcomingText}>Upcoming</Text>
             <View style={styles.cardList}>
@@ -119,7 +116,7 @@ const PlantDetailPage  = ({navigation}) => {
 	</ScrollView>
     <FAB
         style={styles.fab}
-        icon="plus"
+        icon="square-edit-outline"
         color="white"
         onPress={() => console.log('Pressed')}
     />
