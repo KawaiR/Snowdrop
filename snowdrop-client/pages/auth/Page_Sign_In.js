@@ -31,6 +31,12 @@ const Page_Sign_In  = ({navigation}) => {
 	const [email, onChangeEmail] = React.useState("");
 	const [password, onChangePassword] = React.useState("");
 	
+	function resetScreen() {
+		onChangeTitle("Welcome back,\nSign in to continue with your journey");
+		onChangeEmail("");
+		onChangePassword("");
+	}
+
 	async function signInWithGoogleAsync() {
 		try {
 			const result = await Google.logInAsync({
@@ -58,21 +64,21 @@ const Page_Sign_In  = ({navigation}) => {
 					})
 					.then((response) => {
 						if (response.status == 404 || response.status == 400) {
+							resetScreen();
 							navigation.navigate("Page_Create_Google_Username");
 						}
 						else {
 							response.json().then((result) => {
 								global.userName = result.userName;
+								resetScreen();
 								navigation.navigate("Page_Profile_Google_Account")
 							})
 						}
 					})
-					
 				} catch (err) {
 					console.log("Fetch didnt work.");
 					console.log(err);
 				}
-				// navigation.navigate("Page_Profile_Google_Account")
 			} else {
 				return { cancelled: true };
 			}
@@ -105,7 +111,7 @@ const Page_Sign_In  = ({navigation}) => {
 						global.email = email;
 						global.authTokenHash = result.authTokenHash;
 						global.userName = result.userName;
-						
+						resetScreen();
 						navigation.navigate("Page_Profile_Email_Account");
 					});
 				}
@@ -139,7 +145,7 @@ const Page_Sign_In  = ({navigation}) => {
 				<Text style = {noneModeStyles._Optional_Page_Description}>
 					Don’t have an account?
 				</Text>
-				<Text style = {noneModeStyles._Optional_Button_Description} onPress={() => navigation.navigate('Page_Create_Account')}>
+				<Text style = {noneModeStyles._Optional_Button_Description} onPress={() => {resetScreen();navigation.navigate('Page_Create_Account');}}>
 					Sign Up
 				</Text>
 			</View>
@@ -166,7 +172,7 @@ const Page_Sign_In  = ({navigation}) => {
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Password_Location]}
 			/>
 			<View style = {noneModeStyles._Forgot_Password_Navigation_Button}>
-				<Text style={noneModeStyles._Forgot_Password_Navigation_Text} onPress={() => navigation.navigate('Page_Forgot_Password')}  >
+				<Text style={noneModeStyles._Forgot_Password_Navigation_Text} onPress={() => {resetScreen();navigation.navigate('Page_Forgot_Password')}}  >
 					Forgot Password?
 				</Text>
 			</View>

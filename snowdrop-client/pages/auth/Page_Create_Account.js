@@ -42,11 +42,36 @@ const Page_Create_Account  = ({navigation}) => {
 	
 			if (result.type === 'success') {
 				global.isEmail = false;
+				global.googleID = result.user.id;
 				global.accessToken = result.accessToken;
 				global.idToken = result.idToken;
 				global.refreshToken = result.refreshToken;
-
-				navigation.navigate("Page_Profile_Google_Account")
+				try {
+					let response = await fetch(`http://localhost:8080/users/get-google-user`, {
+						method: "POST",
+						headers: {
+						"Content-Type": "application/json; charset=utf-8",
+						},
+						body: JSON.stringify({
+							googleID: global.googleID,
+							userName: null,
+						}),
+					})
+					.then((response) => {
+						if (response.status == 404 || response.status == 400) {
+							navigation.navigate("Page_Create_Google_Username");
+						}
+						else {
+							response.json().then((result) => {
+								global.userName = result.userName;
+								navigation.navigate("Page_Profile_Google_Account")
+							})
+						}
+					})	
+				} catch (err) {
+					console.log("Fetch didnt work.");
+					console.log(err);
+				}
 			} else {
 				return { cancelled: true };
 			}

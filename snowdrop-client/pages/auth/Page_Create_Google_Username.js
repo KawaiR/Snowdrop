@@ -55,7 +55,6 @@ const Page_Create_Google_Username  = ({navigation}) => {
 			onChangeTitle("Please Enter Your Username!")
 			return;
 		}
-		console.log(global.idToken.length)
 		try {
 			let response = await fetch(`http://localhost:8080/users/add-google-user`, {
 				method: "POST",
@@ -75,7 +74,6 @@ const Page_Create_Google_Username  = ({navigation}) => {
 				}
 				else {
 					response.json().then((result) => {
-						console.log(result);
 						global.userName = result.userName;
 						global.authTokenHash = result.authTokenHash;
 						navigation.navigate("Page_Profile_Google_Account");

@@ -61,7 +61,8 @@ const Page_Profile_Google_Account  = ({navigation}) => {
 			<Image style = {noneModeStyles._Left_Leaf_Image} source = {require("../../assets/background/leftleaf.png")}/>
 			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../../assets/background/rightleaf.png")}/>
 
-			<Text style = {{top:pxRD(200,height,base_height),alignSelf:"center",textAlign:"left",width:pxRD(base_width*0.8,width,base_width)}} numberOfLines={1}>{token}</Text>
+			<Text style = {{top:pxRD(200,height,base_height),alignSelf:"center",textAlign:"left",width:pxRD(base_width*0.8,width,base_width)}} numberOfLines={1}>{"Google ID: "+token}</Text>
+			<Text style = {{top:pxRD(220,height,base_height),alignSelf:"center",textAlign:"left",width:pxRD(base_width*0.8,width,base_width)}} numberOfLines={1}>{"Username: "+global.userName}</Text>
             <TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Sign_Out]}  onPress={()=>signOutWithGoogleAsync()}  >
 				<Text style = {noneModeStyles._Main_Button_Description}>
 					Sign Out
