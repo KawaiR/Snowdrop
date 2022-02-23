@@ -12,4 +12,10 @@ public class ChangeForgottenDomain {
     String email;
     String newPassword;
     String resetToken;
+
+    public ChangeForgottenDomain() {
+        email = null;
+        newPassword = null;
+        resetToken = null;
+    }
 }

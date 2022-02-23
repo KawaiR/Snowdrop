@@ -56,6 +56,10 @@ const Page_Create_Account  = ({navigation}) => {
 	}
 
 	async function createAccountAsync() {
+		if (!email || !username || !password) {
+			onChangeTitle("All Fields Are Required!");
+			return;
+		}
 		try {
 			let response = await fetch(`http://localhost:8080/users`, {
 				method: "POST",
@@ -70,9 +74,11 @@ const Page_Create_Account  = ({navigation}) => {
 			})
 			.then((response) => {
 				if (response.status == 400) {
-					onChangeTitle(result.message);
+					response.json().then((result) => {
+						onChangeTitle(result.message);
+					});
 				}
-				else if (response.status == 200) {
+				else if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
 						global.isEmail = true;
 						global.email = email;
@@ -132,6 +138,8 @@ const Page_Create_Account  = ({navigation}) => {
 				onChangeText={onChangePassword}
 				value={password}
 				placeholder="Password"
+				secureTextEntry={true}
+				textContentType="password"
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Password_Location]}
 			/>
 			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Email_Line]}></View>

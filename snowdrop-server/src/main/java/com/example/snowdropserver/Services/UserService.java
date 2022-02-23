@@ -43,6 +43,16 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public Optional<User> getUserByGoogleId(AddGoogleUserDomain userDomain) {
+        // this is the logic for the controller endpoint -- it's a simple service so there isn't much logic
+        Optional<User> user = userRepository.getByGoogleID(userDomain.getGoogleID());
+        if (user.isEmpty()) {
+            System.out.println("There's no user registered with the data you entered.");
+            throw new UserNotFoundException();
+        }
+        return user;
+    }
+
     // Adds a user to the database
     public AuthConfirmDomain addUser(AddUserDomain userDomain) {
         if (check_username_exists(userDomain.getUserName())) {
@@ -72,6 +82,46 @@ public class UserService {
                 .passwordHash(passwordSha256hash)
                 .userName(userDomain.getUserName())
                 .authTokenHash(authTokenHash)
+                .googleID(null)
+                .comments(null)
+                .totalPoints(0)
+                .plants(null)
+                .posts(null)
+                .build();
+
+        userRepository.save(user); // will save into database
+
+        // value returned will interact with the front-end
+        return AuthConfirmDomain.builder()
+                .authTokenHash(authTokenHash)
+                .userName(user.getUserName())
+                .build();
+
+    }
+
+    // Adds a user to the database
+    public AuthConfirmDomain addGoogleUser(AddGoogleUserDomain userDomain) {
+        if (check_username_exists(userDomain.getUserName())) {
+            System.out.println("username found");
+            throw new DuplicateUsernameException();
+        }
+
+        if (check_google_exists(userDomain.getGoogleID())) {
+            System.out.println("google id found");
+            throw new DuplicateEmailException();
+        }
+
+
+        // main idea to associate a token with each login for better security
+        String authToken = generateNewToken();
+        String authTokenHash = hash(authToken);
+        System.out.println(userDomain.getGoogleID());
+        User user = User.builder()
+                .email(null)
+                .passwordHash(null)
+                .userName(userDomain.getUserName())
+                .authTokenHash(authTokenHash)
+                .googleID(userDomain.getGoogleID())
                 .comments(null)
                 .totalPoints(0)
                 .plants(null)
@@ -160,6 +210,11 @@ public class UserService {
         if (!maybeUser.isPresent()) {
             System.out.println("Email not registered.");
             throw new EmailNotFoundException();
+        }
+
+        if (changeForgottenDomain.getNewPassword().length() < 8) {
+            System.out.println("length is less than 8 characters");
+            throw new PasswordTooShortException();
         }
 
         User user = maybeUser.get();
@@ -263,6 +318,11 @@ public class UserService {
 
     public boolean check_email_exists(String email) {
         List<User> users = userRepository.findAllByEmail(email);
+        return !users.isEmpty();
+    }
+
+    public boolean check_google_exists(String idToken) {
+        List<User> users = userRepository.findAllByGoogleID(idToken);
         return !users.isEmpty();
     }
 

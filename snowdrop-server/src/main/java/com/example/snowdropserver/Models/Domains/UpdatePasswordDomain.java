@@ -12,4 +12,10 @@ public class UpdatePasswordDomain {
     String email;
     String oldPassword;
     String newPassword;
+
+    public UpdatePasswordDomain() {
+        email = null;
+        oldPassword = null;
+        newPassword = null;
+    }
 }

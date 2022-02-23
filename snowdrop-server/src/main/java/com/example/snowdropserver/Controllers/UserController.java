@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 // the server will look to map requests that start with "/users" to the endpoints in this controller
@@ -29,12 +30,27 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+
+
     // @PostMapping maps the HTTP put requests on the endpoint to this method
     // it calls the service method and ultimately adds the user to the database
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AuthConfirmDomain addUser(@RequestBody AddUserDomain user) {
         return userService.addUser(user);
+    }
+
+    @PostMapping(value = "/get-google-user")
+    public Optional<User> getUserByIdToken(@RequestBody AddGoogleUserDomain user) {
+        // Have the logic in UserService
+        // Ideally, UserController should just control the request mappings
+        return userService.getUserByGoogleId(user);
+    }
+
+    @PostMapping(value = "/add-google-user")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthConfirmDomain addGoogleUser(@RequestBody AddGoogleUserDomain user) {
+        return userService.addGoogleUser(user);
     }
 
     @PostMapping(value = "/login")

@@ -41,9 +41,38 @@ const Page_Sign_In  = ({navigation}) => {
 	
 			if (result.type === 'success') {
 				global.isEmail = false;
-				global.googleResult = result;
+				global.googleID = result.user.id;
 				global.accessToken = result.accessToken;
-				navigation.navigate("Page_Profile_Google_Account")
+				global.idToken = result.idToken;
+				global.refreshToken = result.refreshToken;
+				try {
+					let response = await fetch(`http://localhost:8080/users/get-google-user`, {
+						method: "POST",
+						headers: {
+						"Content-Type": "application/json; charset=utf-8",
+						},
+						body: JSON.stringify({
+							googleID: global.googleID,
+							userName: null,
+						}),
+					})
+					.then((response) => {
+						if (response.status == 404 || response.status == 400) {
+							navigation.navigate("Page_Create_Google_Username");
+						}
+						else {
+							response.json().then((result) => {
+								global.userName = result.userName;
+								navigation.navigate("Page_Profile_Google_Account")
+							})
+						}
+					})
+					
+				} catch (err) {
+					console.log("Fetch didnt work.");
+					console.log(err);
+				}
+				// navigation.navigate("Page_Profile_Google_Account")
 			} else {
 				return { cancelled: true };
 			}
@@ -66,14 +95,17 @@ const Page_Sign_In  = ({navigation}) => {
 			})
 			.then((response) => {
 				if (response.status == 400) {
-					onChangeTitle(result.message);
+					response.json().then((result) => {
+						onChangeTitle(result.message);
+					});
 				}
-				else if (response.status == 200) {
+				else if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
 						global.isEmail = true;
 						global.email = email;
 						global.authTokenHash = result.authTokenHash;
 						global.userName = result.userName;
+						
 						navigation.navigate("Page_Profile_Email_Account");
 					});
 				}
@@ -129,6 +161,8 @@ const Page_Sign_In  = ({navigation}) => {
 				onChangeText={onChangePassword}
 				value={password}
 				placeholder="Password"
+				secureTextEntry={true}
+				textContentType="password"
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Password_Location]}
 			/>
 			<View style = {noneModeStyles._Forgot_Password_Navigation_Button}>

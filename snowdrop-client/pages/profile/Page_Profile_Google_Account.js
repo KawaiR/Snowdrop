@@ -22,18 +22,21 @@ function pxRD (px, cur_screen, base) {
 const Page_Profile_Google_Account  = ({navigation}) => {
     useEffect(() => {
     }, []);
-    const [token, onChangeToken] = React.useState(global.accessToken);
-    
+    const [token, onChangeToken] = React.useState(global.googleID);
     async function signOutWithGoogleAsync() {
 		try {
 			const result = await Google.logOutAsync({
-            accessToken: token,
+            accessToken: global.accessToken,
 			androidClientId: "1057168519364-q6ubd34uinifouhjccbfa17nsgngvhgn.apps.googleusercontent.com",
 			iosClientId: "1057168519364-13l42e2uflp9m7898h7vvug7hogr9cjt.apps.googleusercontent.com",
 			});
             onChangeToken("LogOut Successful");
-            global.accessToken = undefined;
             global.isEmail = undefined;
+			global.googleID = undefined;
+            global.accessToken = undefined;
+			global.idToken = undefined;
+			global.refreshToken = undefined;
+			global.userName = undefined;
             navigation.navigate("Page_Sign_In")
 		} catch (e) {
 			onChangeToken("Error")

@@ -11,4 +11,9 @@ import lombok.Value;
 public class ValidateResetTokenDomain {
     String email;
     String resetToken;
+
+    public ValidateResetTokenDomain() {
+        email = null;
+        resetToken = null;
+    }
 }

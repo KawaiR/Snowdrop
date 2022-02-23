@@ -32,22 +32,25 @@ const Page_Forgot_Password  = ({navigation}) => {
 	
 	async function sendCode() {
 		try {
-			let response = await fetch(`http://localhost:8080/users/`+email+`/forgot-password`, {
+			let response = await fetch(`http://localhost:8080/users/forgot-password`, {
 				method: "POST",
 				headers: {
 				"Content-Type": "application/json; charset=utf-8",
 				},
 				body: JSON.stringify({
+					email: email,
 				}),
 			})
 			.then((response) => {
 				if (response.status == 400) {
-					onChangeTitle(result.message);
+					response.json().then((result) => {
+						onChangeTitle(result.message);
+					});
 				}
 				else if (response.status == 404) {
 					onChangeTitle("Please Enter Your Email!")
 				}
-				else if (response.status == 200) {
+				else if (response.status == 200 || response.status == 201) {
 					onChangeTitle("Please Check your Email.\nFor the Verification Code.")
 				}
 			})
@@ -57,6 +60,35 @@ const Page_Forgot_Password  = ({navigation}) => {
 		}
 	}
 
+	async function VerifyCode() {
+		try {
+			let response = await fetch(`http://localhost:8080/users/validate-reset-token`, {
+				method: "POST",
+				headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+					email: email,
+					resetToken: code,
+				}),
+			})
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+						onChangeTitle(result.message);
+					});
+				}
+				else if (response.status == 200 || response.status == 201) {
+					global.email = email;
+					global.resetToken = code;
+					navigation.navigate('Page_Password_Reset');
+				}
+			})
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+	}
 
 	let [fontsLoaded] = useFonts({
 		Alata_400Regular,
@@ -85,7 +117,7 @@ const Page_Forgot_Password  = ({navigation}) => {
 				</Text>
 			</View>
 			<View style = {noneModeStyles._White_Box}/>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Submit_Button]} onPress={() => navigation.navigate('Page_Password_Reset')}>
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Submit_Button]} onPress={() => VerifyCode()}>
 				<Text style = {noneModeStyles._Main_Button_Description}   >
 					Submit
 				</Text>

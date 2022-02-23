@@ -10,4 +10,8 @@ import lombok.Value;
 @AllArgsConstructor
 public class SendResetTokenDomain {
     String email;
+
+    public SendResetTokenDomain() {
+        email = null;
+    }
 }

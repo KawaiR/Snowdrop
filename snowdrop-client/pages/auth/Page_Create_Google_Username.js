@@ -23,39 +23,70 @@ const color_opt_button = "#007AFF";
 function pxRD (px, cur_screen, base) {
 	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
 }
-console.log("test");
+
 const Page_Create_Google_Username  = ({navigation}) => {
 	useEffect(() => {
 	}, []);
-	const [token, onChangeToken] = React.useState(global.accessToken);
+
+	const [title, onChangeTitle] = React.useState("Welcome aboard,\nCreate an username to start your journey");
+	const [userName, onChangeUserName] = React.useState("");
+
 	async function signOutWithGoogleAsync() {
 		try {
 			const result = await Google.logOutAsync({
-            accessToken: token,
+            accessToken: global.accessToken,
 			androidClientId: "1057168519364-q6ubd34uinifouhjccbfa17nsgngvhgn.apps.googleusercontent.com",
 			iosClientId: "1057168519364-13l42e2uflp9m7898h7vvug7hogr9cjt.apps.googleusercontent.com",
 			});
-            onChangeToken("LogOut Successful");
             global.isEmail = undefined;
+			global.googleID = undefined;
             global.accessToken = undefined;
 			global.idToken = undefined;
 			global.refreshToken = undefined;
-			global.username = undefined;
+			global.userName = undefined;
             navigation.navigate("Page_Sign_In")
 		} catch (e) {
-			onChangeToken("Error")
+			onChangeTitle("Logout Error")
 		}
 	}
 
 	async function createAccountAsync() {
+		if (!userName) {
+			onChangeTitle("Please Enter Your Username!")
+			return;
+		}
+		console.log(global.idToken.length)
 		try {
-			
-		} catch (e) {
-			onChangeToken("Error")
+			let response = await fetch(`http://localhost:8080/users/add-google-user`, {
+				method: "POST",
+				headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+					googleID: global.googleID,
+					userName: userName,
+				}),
+			})
+			.then((response) => {
+				if (response.status == 404 || response.status == 400) {
+					response.json().then((result) => {
+						onChangeTitle(result.message)
+					})
+				}
+				else {
+					response.json().then((result) => {
+						console.log(result);
+						global.userName = result.userName;
+						global.authTokenHash = result.authTokenHash;
+						navigation.navigate("Page_Profile_Google_Account");
+					})
+				}				
+			})
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
 		}
 	}
-
-	const [username, onChangeUsername] = React.useState("");
 
 	let [fontsLoaded] = useFonts({
 		Alata_400Regular,
@@ -90,13 +121,13 @@ const Page_Create_Google_Username  = ({navigation}) => {
 			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Username_Line]}></View>
 			<TextInput
 				autoFocus={true}
-				onChangeText={onChangeUsername}
-				value={username}
+				onChangeText={onChangeUserName}
+				value={userName}
 				placeholder="Username"
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Username_Location]}
 			/>
 			<Text style = {noneModeStyles._Title_Description}   >
-				Welcome aboard,{'\n'}Create an username to start your journey
+				{title}
 			</Text>
 			<View style = {noneModeStyles._Icon_Frame}>
 				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle.png")}/>

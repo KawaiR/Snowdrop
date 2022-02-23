@@ -26,9 +26,51 @@ function pxRD (px, cur_screen, base) {
 const Page_Password_Reset  = ({navigation}) => {
 	useEffect(() => {
 	}, []);
+	const [email, onChangeEmail] = React.useState(global.email);
+	const [resetToken, onChangeResetToken] = React.useState(global.resetToken);
+	global.email = undefined;
+	global.resetToken = undefined;
+	const [title, onChangeTitle] = React.useState("Create an new password,\nRecover your account to continue.");
 	const [newPassword, onChangeNewPassword] = React.useState("");
 	const [confirm, onChangeConfirm] = React.useState("");
 	
+	async function UpdatePassword() {
+		if (!newPassword || !confirm) {
+			onChangeTitle("Password Cannot Be Empty!");
+			return;
+		}
+		if (newPassword != confirm) {
+			onChangeTitle("Password Does Not Match!");
+			return;
+		}
+		try {
+			let response = await fetch(`http://localhost:8080/users/update-forgot-password`, {
+				method: "POST",
+				headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+					email: email,
+					newPassword: newPassword,
+					resetToken: resetToken,
+				}),
+			})
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+						onChangeTitle(result.message);
+					});
+				}
+				else if (response.status == 200 || response.status == 201) {
+					navigation.navigate('Page_Sign_In');
+				}
+			})
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+	}
+
 	let [fontsLoaded] = useFonts({
 		Alata_400Regular,
 		Lato_400Regular,
@@ -56,8 +98,8 @@ const Page_Password_Reset  = ({navigation}) => {
 				</Text>
 			</View>
 			<View style = {noneModeStyles._White_Box}/>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Submit_Button]}>
-				<Text style = {noneModeStyles._Main_Button_Description}   >
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Submit_Button]} onPress={()=>UpdatePassword()}>
+				<Text style = {noneModeStyles._Main_Button_Description} >
 					Submit
 				</Text>
 			</TouchableOpacity>
@@ -68,6 +110,8 @@ const Page_Password_Reset  = ({navigation}) => {
 				onChangeText={onChangeConfirm}
 				value={confirm}
 				placeholder="Re-enter Password"
+				secureTextEntry={true}
+				textContentType="password"
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Verification_Code_Location]}
 			/>
 			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Email_Line]}></View>
@@ -78,10 +122,12 @@ const Page_Password_Reset  = ({navigation}) => {
 				onChangeText={onChangeNewPassword}
 				value={newPassword}
 				placeholder="New Password"
+				secureTextEntry={true}
+				textContentType="password"
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Email_Location]}
 			/>
 			<Text style = {noneModeStyles._Title_Description}   >
-				Create an new password,{'\n'}Recover your account to continue.
+				{title}
 			</Text>
 			<View style = {noneModeStyles._Icon_Frame}>
 				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle_light.png")}/>
