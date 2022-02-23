@@ -115,7 +115,7 @@ public class UserService {
         // main idea to associate a token with each login for better security
         String authToken = generateNewToken();
         String authTokenHash = hash(authToken);
-        System.out.println(userDomain.getGoogleID());
+
         User user = User.builder()
                 .email(null)
                 .passwordHash(null)
