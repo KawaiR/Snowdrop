@@ -101,6 +101,13 @@ export default StyleSheet.create({
     cardText: {
         marginLeft: width * 0.06,
     },
+    cardImage: {
+        width: width * 0.18,
+        height: width * 0.18,
+        backgroundColor: 'white',
+        borderColor: '#D3D3D3',
+        borderWidth: 1,
+    },
     fab: {
         position: 'absolute',
         //width: width * 0.1449,
@@ -115,9 +122,5 @@ export default StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: green,
         height: height * 0.078125,
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
     },
 });
