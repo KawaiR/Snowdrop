@@ -41,9 +41,17 @@ export default StyleSheet.create({
         borderWidth: 1,
         marginRight: 16,
     },
-    itemText: {
+    textContainer: {
+        flexDirection: "column",
+    },
+    itemName: {
         marginLeft: width * 0.07,
-        fontSize: 20,
+        fontSize: 16,
+        fontFamily: 'Lato',
+    },
+    itemScientific: {
+        marginLeft: width * 0.07,
+        fontSize: 12,
         fontFamily: 'Lato',
     },
     separator: {

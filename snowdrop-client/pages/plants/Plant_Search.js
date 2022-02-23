@@ -8,73 +8,55 @@ import styles from './Plant_Search_Style.js';
 const masterDataSource = [
     {
         id: 1,
-        name: 'Monstera Deliciosa',
+        name: 'Monstera',
+        scientific: 'Monstera Deliciosa',
     },
     {
         id: 2,
-        name: 'Golden Pothos',
+        name: 'Goldie',
+        scientific: 'Golden Pothos',
     },
     {
         id: 3,
-        name: 'Cactus',
+        name: 'Cactii Boi',
+        scientific: 'Cactus'
     },
     {
         id: 4,
-        name: 'Basil',
+        name: 'Basil Boi',
+        scientific: 'Basil',
     },
     {
         id: 5,
         name: 'Sand Verbena',
+        scientific: 'Verbenas Sandis',
     },
     {
         id: 6,
         name: 'California Copperfield',
+        scientific: 'Copperfieldus Californias',
     },
     {
         id: 7,
-        name: 'Acarospora Caesiofusca',
+        name: null,
+        scientific: 'Acarospora Caesiofusca',
     },
     {
         id: 8,
-        name: 'Long long long scientific name',
+        name: 'Long long long long name',
+        scientific: null,
     },
     {
         id: 9,
-        name: 'Monstera',
-    },
-    {
-        id: 10,
-        name: 'Golden',
-    },
-    {
-        id: 11,
-        name: 'Cactii',
-    },
-    {
-        id: 12,
-        name: 'Basil Basil',
-    },
-    {
-        id: 13,
-        name: 'Verbena',
-    },
-    {
-        id: 14,
-        name: 'California',
-    },
-    {
-        id: 15,
-        name: 'Caesiofusca',
-    },
-    {
-        id: 16,
-        name: 'Long long long long long scientific name',
+        name: 'Copperfornia Califield',
+        scientific: 'Copperfornias Califieldus',
     },
 ];
 
 const Plants_Search = ({ navigation }) => {
     var width = Dimensions.get('window').width;
     const [search, setSearch] = useState('');
+    // const [masterDataSource, setMasterDataSource] = useState([]);
     const [filteredDataSource, setFilteredDataSource] = useState(masterDataSource);
 
     const searchFilterFunction = (text) => {
@@ -84,10 +66,29 @@ const Plants_Search = ({ navigation }) => {
             // Filter the masterDataSource
             // Update FilteredDataSource
             const newData = masterDataSource.filter(function (item) {
-                const itemData = item.name;
+                var itemData = "";
+                if (item.name != null && item.scientific != null) {
+                    // Both name and scientific name are not null
+                    // Filter using either one
+                    const itemName = item.name;
+                    const itemScientific = item.scientific;
+                    const textData = text;
+                    return itemName.indexOf(textData) > -1 || itemScientific.indexOf(textData) > -1;
+                } else if (item.name != null) {
+                    // Only name is not null - filter using name
+                    itemData = item.name;
+                } else if (item.scientific != null) {
+                    // Only scientific is not null - filter using scientific
+                    itemData = item.scientific;
+                } else {
+                    // Both are null - shouldn't happen
+                    console.log("This shouldn't happen");
+                    return false;
+                }
                 const textData = text;
                 return itemData.indexOf(textData) > -1;
             });
+
             setFilteredDataSource(newData);
             setSearch(text);
         } else {
@@ -97,6 +98,27 @@ const Plants_Search = ({ navigation }) => {
             setSearch(text);
         }
     };
+
+    // getPlants = () => {
+    //     // const {route} = this.props;
+    //     // const {userId} = route.params;
+    //     // this.setState({userId: userId});
+    //     fetch('localhost:8080/plants/get-all-plant-details')
+    //       .then(res => res.json())
+    //       .then(data => {
+    //         if (data.error) {
+    //           Alert.alert(
+    //             'Error',
+    //             'Unable to load plant search at this time, please try again later.',
+    //             [{text: 'OK'}],
+    //           );
+    //         } else {
+    //         //   this.setState({activities: data});
+    //             setMasterDataSource(data);
+    //             setFilteredDataSource(data);
+    //         }
+    //       });
+    //   };
 
     onItemPressed = (item) => {
         // Function for click on an item
@@ -111,15 +133,19 @@ const Plants_Search = ({ navigation }) => {
                     size={width * 0.12}
                     style={styles.itemImage}
                 />
-                <Text
-                    category="s1"
-                    style={styles.itemText}
-                >{item.name}</Text>
+                <View style={styles.textContainer}>
+                    <Text
+                        category="s1"
+                        style={styles.itemName}
+                    >{item.name}</Text>
+                    <Text
+                        category="s1"
+                        style={styles.itemScientific}
+                    >{item.scientific}</Text>
+                </View>
             </View>
         </TouchableOpacity>
     );
-
-    extractItemKey = (item) => '${item.id}';
 
     renderSeparator = () => <View style={styles.separator} />
 
