@@ -23,94 +23,40 @@ function pxRD (px, cur_screen, base) {
 	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
 }
 
-const Page_Password_Reset  = ({navigation}) => {
-	
-	const [email, onChangeEmail] = React.useState(global.email);
-	const [resetToken, onChangeResetToken] = React.useState(global.resetToken);
-	const [oldPassword, onChangeOldPassword] = React.useState(global.oldPassword);
-	global.email = undefined;
-	global.resetToken = undefined;
-	global.oldPassword = undefined;
-	const [title, onChangeTitle] = React.useState("Create an new password,\nRecover your account to continue.");
-	const [newPassword, onChangeNewPassword] = React.useState("");
-	const [confirm, onChangeConfirm] = React.useState("");
-	const [optionalPageDescription, onChangeOptionalPageDescription] = React.useState("Remember the password?");
-	const [optionalButtonDescription, onChangeOptionalButtonDescription] = React.useState("Sign In");
+const Page_Change_Password  = ({navigation}) => {
 	useEffect(() => {
-		if (resetToken == undefined) {
-			onChangeOptionalPageDescription("Changed your mind?");
-			onChangeOptionalButtonDescription("Profile");
-		}
 	}, []);
+	const [title, onChangeTitle] = React.useState("Want to change your password,\nDon't worry! We will help you.");
+	const [email, onChangeEmail] = React.useState("");
+	const [password, onChangePassword] = React.useState("");
 
-	function OptionalNavigation() {
-		if (resetToken == undefined) navigation.navigate("Page_Profile_Email_Account")
-		else navigation.navigate("Page_Sign_In");
-	}
-	async function UpdatePassword() {
-		if (!newPassword || !confirm) {
-			onChangeTitle("Password Cannot Be Empty!");
-			return;
-		}
-		if (newPassword != confirm) {
-			onChangeTitle("Password Does Not Match!");
-			return;
-		}
-		if (resetToken != undefined) {
-			try {
-				let response = await fetch(`http://localhost:8080/users/update-forgot-password`, {
-					method: "POST",
-					headers: {
-					"Content-Type": "application/json; charset=utf-8",
-					},
-					body: JSON.stringify({
-						email: email,
-						newPassword: newPassword,
-						resetToken: resetToken,
-					}),
-				})
-				.then((response) => {
-					if (response.status == 400) {
-						response.json().then((result) => {
-							onChangeTitle(result.message);
-						});
-					}
-					else if (response.status == 200 || response.status == 201) {
-						navigation.navigate('Page_Sign_In');
-					}
-				})
-			} catch (err) {
-				console.log("Fetch didnt work.");
-				console.log(err);
-			}
-		}
-		else {
-			try {
-				let response = await fetch(`http://localhost:8080/users/update-password`, {
-					method: "POST",
-					headers: {
-					"Content-Type": "application/json; charset=utf-8",
-					},
-					body: JSON.stringify({
-						email: email,
-						newPassword: newPassword,
-						oldPassword: oldPassword,
-					}),
-				})
-				.then((response) => {
-					if (response.status == 400) {
-						response.json().then((result) => {
-							onChangeTitle(result.message);
-						});
-					}
-					else if (response.status == 200 || response.status == 201) {
-						navigation.navigate('Page_Profile_Email_Account');
-					}
-				})
-			} catch (err) {
-				console.log("Fetch didnt work.");
-				console.log(err);
-			}
+	async function VerifyCode() {
+		try {
+			let response = await fetch(`http://localhost:8080/users/validate-password`, {
+				method: "POST",
+				headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+					email: email,
+					password: password,
+				}),
+			})
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+						onChangeTitle(result.message);
+					});
+				}
+				else if (response.status == 200 || response.status == 201) {
+					global.email = email;
+					global.oldPassword = password;
+					navigation.navigate('Page_Password_Reset');
+				}
+			})
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
 		}
 	}
 
@@ -134,53 +80,52 @@ const Page_Password_Reset  = ({navigation}) => {
 			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../../assets/background/rightleaf.png")}/>
 			<View style = {noneModeStyles._Optional_Navigation_Button}>
 				<Text style = {noneModeStyles._Optional_Page_Description}>
-					{optionalPageDescription}
+					Changed your mind?
 				</Text>
-				<Text style = {noneModeStyles._Optional_Button_Description} onPress={() => OptionalNavigation()}>
-					{optionalButtonDescription}
+				<Text style = {noneModeStyles._Optional_Button_Description} onPress={() => navigation.navigate('Page_Profile_Email_Account')}>
+					Profile
 				</Text>
 			</View>
 			<View style = {noneModeStyles._White_Box}/>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Submit_Button]} onPress={()=>UpdatePassword()}>
-				<Text style = {noneModeStyles._Main_Button_Description} >
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Submit_Button]} onPress={() => VerifyCode()}>
+				<Text style = {noneModeStyles._Main_Button_Description}   >
 					Submit
 				</Text>
 			</TouchableOpacity>
 			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Verification_Code_Line]}></View>
-			<TextInput 
+			<TextInput
 				autoCapitalized='none'
 				autoCorrect={false}
-				onChangeText={onChangeConfirm}
-				value={confirm}
-				placeholder="Re-enter Password"
+				onChangeText={onChangePassword}
+				value={password}
+				placeholder="Old Password"
 				secureTextEntry={true}
 				textContentType="password"
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Verification_Code_Location]}
 			/>
 			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Email_Line]}></View>
-			<TextInput 
+			<TextInput
 				autoCapitalized='none'
 				autoCorrect={false}
 				autoFocus={true}
-				onChangeText={onChangeNewPassword}
-				value={newPassword}
-				placeholder="New Password"
-				secureTextEntry={true}
-				textContentType="password"
+				onChangeText={onChangeEmail}
+				value={email}
+				placeholder="Email"
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Email_Location]}
 			/>
+			
 			<Text style = {noneModeStyles._Title_Description}   >
 				{title}
 			</Text>
 			<View style = {noneModeStyles._Icon_Frame}>
-				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle_light.png")}/>
+				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle_black.png")}/>
 				<Text  style = {noneModeStyles._App_Name}>SNOWDROP</Text>
 			</View>
 		</View>
 	</ScrollView>
 	</KeyboardAvoidingView>
 )}
-export default Page_Password_Reset
+export default Page_Change_Password
 
 const noneModeStyles = StyleSheet.create({	
 	_Page: { 
@@ -244,20 +189,6 @@ const noneModeStyles = StyleSheet.create({
 	},
 	_Verification_Code_Location: { 
 		top: pxRD(386,height,base_height),
-	},
-	_Send_Code_Button: { 
-		position: "absolute",
-		alignSelf: "center",
-		width: pxRD(344,width,base_width),
-		top: pxRD(338,height,base_height),
-	},
-	_Send_Code_Button_Text: { 
-		position: "absolute",
-		alignSelf: "flex-end",
-		fontSize: pxRD(15,height,base_height),
-		fontFamily: "Lato_700Bold",
-		textAlign: "right",
-		color: color_opt_button,
 	},
 	_Main_Navigation_Button: { 
 		position: "absolute",
