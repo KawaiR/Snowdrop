@@ -45,7 +45,7 @@ public class TestUpdateEmail {
         UpdateEmailDomain updateEmailDomain = UpdateEmailDomain.builder()
                 .oldEmail("razankawai99@hotmail.com")
                 .newEmail("pyunj70@gmail.com")
-                .emailToken("10731")
+                .emailToken("66027")
                 .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -59,6 +59,13 @@ public class TestUpdateEmail {
         CloseableHttpResponse response = client.execute(httpPost);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(200));
         client.close();
+    }
+
+    @Test
+    public void loginWithNewEmailSuccess() throws Exception {
+        TestingUtils.loginAndExpect("pyunj70@gmail.com",
+                "requestChangeSuccess",
+                200);
     }
 
     @Test
