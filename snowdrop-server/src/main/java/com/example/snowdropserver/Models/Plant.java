@@ -28,6 +28,10 @@ public class Plant {
     @Column(name = "plant_image")
     String plantImage;
 
+    // VL: Very low, L: Low, M: Moderate, H: High
+    @Column(name = "water_needs")
+    String waterNeeds;
+
     @OneToMany(mappedBy = "plant")
     List<PlantCare> caredFor;
 }

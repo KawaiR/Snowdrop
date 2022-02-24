@@ -2,20 +2,19 @@ package com.example.snowdropserver.Models.Domains;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.Value;
+
+import javax.persistence.Column;
 
 @Value
 @Builder
 @AllArgsConstructor
-public class AddUserDomain {
-    String email;
-    String password;
+public class AddGoogleUserDomain {
+    String googleID;
     String userName;
 
-    public AddUserDomain() {
-        this.email = "";
-        this.password = "";
+    public AddGoogleUserDomain() {
+        this.googleID = "";
         this.userName = "";
     }
 }

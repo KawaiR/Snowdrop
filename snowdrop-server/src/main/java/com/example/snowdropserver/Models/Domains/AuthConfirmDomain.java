@@ -8,12 +8,12 @@ import lombok.Value;
 @Value
 @Builder
 @AllArgsConstructor
-public class ValidateResetTokenDomain {
-    String email;
-    String resetToken;
+public class AuthConfirmDomain {
+    private String authTokenHash;
+    private String userName;
 
-    public ValidateResetTokenDomain() {
-        email = null;
-        resetToken = null;
+    public AuthConfirmDomain() {
+        authTokenHash = null;
+        userName = null;
     }
 }
