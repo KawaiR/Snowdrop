@@ -27,9 +27,6 @@
     },
     "web": {
       "favicon": "./assets/auth/icon_circle.png"
-    },
-    "plugins": [
-      "sentry-expo"
-    ]
+    }
   }
 }
