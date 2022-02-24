@@ -17,7 +17,7 @@ export default function App() {
     //<PlantsPage/>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Page_PlantDetail" component={PlantDetailPage} />
+        {/* <Stack.Screen name="Page_PlantDetail" component={PlantDetailPage} /> */}
         <Stack.Screen name="Page_Plant" component={PlantsPage} />
         <Stack.Screen name="Page_Sign_In" component={Page_Sign_In} />
         <Stack.Screen name="Page_Create_Account" component={Page_Create_Account} />
