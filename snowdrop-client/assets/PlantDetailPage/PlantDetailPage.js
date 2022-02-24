@@ -22,6 +22,7 @@ const PlantDetailPage  = ({navigation}) => {
     }
     const waterrNo = () => {
         setWaterVisible(false);
+        // add
     }
     const fertilizerYes = () => {
         setFertilizerVisible(false);
@@ -39,7 +40,15 @@ const PlantDetailPage  = ({navigation}) => {
         <Appbar.Action icon="brightness-5" color="white" style={{marginLeft: 'auto'}}/>
     </Appbar.Header>
 	<ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
-        <Image style={styles.plantsImage} source={require('snowdrop-client/assets/plant-image.jpeg')}></Image>
+        <ImageBackground style={styles.plantsImage} source={require('snowdrop-client/assets/plant-image.jpeg')}>
+            <View style={styles.plantNameView}>
+                <View style={styles.plantNameContent}>
+                    <Text style={styles.plantNameText}>Name</Text>
+                    <Text style={styles.plantNameText}>Scientific Name</Text>
+                    <Text style={styles.plantNameText}>Last watered: hihi</Text>
+                </View>
+            </View>
+        </ImageBackground>
         <View style={styles.upcomingView}>
             <Text style={styles.upcomingText}>Upcoming</Text>
             <View style={styles.cardList}>
