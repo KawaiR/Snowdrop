@@ -77,6 +77,11 @@ const Page_Profile_Email_Account  = ({navigation}) => {
                     Change Password
 				</Text>
 			</TouchableOpacity>
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Plant_Page_Button]}  onPress={()=>navigation.navigate("Page_Plant")}  >
+				<Text style = {noneModeStyles._Main_Button_Description}   >
+                    Plant page
+				</Text>
+			</TouchableOpacity>
 		</View>
 	</ScrollView>
 	</KeyboardAvoidingView>
@@ -120,6 +125,10 @@ const noneModeStyles = StyleSheet.create({
 	_Delete_Account_Button: {
 		top: pxRD(530,height,base_height),
 		backgroundColor: "#FF000099",
+	},
+	_Plant_Page_Button: { 
+		top: pxRD(600,height,base_height),
+		backgroundColor: "#A4C400",
 	},
 
 

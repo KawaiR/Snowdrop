@@ -7,7 +7,7 @@ import styles from './PlantsPageStyle.js';
 const PlantsPage  = ({navigation}) => {
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
-    /*
+
     async function getPlants() {
         try {
 			let response = await fetch(`http://localhost:8080/users/plant-for-user`, {
@@ -38,7 +38,6 @@ const PlantsPage  = ({navigation}) => {
 			console.log(err);
 		}
     }
-    */
 
 	return (
     <View style={styles.container}>
@@ -61,7 +60,7 @@ const PlantsPage  = ({navigation}) => {
                 title="Card Title"
                 subtitle="Card Subtitle"
                 left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
-                right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => {}} />}
+                right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => getPlants()} />}
             />
         </View>
 	</ScrollView>
