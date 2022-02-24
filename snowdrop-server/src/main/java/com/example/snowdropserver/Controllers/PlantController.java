@@ -1,5 +1,6 @@
 package com.example.snowdropserver.Controllers;
 
+import com.example.snowdropserver.Models.Domains.AddUserPlantDomain;
 import com.example.snowdropserver.Models.Domains.PlantInfoDomain;
 import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Services.PlantService;
@@ -31,5 +32,10 @@ public class PlantController {
     @GetMapping(value = "/{id}/get-plant-info")
     public PlantInfoDomain getPlantInfo(@PathVariable int id) {
         return plantService.getPlantInfo(id);
+    }
+
+    @PostMapping(value = "/{id}/add-plant")
+    public void AddUserPlant(@PathVariable int id, @RequestBody String username) {
+        plantService.addUserPlant(id, username);
     }
 }

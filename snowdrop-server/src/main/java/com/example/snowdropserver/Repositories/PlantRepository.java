@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface PlantRepository extends JpaRepository<Plant, Integer> {
-
     Optional<Plant> getById(int plantId);
 }
