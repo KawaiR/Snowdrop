@@ -178,7 +178,6 @@ public class UserService {
         // update user info in database
         userRepository.save(user);
         System.out.println("Password updated!");
-
     }
 
     // Assumes old password was validated prior to this function call
@@ -210,6 +209,91 @@ public class UserService {
         System.out.println("Password updated!");
     }
 
+
+    public void changeEmail(String email) {
+        System.out.println(email);
+
+        // check if user exists
+        Optional<User> maybeUser = userRepository.getByEmail(email);
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("Email not registered.");
+            throw new EmailNotFoundException();
+        }
+
+        User user = maybeUser.get();
+
+        int resetTokenPin = (int) (Math.random() * 100000);
+
+        // hash before storing in database for increased security
+        String hashedToken = hash(Integer.toString(resetTokenPin));
+
+        ResetToken resetToken = ResetToken.builder().
+                hashedToken(hashedToken).
+                expiryDate(LocalDateTime.now().plusMinutes(10)).
+                user(user).
+                build();
+
+        resetTokenRepository.save(resetToken);
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(user.getEmail());
+        simpleMailMessage.setSubject("[SNOWDROP PLANT APP] Change Your Email");
+        simpleMailMessage.setText("Here's the pin to change your email: " + resetTokenPin);
+        simpleMailMessage.setFrom("snowdrop.plantapp@gmail.com");
+        javaMailSender.send(simpleMailMessage);
+
+        System.out.println("Successfully sent email.");
+    }
+
+    public void updateEmail(UpdateEmailDomain updateEmailDomain) {
+        // check if user exists
+        Optional<User> maybeUser = userRepository.getByEmail(updateEmailDomain.getOldEmail());
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("Email not registered.");
+            throw new EmailNotFoundException();
+        }
+
+        User user = maybeUser.get();
+
+        // check if the reset token entered is valid
+        Optional<ResetToken> maybeResetToken = resetTokenRepository.
+                findByHashedTokenAndUser(hash(updateEmailDomain.getEmailToken()), user);
+
+        // throw error if not found
+        if (!maybeResetToken.isPresent()) {
+            System.out.println("Token entered is invalid or expired.");
+            throw new InvalidResetToken();
+        }
+
+        // retrieve token from database
+        ResetToken resetToken = maybeResetToken.get();
+
+        // remove reset token from database
+        resetTokenRepository.delete(resetToken);
+
+        if (check_email_exists(updateEmailDomain.getNewEmail())) {
+            System.out.println("New email already exists.");
+            throw new DuplicateEmailException();
+        }
+        user.setEmail(updateEmailDomain.getNewEmail());
+
+        System.out.println(user.getEmail());
+
+        // update user info in database
+        userRepository.save(user);
+        System.out.println("Email updated!");
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(user.getEmail());
+        simpleMailMessage.setSubject("[SNOWDROP PLANT APP] Your new email");
+        simpleMailMessage.setText("The email for " + user.getUserName() + " was changed.");
+        simpleMailMessage.setFrom("snowdrop.plantapp@gmail.com");
+        javaMailSender.send(simpleMailMessage);
+    }
+
+    // executed every minute
     @Scheduled(fixedRate = 60000)
     public void removeExpiredTokens() {
         List<ResetToken> expiredTokens = resetTokenRepository.findByExpiryDate(LocalDateTime.now());
