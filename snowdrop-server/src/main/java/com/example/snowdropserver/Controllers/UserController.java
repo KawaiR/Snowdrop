@@ -82,4 +82,14 @@ public class UserController {
     public void updatePassword(@RequestBody UpdatePasswordDomain updatePasswordDomain) {
         userService.updatePassword(updatePasswordDomain);
     }
+
+    @PostMapping(value = "/change-email-request")
+    public void changeEmail(@RequestBody String email) {
+        userService.changeEmail(email);
+    }
+
+    @PostMapping(value = "/update-email")
+    public void updateEmail(@RequestBody UpdateEmailDomain updateEmailDomain) {
+        userService.updateEmail(updateEmailDomain);
+    }
 }
