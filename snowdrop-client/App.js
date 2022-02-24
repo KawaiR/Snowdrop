@@ -1,8 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import PlantsPage from "./assets/PlantsPage/PlantsPage.js"
-import PlantDetailPage from "./assets/PlantDetailPage/PlantDetailPage.js"
+import PlantsPage from "./pages/PlantsPage/PlantsPage.js"
+import PlantDetailPage from "./pages/PlantDetailPage/PlantDetailPage.js"
 import Page_Create_Google_Username from "./pages/auth/Page_Create_Google_Username.js";
 import Page_Create_Account from "./pages/auth/Page_Create_Account.js";
 import Page_Sign_In from "./pages/auth/Page_Sign_In.js";
@@ -17,8 +17,7 @@ export default function App() {
     //<PlantsPage/>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        {/* <Stack.Screen name="Page_PlantDetail" component={PlantDetailPage} /> */}
-        <Stack.Screen name="Page_Plant" component={PlantsPage} />
+
         <Stack.Screen name="Page_Sign_In" component={Page_Sign_In} />
         <Stack.Screen name="Page_Create_Account" component={Page_Create_Account} />
         <Stack.Screen name="Page_Profile_Email_Account" component={Page_Profile_Email_Account} />
@@ -26,6 +25,8 @@ export default function App() {
         <Stack.Screen name="Page_Password_Reset" component={Page_Password_Reset} />
         <Stack.Screen name="Page_Create_Google_Username" component={Page_Create_Google_Username} />
         <Stack.Screen name="Page_Profile_Google_Account" component={Page_Profile_Google_Account} />
+        <Stack.Screen name="Page_PlantDetail" component={PlantDetailPage} />
+        <Stack.Screen name="Page_Plant" component={PlantsPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

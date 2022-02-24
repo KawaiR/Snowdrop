@@ -8,6 +8,39 @@ const PlantsPage  = ({navigation}) => {
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
 
+    async function getPlants() {
+        try {
+			let response = await fetch(`http://localhost:8080/users/plant-for-user`, {
+				method: "POST",
+				headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+                    authTokenHash: global.authTokenHash,
+                    userName: global.userName,
+				}),
+			})
+			.then((response) => {
+			    /*
+				if (response.status == 400) {
+					response.json().then((result) => {
+						onChangeTitle(result.message);
+					});
+				}
+				*/
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+						console.log(result);
+					});
+				}
+			})
+			
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
 	return (
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>

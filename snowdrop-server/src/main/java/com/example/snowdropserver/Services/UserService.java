@@ -2,6 +2,7 @@ package com.example.snowdropserver.Services;
 
 import com.example.snowdropserver.Exceptions.*;
 import com.example.snowdropserver.Models.Domains.*;
+import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Models.ResetToken;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Repositories.ResetTokenRepository;
@@ -440,5 +441,10 @@ public class UserService {
         return Hashing.sha256()
                 .hashString(toHash, StandardCharsets.UTF_8)
                 .toString();
+    }
+    
+    public List<PlantCare> plantForUser(AuthConfirmDomain domain) {
+        Optional<User> user = userRepository.getByUserName(domain.getUserName());
+        return user.get().getPlants();
     }
 }
