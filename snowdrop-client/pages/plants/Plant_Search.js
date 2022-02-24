@@ -1,82 +1,23 @@
 import React, { useState } from "react";
-import { SafeAreaView, FlatList, View, Text, Dimensions, TouchableOpacity, Image } from "react-native";
+import { SafeAreaView, FlatList, View, Text, Dimensions, TouchableOpacity } from "react-native";
 import { Appbar, Avatar } from 'react-native-paper';
 import { SearchBar, Icon } from 'react-native-elements';
 
 import styles from './Plant_Search_Style.js';
-
-var masterDataSource = [
-    {
-        id: 1,
-        plantName: 'Monstera',
-        scientificName: 'Monstera Deliciosa',
-        plantImage: 'https://s3.amazonaws.com/eit-planttoolbox-prod/media/images/Monstera_deliciosa_p_nxq1eU566aWi.jpeg',
-    },
-    {
-        id: 2,
-        plantName: 'Goldie',
-        scientificName: 'Golden Pothos',
-        plantImage: 'https://www.mydomaine.com/thmb/clhqjpwHUQ7lSEFxp8ioC-XQY_Q=/1080x1349/filters:fill(auto,1)/160356248_2468204359991580_622325574967542030_n-f2f3fc1a07744346bbac98984f8b138e.jpg',
-    },
-    {
-        id: 3,
-        plantName: 'Cactii Boi',
-        scientificName: 'Cactus',
-        plantImage: 'https://s3.amazonaws.com/eit-planttoolbox-prod/media/images/Monstera_deliciosa_p_nxq1eU566aWi.jpeg',
-    },
-    {
-        id: 4,
-        plantName: 'Basil Boi',
-        scientificName: 'Basil',
-        plantImage: 'beep boop',
-    },
-    {
-        id: 5,
-        plantName: 'Sand Verbena',
-        scientificName: 'Verbenas Sandis',
-        plantImage: '',
-    },
-    {
-        id: 6,
-        plantName: 'California Copperfield',
-        scientificName: 'Copperfieldus Californias',
-        plantImage: 'https://s3.amazonaws.com/eit-planttoolbox-prod/media/images/Monstera_deliciosa_p_nxq1eU566aWi.jpeg',
-    },
-    {
-        id: 7,
-        plantName: null,
-        scientificName: 'Acarospora Caesiofusca',
-        plantImage: 'https://s3.amazonaws.com/eit-planttoolbox-prod/media/images/Monstera_deliciosa_p_nxq1eU566aWi.jpeg',
-    },
-    {
-        id: 8,
-        plantName: 'Long long long long name',
-        scientificName: null,
-        plantImage: 'https://s3.amazonaws.com/eit-planttoolbox-prod/media/images/Monstera_deliciosa_p_nxq1eU566aWi.jpeg',
-    },
-    {
-        id: 9,
-        plantName: 'Copperfornia Califield',
-        scientificName: 'Copperfornias Califieldus',
-        plantImage: 'https://s3.amazonaws.com/eit-planttoolbox-prod/media/images/Monstera_deliciosa_p_nxq1eU566aWi.jpeg',
-    },
-];
 
 class Plants_Search extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             search: [],
-            filteredDataSource: masterDataSource,
+            masterDataSource: [],
+            filteredDataSource: [],
             width: Dimensions.get('window').width,
         };
     }
 
-    // const [search, setSearch] = useState('');
-    // const [masterDataSource, setMasterDataSource] = useState([]);
-    // const [filteredDataSource, setFilteredDataSource] = useState(masterDataSource);
-
     componentDidMount = () => {
+        this.getPlants();
         this.checkAllImagesValidity();
     }
 
@@ -86,7 +27,7 @@ class Plants_Search extends React.Component {
             // Inserted text is not blank
             // Filter the masterDataSource
             // Update FilteredDataSource
-            const newData = masterDataSource.filter(function (item) {
+            const newData = this.state.masterDataSource.filter(function (item) {
                 var itemData = "";
                 if (item.plantName != null && item.scientificName != null) {
                     // Both name and scientific name are not null
@@ -113,32 +54,28 @@ class Plants_Search extends React.Component {
         } else {
             // Inserted text is blank
             // Update FilteredDataSource with masterDataSource
-            this.setState({ search: text, filteredDataSource: masterDataSource, });
-            // setFilteredDataSource(masterDataSource);
-            // setSearch(text);
+            this.setState({ search: text, filteredDataSource: this.state.masterDataSource });
         }
     };
 
-    // getPlants = () => {
-    //     // const {route} = this.props;
-    //     // const {userId} = route.params;
-    //     // this.setState({userId: userId});
-    //     fetch('localhost:8080/plants/get-all-plant-details')
-    //       .then(res => res.json())
-    //       .then(data => {
-    //         if (data.error) {
-    //           Alert.alert(
-    //             'Error',
-    //             'Unable to load plant search at this time, please try again later.',
-    //             [{text: 'OK'}],
-    //           );
-    //         } else {
-    //         //   this.setState({activities: data});
-    //             setMasterDataSource(data);
-    //             setFilteredDataSource(data);
-    //         }
-    //       });
-    //   };
+    getPlants = () => {
+        console.log("Before fetch call");
+        fetch('http://192.168.1.149:8080/plants', { method: 'GET' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    console.log("Fetch call failed");
+                    Alert.alert(
+                        'Error',
+                        'Unable to load plant search at this time, please try again later.',
+                        [{ text: 'OK' }],
+                    );
+                } else {
+                    console.log("Fetch call succeeded");
+                    this.setState({ masterDataSource: data, filteredDataSource: data });
+                }
+            });
+    };
 
     checkImage = (url) => {
         //define some image formats 
@@ -157,12 +94,12 @@ class Plants_Search extends React.Component {
     }
 
     checkAllImagesValidity = () => {
-        for (let index = 0; index < masterDataSource.length; index++) {
-            const element = masterDataSource[index];
+        for (let index = 0; index < this.state.masterDataSource.length; index++) {
+            const element = this.state.masterDataSource[index];
             if (this.checkImage(element.plantImage)) {
                 console.log("Image is good");
             } else {
-                masterDataSource[index].plantImage = 'https://cdn-icons-png.flaticon.com/512/3090/3090496.png';
+                this.state.masterDataSource[index].plantImage = 'https://cdn-icons-png.flaticon.com/512/3090/3090496.png';
                 // 1. Make a shallow copy of the items
                 let items = [...this.state.filteredDataSource];
                 // 2. Make a shallow copy of the item you want to mutate
@@ -183,7 +120,7 @@ class Plants_Search extends React.Component {
     };
 
     renderItem = ({ item }) => (
-        <TouchableOpacity onPress={() => onItemPressed(item)}>
+        <TouchableOpacity onPress={() => this.onItemPressed(item)}>
             <View style={styles.itemContainer}>
                 <Avatar.Image
                     source={{ uri: item.plantImage }}
@@ -215,8 +152,6 @@ class Plants_Search extends React.Component {
             searchIcon={{ size: 24 }}
             onChangeText={(text) => this.searchFilterFunction(text)}
             onClear={(text) => this.searchFilterFunction('')}
-            // onCancel={searchFilterFunction("")}
-            // clearIcon={<Icon name='cancel' type='material-icons' color='grey' />}
             placeholder="Search for a plant..."
             value={this.state.search}
         />
