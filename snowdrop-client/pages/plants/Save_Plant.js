@@ -14,9 +14,6 @@ const {
     height,
 } = Dimensions.get("window");
 
-const base_width = 414;
-const base_height = 896;
-
 function pxRD(px, cur_screen, base) {
     return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
 }
@@ -26,6 +23,7 @@ const Save_Plant = ({ navigation }) => {
     }, []);
 
     const [name, onChangeName] = React.useState("");
+    const [health, setHealth] = React.useState("");
 
     let [fontsLoaded] = useFonts({
         Alata_400Regular,
@@ -38,7 +36,6 @@ const Save_Plant = ({ navigation }) => {
     }
 
     return (
-        // <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ height: Dimensions.get("window").height }}>
         <ScrollView bounces={false} showsVerticalScrollIndicator={false} style={{ height: Dimensions.get("window").height }}>
             <View style={styles.page}    >
                 <Image style={styles.cactusImage} source={require("../../assets/background/cactus.png")} />
@@ -50,7 +47,6 @@ const Save_Plant = ({ navigation }) => {
                 {/* Header Bar */}
                 <Appbar.Header style={styles.appbar}>
                     <Appbar.BackAction color="white" />
-                    <Appbar.Action icon="brightness-5" color="white" style={{ marginLeft: 'auto' }} />
                 </Appbar.Header>
 
                 <Text style={styles.nameText}>{"Name your plant! (Optional)"}</Text>
@@ -78,7 +74,7 @@ const Save_Plant = ({ navigation }) => {
                         color='#82B47D'
                         size={width * 0.16}
                         style={styles.icon}
-                        onPress={() => console.log('hello')} />
+                        onPress={() => setHealth("good")} />
                     <Icon
                         // raised
                         name='sentiment-neutral'
@@ -86,20 +82,20 @@ const Save_Plant = ({ navigation }) => {
                         color='#F2BC58'
                         size={width * 0.16}
                         style={styles.icon}
-                        onPress={() => console.log('hello')} />
+                        onPress={() => setHealth("medium")} />
                     <Icon
                         name='sentiment-very-dissatisfied'
                         type='material-icons'
                         color='#D26060'
                         size={width * 0.16}
                         style={styles.icon}
-                        onPress={() => console.log('hello')} />
+                        onPress={() => setHealth("bad")} />
                 </View>
 
                 <TouchableOpacity style={styles.submitButton}  >
                     <Text style={styles.submitButtonText}>
                         Submit
-				        </Text>
+				    </Text>
                 </TouchableOpacity>
 
                 {/* Bottom Nav Bar */}
@@ -111,7 +107,6 @@ const Save_Plant = ({ navigation }) => {
                 </Appbar>
             </View>
         </ScrollView>
-        // </KeyboardAvoidingView>
     )
 }
 

@@ -10,7 +10,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        {/* <Stack.Screen name="Plant_Search" component={Plant_Search} /> */}
+        <Stack.Screen name="Plant_Search" component={Plant_Search} />
         <Stack.Screen name="Save_Plant" component={Save_Plant} />
       </Stack.Navigator>
     </NavigationContainer>

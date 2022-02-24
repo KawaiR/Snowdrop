@@ -116,7 +116,7 @@ class Plants_Search extends React.Component {
 
     onItemPressed = (item) => {
         // Function for click on an item
-        alert('Id : ' + item.id + ' Title : ' + item.plantName);
+        this.props.navigation.navigate('Save_Plant');
     };
 
     renderItem = ({ item }) => (
@@ -163,7 +163,6 @@ class Plants_Search extends React.Component {
                 {/* Header Bar */}
                 <Appbar.Header style={styles.appbar}>
                     <Appbar.BackAction color="white" />
-                    <Appbar.Action icon="brightness-5" color="white" style={{ marginLeft: 'auto' }} />
                 </Appbar.Header>
 
                 <SafeAreaView style={styles.safeAreaContainer}>

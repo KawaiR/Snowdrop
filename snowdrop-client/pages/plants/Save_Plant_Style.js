@@ -1,4 +1,3 @@
-import { Lato_400Regular } from '@expo-google-fonts/lato';
 import { StyleSheet, Dimensions } from 'react-native';
 import { PixelRatio } from "react-native";
 

@@ -47,12 +47,12 @@ export default StyleSheet.create({
     itemName: {
         marginLeft: width * 0.07,
         fontSize: 16,
-        fontFamily: 'Lato',
+        fontFamily: "Lato_400Regular",
     },
     itemScientific: {
         marginLeft: width * 0.07,
         fontSize: 12,
-        fontFamily: 'Lato',
+        fontFamily: 'Lato_400Regular',
     },
     separator: {
         flex: 1,
