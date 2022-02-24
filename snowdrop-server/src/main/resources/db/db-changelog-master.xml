@@ -9,4 +9,5 @@
     <include file="db/changelogs/20220217174100-ramyamandyam.xml" />
     <include file="db/changelogs/20220221154500-razanalkawai.xml" />
     <include file="db/changelogs/20220221182900-razanalkawai.xml" />
+    <include file="db/changelogs/20220223190000-razanalkawai.xml" />
 </databaseChangeLog>
