@@ -7,7 +7,7 @@ import styles from './PlantsPageStyle.js';
 const PlantsPage  = ({navigation}) => {
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
-
+    /*
     async function getPlants() {
         try {
 			let response = await fetch(`http://localhost:8080/users/plant-for-user`, {
@@ -21,13 +21,11 @@ const PlantsPage  = ({navigation}) => {
 				}),
 			})
 			.then((response) => {
-			    /*
 				if (response.status == 400) {
 					response.json().then((result) => {
 						onChangeTitle(result.message);
 					});
 				}
-				*/
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
 						console.log(result);
@@ -40,6 +38,7 @@ const PlantsPage  = ({navigation}) => {
 			console.log(err);
 		}
     }
+    */
 
 	return (
     <View style={styles.container}>
