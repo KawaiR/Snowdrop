@@ -1,13 +1,18 @@
 package com.example.snowdropserver.integration;
 
 import com.example.snowdropserver.Models.Domains.*;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -152,5 +157,35 @@ public class TestingUtils {
         CloseableHttpResponse response = client.execute(httpPost);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();
+    }
+
+    public static PlantInfoDomain getPlantInfoAndExpect(int plantId, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(baseUrl + "/plants/" + plantId + "/get-plant-info");
+
+        System.out.println(plantId);
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING GET PLANT INFO REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpGet);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        PlantInfoDomain plantInfoDomain = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            plantInfoDomain = objectMapper.readValue(jsonResponse,
+                    new TypeReference<PlantInfoDomain>() {
+                    });
+        }
+        client.close();
+
+        return plantInfoDomain;
     }
 }
