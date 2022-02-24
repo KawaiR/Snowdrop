@@ -11,7 +11,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAllByUserName(String username);
     List<User> findAllByEmail(String email);
-    List<User> findAllByGoogleID(String idToken);
     Optional<User> getByEmail(String email);
-    Optional<User> getByGoogleID(String googleID);
 }

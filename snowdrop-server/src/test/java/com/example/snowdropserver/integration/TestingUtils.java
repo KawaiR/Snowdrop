@@ -1,6 +1,9 @@
 package com.example.snowdropserver.integration;
 
-import com.example.snowdropserver.Models.Domains.*;
+import com.example.snowdropserver.Models.Domains.AddUserDomain;
+import com.example.snowdropserver.Models.Domains.LoginDomain;
+import com.example.snowdropserver.Models.Domains.UpdatePasswordDomain;
+import com.example.snowdropserver.Models.Domains.ValidateResetTokenDomain;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -25,7 +28,7 @@ public class TestingUtils {
         AddUserDomain userDomain = AddUserDomain.builder()
                 .userName(username)
                 .email(email)
-                .password(password)
+                .passwordHash(password)
                 .build();
 
         System.out.println(userDomain);
@@ -103,8 +106,7 @@ public class TestingUtils {
         client.close();
     }
 
-    public static void validateTokenAndExpect(ValidateResetTokenDomain resetTokenDomain,
-                                              int expectedStatusCode) throws Exception {
+    public static void validateTokenAndExpect(ValidateResetTokenDomain resetTokenDomain, int expectedStatusCode) throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
 
         HttpPost httpPost = new HttpPost(baseUrl + "/users/validate-reset-token");
@@ -121,34 +123,6 @@ public class TestingUtils {
 
 
         System.out.println("**** MAKING VALIDATE TOKEN REQUEST REQUEST ****");
-        CloseableHttpResponse response = client.execute(httpPost);
-        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
-        client.close();
-    }
-
-    public static void validatePasswordAndExpect(String email, String password,
-                                                 int expectedStatusCode) throws Exception {
-        CloseableHttpClient client = HttpClients.createDefault();
-
-        HttpPost httpPost = new HttpPost(baseUrl + "/users/validate-password");
-
-        ValidatePasswordDomain validatePasswordDomain = ValidatePasswordDomain.builder()
-                        .password(password)
-                        .email(email)
-                        .build();
-
-        System.out.println(validatePasswordDomain);
-
-        String json = objectMapper.writeValueAsString(validatePasswordDomain);
-        System.out.println(json);
-
-        StringEntity entity = new StringEntity(json);
-        httpPost.setEntity(entity);
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setHeader("Content-type", "application/json");
-
-
-        System.out.println("**** MAKING VALIDATE PASSWORD REQUEST ****");
         CloseableHttpResponse response = client.execute(httpPost);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();

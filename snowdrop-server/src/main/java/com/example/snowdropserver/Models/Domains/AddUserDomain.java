@@ -10,12 +10,12 @@ import lombok.Value;
 @AllArgsConstructor
 public class AddUserDomain {
     String email;
-    String password;
+    String passwordHash;
     String userName;
 
     public AddUserDomain() {
         this.email = "";
-        this.password = "";
+        this.passwordHash = "";
         this.userName = "";
     }
 }

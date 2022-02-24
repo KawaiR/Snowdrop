@@ -43,18 +43,8 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserByGoogleId(AddGoogleUserDomain userDomain) {
-        // this is the logic for the controller endpoint -- it's a simple service so there isn't much logic
-        Optional<User> user = userRepository.getByGoogleID(userDomain.getGoogleID());
-        if (user.isEmpty()) {
-            System.out.println("There's no user registered with the data you entered.");
-            throw new UserNotFoundException();
-        }
-        return user;
-    }
-
     // Adds a user to the database
-    public AuthConfirmDomain addUser(AddUserDomain userDomain) {
+    public AddUserDomain addUser(AddUserDomain userDomain) {
         if (check_username_exists(userDomain.getUserName())) {
             System.out.println("username found");
             throw new DuplicateUsernameException();
@@ -65,24 +55,19 @@ public class UserService {
             throw new DuplicateEmailException();
         }
 
-        if (userDomain.getPassword().length() < 8) {
+        if (userDomain.getPasswordHash().length() < 8) {
             System.out.println("length is less than 8 characters");
             throw new PasswordTooShortException();
         }
 
         // hash password before storing it into the database
-        String passwordSha256hash = hash(userDomain.getPassword());
-
-        // main idea to associate a token with each login for better security
-        String authToken = generateNewToken();
-        String authTokenHash = hash(authToken);
+        String passwordSha256hash = hash(userDomain.getPasswordHash());
 
         User user = User.builder()
                 .email(userDomain.getEmail())
                 .passwordHash(passwordSha256hash)
                 .userName(userDomain.getUserName())
-                .authTokenHash(authTokenHash)
-                .googleID(null)
+                .authTokenHash(null)
                 .comments(null)
                 .totalPoints(0)
                 .plants(null)
@@ -92,53 +77,15 @@ public class UserService {
         userRepository.save(user); // will save into database
 
         // value returned will interact with the front-end
-        return AuthConfirmDomain.builder()
-                .authTokenHash(authTokenHash)
+        return AddUserDomain.builder()
+                .email(user.getEmail())
+                .passwordHash(user.getPasswordHash())
                 .userName(user.getUserName())
                 .build();
 
     }
 
-    // Adds a user to the database
-    public AuthConfirmDomain addGoogleUser(AddGoogleUserDomain userDomain) {
-        if (check_username_exists(userDomain.getUserName())) {
-            System.out.println("username found");
-            throw new DuplicateUsernameException();
-        }
-
-        if (check_google_exists(userDomain.getGoogleID())) {
-            System.out.println("google id found");
-            throw new DuplicateEmailException();
-        }
-
-
-        // main idea to associate a token with each login for better security
-        String authToken = generateNewToken();
-        String authTokenHash = hash(authToken);
-
-        User user = User.builder()
-                .email(null)
-                .passwordHash(null)
-                .userName(userDomain.getUserName())
-                .authTokenHash(authTokenHash)
-                .googleID(userDomain.getGoogleID())
-                .comments(null)
-                .totalPoints(0)
-                .plants(null)
-                .posts(null)
-                .build();
-
-        userRepository.save(user); // will save into database
-
-        // value returned will interact with the front-end
-        return AuthConfirmDomain.builder()
-                .authTokenHash(authTokenHash)
-                .userName(user.getUserName())
-                .build();
-
-    }
-
-    public AuthConfirmDomain login(LoginDomain loginDomain) {
+    public String login(LoginDomain loginDomain) {
         Optional<User> maybeUser = userRepository.getByEmail(loginDomain.getEmail());
 
         if (!maybeUser.isPresent()) {
@@ -160,18 +107,15 @@ public class UserService {
 
             userRepository.save(user);
 
-            return AuthConfirmDomain.builder()
-                    .authTokenHash(authTokenHash)
-                    .userName(user.getUserName())
-                    .build();
+            return authToken;
         }
     }
 
-    public void forgotPassword(SendResetTokenDomain sendResetTokenDomain) {
-        System.out.println(sendResetTokenDomain.getEmail());
+    public void forgotPassword(String email) {
+        System.out.println(email);
 
         // check if user exists
-        Optional<User> maybeUser = userRepository.getByEmail(sendResetTokenDomain.getEmail());
+        Optional<User> maybeUser = userRepository.getByEmail(email);
 
         if (!maybeUser.isPresent()) {
             System.out.println("Email not registered.");
@@ -212,11 +156,6 @@ public class UserService {
             throw new EmailNotFoundException();
         }
 
-        if (changeForgottenDomain.getNewPassword().length() < 8) {
-            System.out.println("length is less than 8 characters");
-            throw new PasswordTooShortException();
-        }
-
         User user = maybeUser.get();
 
         // check if the reset token entered is valid
@@ -239,6 +178,7 @@ public class UserService {
         // update user info in database
         userRepository.save(user);
         System.out.println("Password updated!");
+
     }
 
     // Assumes old password was validated prior to this function call
@@ -253,12 +193,7 @@ public class UserService {
 
         User user = maybeUser.get();
 
-        ValidatePasswordDomain validatePasswordDomain = ValidatePasswordDomain.builder()
-                .password(updatePasswordDomain.getOldPassword())
-                .email(updatePasswordDomain.getEmail())
-                .build();
-
-        if (!validate_password(validatePasswordDomain)) {
+        if (!validate_password(updatePasswordDomain.getEmail(), updatePasswordDomain.getOldPassword())) {
             System.out.println("Password entered is invalid");
             throw new InvalidPasswordException();
         }
@@ -270,91 +205,6 @@ public class UserService {
         System.out.println("Password updated!");
     }
 
-
-    public void changeEmail(String email) {
-        System.out.println(email);
-
-        // check if user exists
-        Optional<User> maybeUser = userRepository.getByEmail(email);
-
-        if (!maybeUser.isPresent()) {
-            System.out.println("Email not registered.");
-            throw new EmailNotFoundException();
-        }
-
-        User user = maybeUser.get();
-
-        int resetTokenPin = (int) (Math.random() * 100000);
-
-        // hash before storing in database for increased security
-        String hashedToken = hash(Integer.toString(resetTokenPin));
-
-        ResetToken resetToken = ResetToken.builder().
-                hashedToken(hashedToken).
-                expiryDate(LocalDateTime.now().plusMinutes(10)).
-                user(user).
-                build();
-
-        resetTokenRepository.save(resetToken);
-
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(user.getEmail());
-        simpleMailMessage.setSubject("[SNOWDROP PLANT APP] Change Your Email");
-        simpleMailMessage.setText("Here's the pin to change your email: " + resetTokenPin);
-        simpleMailMessage.setFrom("snowdrop.plantapp@gmail.com");
-        javaMailSender.send(simpleMailMessage);
-
-        System.out.println("Successfully sent email.");
-    }
-
-    public void updateEmail(UpdateEmailDomain updateEmailDomain) {
-        // check if user exists
-        Optional<User> maybeUser = userRepository.getByEmail(updateEmailDomain.getOldEmail());
-
-        if (!maybeUser.isPresent()) {
-            System.out.println("Email not registered.");
-            throw new EmailNotFoundException();
-        }
-
-        User user = maybeUser.get();
-
-        // check if the reset token entered is valid
-        Optional<ResetToken> maybeResetToken = resetTokenRepository.
-                findByHashedTokenAndUser(hash(updateEmailDomain.getEmailToken()), user);
-
-        // throw error if not found
-        if (!maybeResetToken.isPresent()) {
-            System.out.println("Token entered is invalid or expired.");
-            throw new InvalidResetToken();
-        }
-
-        // retrieve token from database
-        ResetToken resetToken = maybeResetToken.get();
-
-        // remove reset token from database
-        resetTokenRepository.delete(resetToken);
-
-        if (check_email_exists(updateEmailDomain.getNewEmail())) {
-            System.out.println("New email already exists.");
-            throw new DuplicateEmailException();
-        }
-        user.setEmail(updateEmailDomain.getNewEmail());
-
-        System.out.println(user.getEmail());
-
-        // update user info in database
-        userRepository.save(user);
-        System.out.println("Email updated!");
-
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(user.getEmail());
-        simpleMailMessage.setSubject("[SNOWDROP PLANT APP] Your new email");
-        simpleMailMessage.setText("The email for " + user.getUserName() + " was changed.");
-        simpleMailMessage.setFrom("snowdrop.plantapp@gmail.com");
-        javaMailSender.send(simpleMailMessage);
-    }
-
-    // executed every minute
     @Scheduled(fixedRate = 60000)
     public void removeExpiredTokens() {
         List<ResetToken> expiredTokens = resetTokenRepository.findByExpiryDate(LocalDateTime.now());
@@ -371,24 +221,9 @@ public class UserService {
         return !users.isEmpty();
     }
 
-    public boolean validate_password(ValidatePasswordDomain validatePasswordDomain) {
-        Optional<User> maybeUser = userRepository.getByEmail(validatePasswordDomain.getEmail());
-
-        if (!maybeUser.isPresent()) {
-            System.out.println("Email not registered.");
-            throw new EmailNotFoundException();
-        }
-
-        User user = maybeUser.get();
-
-        String hashedPassword = hash(validatePasswordDomain.getPassword());
-
-        if (!user.getPasswordHash().equals(hashedPassword)) {
-            System.out.println("Incorrect password.");
-            throw new InvalidPasswordException();
-        }
-
-        return true;
+    public boolean validate_password(String email, String password) {
+        User user = userRepository.findAllByEmail(email).get(0);
+        return user.getPasswordHash().equals(hash(password));
     }
 
     public boolean validate_reset_token(ValidateResetTokenDomain resetTokenDomain) {
@@ -422,11 +257,6 @@ public class UserService {
 
     public boolean check_email_exists(String email) {
         List<User> users = userRepository.findAllByEmail(email);
-        return !users.isEmpty();
-    }
-
-    public boolean check_google_exists(String idToken) {
-        List<User> users = userRepository.findAllByGoogleID(idToken);
         return !users.isEmpty();
     }
 

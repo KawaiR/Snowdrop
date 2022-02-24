@@ -45,7 +45,7 @@ public class TestForgotPassword {
 
         ChangeForgottenDomain changeForgottenDomain = ChangeForgottenDomain.builder()
                 .email("razankawai99@gmail.com")
-                .resetToken("72272")
+                .resetToken("96786")
                 .newPassword("updatePasswordSuccess")
                 .build();
 
