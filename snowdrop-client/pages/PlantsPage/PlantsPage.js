@@ -94,7 +94,7 @@ const PlantsPage  = ({navigation}) => {
                     style={styles.card}
                     titleStyle={styles.cardText}
                     subtitleStyle={styles.cardText}
-                    title={(plant.nickname != null) ? nickname : 'getPlantName(plant.id)'}
+                    title={(plant.nickname != null) ? plant.nickname : 'getPlantName(plant.id)'}
                     subtitle="waterLast"
                     left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
                     right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => navigation.navigate('Page_PlantDetail', {plant: plant, id: plant.id})} />}
@@ -102,22 +102,13 @@ const PlantsPage  = ({navigation}) => {
             
             )}
 
-            {/* <Card.Title
-                style={styles.card}
-                titleStyle={styles.cardText}
-                subtitleStyle={styles.cardText}
-                title="Card Title"
-                subtitle="Card Subtitle"
-                left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
-                right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => processList()} />}
-            /> */}
         </View>
 	</ScrollView>
     <FAB
         style={styles.fab}
         icon="plus"
         color="white"
-        onPress={() => navigation.navigate(Plant_Search)}
+        onPress={() => navigation.navigate("Plant_Search")}
     />
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={width*0.09}/>

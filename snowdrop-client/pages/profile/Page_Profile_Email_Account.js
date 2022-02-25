@@ -92,16 +92,11 @@ const Page_Profile_Email_Account = ({ navigation }) => {
                             Change Email
 						</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Plant_Page_Button]}  onPress={()=>navigation.navigate("Page_Plant")}  >
-                        <Text style = {noneModeStyles._Main_Button_Description}   >
-                            Plant page
-                        </Text>
-                    </TouchableOpacity>
 
                     {/* Bottom Nav Bar */}
                     <Appbar style={noneModeStyles.bottom}>
                         <Appbar.Action icon="home" color="#005500" size={width * 0.09} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
-                        <Appbar.Action icon="leaf" color="#005500" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Plant_Search")} />
+                        <Appbar.Action icon="leaf" color="#005500" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
                         <Appbar.Action icon="account-supervisor" color="#005500" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />
                         <Appbar.Action icon="brightness-5" color="#EDEECB" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
                     </Appbar>
@@ -156,21 +151,9 @@ const noneModeStyles = StyleSheet.create({
         top: pxRD(596, height, base_height),
         backgroundColor: "#FF000099",
     },
-    _Plant_Page_Button: { 
-		top: pxRD(700,height,base_height),
+	_Plant_Page_Button: { 
+		top: pxRD(600,height,base_height),
 		backgroundColor: "#A4C400",
-	},
-	_Change_Password_Button: { 
-		top: pxRD(396,height,base_height),
-		backgroundColor: "#A4C400",
-	},
-	_Edit_Account_Button: { 
-		top: pxRD(463,height,base_height),
-		backgroundColor: "#A4C400",
-	},
-	_Delete_Account_Button: {
-		top: pxRD(530,height,base_height),
-		backgroundColor: "#FF000099",
 	},
 
 
