@@ -14,7 +14,7 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [fertilizerVisible, setFertilizerVisible] = React.useState(false);
     const [healthVisible, setHealthVisible] = React.useState(false);
 
-    const [commonName, setCommonName] = React.useState("");
+    const [commonName, setCommonName] = React.useState(plant.nickname);
     const [scientificName, setScientificName] = React.useState("");
     const [lastWatered, setLastWatered] = React.useState(plant.waterLast);
     const [image, setImage] = React.useState("");
@@ -123,11 +123,13 @@ const PlantDetailPage  = ({route, navigation}) => {
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
                         console.log(result);
+                        /*
                         if (result.plantName != null) {
                             setCommonName(result.plantName);
                         } else {
                             setCommonName(result.scientificName);
                         }
+                        */
                         setScientificName(result.scientificName);
                         if (result.plantImage != null) {
                             setImage(result.plantImage);

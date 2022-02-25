@@ -68,6 +68,7 @@ const Save_Plant = ({ route, navigation }) => {
                         [{
                             text: 'OK',
                             onPress: () => { 
+                                navigation.navigate("Page_Plant");
                                 // Navigate to view plants page
                             },
                         }],
