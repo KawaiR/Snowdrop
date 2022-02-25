@@ -34,4 +34,52 @@ public class Plant {
 
     @OneToMany(mappedBy = "plant")
     List<PlantCare> caredFor;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getPlantName() {
+        return plantName;
+    }
+
+    public String getScientificName() {
+        return scientificName;
+    }
+
+    public String getPlantImage() {
+        return plantImage;
+    }
+
+    public String getWaterNeeds() {
+        return waterNeeds;
+    }
+
+    public List<PlantCare> getCaredFor() {
+        return caredFor;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPlantName(String plantName) {
+        this.plantName = plantName;
+    }
+
+    public void setScientificName(String scientificName) {
+        this.scientificName = scientificName;
+    }
+
+    public void setPlantImage(String plantImage) {
+        this.plantImage = plantImage;
+    }
+
+    public void setWaterNeeds(String waterNeeds) {
+        this.waterNeeds = waterNeeds;
+    }
+
+    public void setCaredFor(List<PlantCare> caredFor) {
+        this.caredFor = caredFor;
+    }
 }

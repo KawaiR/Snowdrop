@@ -46,4 +46,83 @@ public class User {
     @OneToMany(mappedBy = "sender")
     private List<Comment> comments;
 
+    public int getId() {
+        return id;
+    }
+
+    public int getTotalPoints() {
+        return totalPoints;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public List<PlantCare> getPlants() {
+        return plants;
+    }
+
+    public String getAuthTokenHash() {
+        return authTokenHash;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getGoogleID() {
+        return googleID;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public void setTotalPoints(int totalPoints) {
+        this.totalPoints = totalPoints;
+    }
+
+    public void setAuthTokenHash(String authTokenHash) {
+        this.authTokenHash = authTokenHash;
+    }
+
+    public void setGoogleID(String googleID) {
+        this.googleID = googleID;
+    }
+
+    public void setPlants(List<PlantCare> plants) {
+        this.plants = plants;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }
