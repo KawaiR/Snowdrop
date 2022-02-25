@@ -1,12 +1,14 @@
 package com.example.snowdropserver.Controllers;
 
+import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.Plant;
+import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Services.PlantService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -27,5 +29,32 @@ public class PlantController {
         // Have the logic in PlantService
         // Ideally, PlantController should just control the request mappings
         return plantService.getAllPlants();
+    }
+
+    @GetMapping(value = "/{id}/get-plant-info")
+    public PlantInfoDomain getPlantInfo(@PathVariable int id) {
+        return plantService.getPlantInfo(id);
+    }
+
+    @PostMapping(value = "/{id}/add-plant")
+    @ResponseStatus(HttpStatus.CREATED)
+    public int AddUserPlant(@PathVariable int id, @RequestBody AddPlantDomain addPlantDomain) {
+        return plantService.addUserPlant(id, addPlantDomain);
+    }
+
+    @PostMapping(value = "/{plantCareId}/water-plant")
+    public WaterPlantDomain logWaterDate(@PathVariable int plantCareId,
+                                         @RequestBody LogWaterPlantDomain logWaterPlantDomain) {
+        return plantService.logWaterDate(plantCareId, logWaterPlantDomain);
+    }
+
+    @GetMapping(value = "/{username}/get-user-plants")
+    public UserPlantsDomain getUserPlants(@PathVariable String username) {
+        return plantService.getUserPlants(username);
+    }
+
+    @PostMapping(value = "/{username}/update-nickname")
+    public void updateNickName(@PathVariable String username, @RequestBody SetNicknameDomain setNicknameDomain) {
+        plantService.updateNickName(username, setNicknameDomain);
     }
 }
