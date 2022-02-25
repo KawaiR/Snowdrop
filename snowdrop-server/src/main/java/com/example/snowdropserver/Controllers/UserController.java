@@ -1,6 +1,7 @@
 package com.example.snowdropserver.Controllers;
 
 import com.example.snowdropserver.Models.Domains.*;
+import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,4 +93,10 @@ public class UserController {
     public void updateEmail(@RequestBody UpdateEmailDomain updateEmailDomain) {
         userService.updateEmail(updateEmailDomain);
     }
+    /*
+    @PostMapping(value = "/plant-for-user")
+    public List<PlantCare> plantForUser(@RequestBody AuthConfirmDomain authConfirmDomain) {
+        return userService.plantForUser(authConfirmDomain);
+    }
+    */
 }

@@ -462,4 +462,10 @@ public class UserService {
                 .hashString(toHash, StandardCharsets.UTF_8)
                 .toString();
     }
+    /*
+    public List<PlantCare> plantForUser(AuthConfirmDomain domain) {
+        Optional<User> user = userRepository.getByUserName(domain.getUserName());
+        return user.get().getPlants();
+    }
+    */
 }
