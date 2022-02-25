@@ -6,11 +6,21 @@ import org.junit.Test;
 public class TestAddPlant {
     @Test
     public void userPlantSuccess() throws Exception {
-        TestingUtils.createUserAndExpect("userPlantSuccess3",
-                "userPlantSuccess3@test.com",
+        TestingUtils.createUserAndExpect("userPlantSuccess",
+                "userPlantSuccess@test.com",
                 "userPlantSuccess",
                 201);
 
-        TestingUtils.addUserPlant("userPlantSuccess1", 1, 200);
+        TestingUtils.addUserPlant("userPlantSuccess", 3, 200);
+    }
+
+    @Test
+    public void userPlantFailure() throws Exception {
+        TestingUtils.createUserAndExpect("userPlantFailure",
+                "userPlantFailure@test.com",
+                "userPlantFailure",
+                201);
+
+        TestingUtils.addUserPlant("userPlantFail", 4, 400);
     }
 }

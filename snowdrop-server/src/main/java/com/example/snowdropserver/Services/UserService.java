@@ -426,6 +426,21 @@ public class UserService {
         return true;
     }
 
+    public User getUserByUserName(String username) {
+        System.out.println("in userService: " + username);
+
+        List<User> users = userRepository.findAllByUserName(username);
+        System.out.println(users);
+
+        Optional<User> maybeUser = userRepository.getByUserName(username);
+        System.out.println(maybeUser);
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("User not found.");
+            throw new UserNotFoundException();
+        }
+        return maybeUser.get();
+    }
 
     public boolean check_email_exists(String email) {
         List<User> users = userRepository.findAllByEmail(email);
