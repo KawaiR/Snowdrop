@@ -1,9 +1,10 @@
 package com.example.snowdropserver.Models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+
 import java.util.List;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"plants", "posts", "comments"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,13 +39,31 @@ public class User {
     @Column(name="google_id")
     String googleID;
 
-    @OneToMany(mappedBy = "user")
-    private List<PlantCare> plants;
+//    @OneToMany(mappedBy = "user")
+//    @JsonManagedReference
+//    @ToString.Exclude
+//    private List<PlantCare> plants;
 
     @OneToMany(mappedBy = "sender")
+    @ToString.Exclude
     private List<Post> posts;
 
     @OneToMany(mappedBy = "sender")
+    @ToString.Exclude
     private List<Comment> comments;
 
+    /*
+    @Override
+    public String toString() {
+        return "User{" +
+                "id:" + id +
+                ",userName:" + userName +
+                ",email:" + email +
+                ",passwordHash:" + passwordHash +
+                ",totalPoints:" + totalPoints +
+                ",authTokenHash:" + authTokenHash +
+                ",googleID:" + googleID +
+                "}";
+    }
+     */
 }

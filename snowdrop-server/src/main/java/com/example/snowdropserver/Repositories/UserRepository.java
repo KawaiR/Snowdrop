@@ -1,5 +1,6 @@
 package com.example.snowdropserver.Repositories;
 
+import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,5 +16,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> getByEmail(String email);
     Optional<User> getByGoogleID(String googleID);
     Optional<User> getByAuthTokenHash(String authTokenHash);
-    Optional<User> getByUserName(String userName);
+    Optional<User> getByUserName(String username);
 }

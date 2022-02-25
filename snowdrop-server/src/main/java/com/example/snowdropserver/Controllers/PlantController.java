@@ -1,9 +1,14 @@
 package com.example.snowdropserver.Controllers;
 
+import com.example.snowdropserver.Models.Domains.AddUserPlantDomain;
 import com.example.snowdropserver.Models.Domains.PlantInfoDomain;
+import com.example.snowdropserver.Models.Domains.SetNicknameDomain;
+import com.example.snowdropserver.Models.Domains.UserPlantsDomain;
 import com.example.snowdropserver.Models.Plant;
+import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Services.PlantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,5 +36,21 @@ public class PlantController {
     @GetMapping(value = "/{id}/get-plant-info")
     public PlantInfoDomain getPlantInfo(@PathVariable int id) {
         return plantService.getPlantInfo(id);
+    }
+
+    @PostMapping(value = "/{id}/add-plant")
+    @ResponseStatus(HttpStatus.CREATED)
+    public int AddUserPlant(@PathVariable int id, @RequestBody String username) {
+        return plantService.addUserPlant(id, username);
+    }
+
+    @GetMapping(value = "/{username}/get-user-plants")
+    public UserPlantsDomain getUserPlants(@PathVariable String username) {
+        return plantService.getUserPlants(username);
+    }
+
+    @PostMapping(value = "/{username}/update-nickname")
+    public void updateNickName(@PathVariable String username, @RequestBody SetNicknameDomain setNicknameDomain) {
+        plantService.updateNickName(username, setNicknameDomain);
     }
 }

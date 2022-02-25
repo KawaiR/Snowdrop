@@ -2,9 +2,12 @@ package com.example.snowdropserver.Services;
 
 import com.example.snowdropserver.Exceptions.*;
 import com.example.snowdropserver.Models.Domains.*;
+import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Models.ResetToken;
 import com.example.snowdropserver.Models.User;
+import com.example.snowdropserver.Repositories.PlantCareRepository;
+import com.example.snowdropserver.Repositories.PlantRepository;
 import com.example.snowdropserver.Repositories.ResetTokenRepository;
 import com.example.snowdropserver.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +17,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.google.common.hash.Hashing;
 
-import javax.swing.text.html.Option;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -27,16 +29,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final ResetTokenRepository resetTokenRepository;
     private final JavaMailSender javaMailSender;
+    private final PlantRepository plantRepository;
+    private final PlantCareRepository plantCareRepository;
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
 
     // this autowired annotation is magic that will link the correct repository into this constructor to make the service
     @Autowired
-    public UserService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, JavaMailSender javaMailSender) {
+    public UserService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, JavaMailSender javaMailSender, PlantRepository plantRepository, PlantCareRepository plantCareRepository) {
         this.userRepository = userRepository;
         this.resetTokenRepository = resetTokenRepository;
         this.javaMailSender = javaMailSender;
+        this.plantRepository = plantRepository;
+        this.plantCareRepository = plantCareRepository;
     }
 
     public List<User> getAllUsers() {
@@ -86,7 +92,6 @@ public class UserService {
                 .googleID(null)
                 .comments(null)
                 .totalPoints(0)
-                .plants(null)
                 .posts(null)
                 .build();
 
@@ -125,7 +130,6 @@ public class UserService {
                 .googleID(userDomain.getGoogleID())
                 .comments(null)
                 .totalPoints(0)
-                .plants(null)
                 .posts(null)
                 .build();
 
@@ -420,6 +424,21 @@ public class UserService {
         return true;
     }
 
+    public User getUserByUserName(String username) {
+        System.out.println("in userService: " + username);
+
+        List<User> users = userRepository.findAllByUserName(username);
+        System.out.println(users);
+
+        Optional<User> maybeUser = userRepository.getByUserName(username);
+        System.out.println(maybeUser);
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("User not found.");
+            throw new UserNotFoundException();
+        }
+        return maybeUser.get();
+    }
 
     public boolean check_email_exists(String email) {
         List<User> users = userRepository.findAllByEmail(email);

@@ -1,10 +1,7 @@
 package com.example.snowdropserver.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -32,6 +29,47 @@ public class Plant {
     @Column(name = "water_needs")
     String waterNeeds;
 
-    @OneToMany(mappedBy = "plant")
-    List<PlantCare> caredFor;
+//    @OneToMany(mappedBy = "plant")
+//    @ToString.Exclude
+//    List<PlantCare> caredFor;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getPlantName() {
+        return plantName;
+    }
+
+    public String getScientificName() {
+        return scientificName;
+    }
+
+    public String getPlantImage() {
+        return plantImage;
+    }
+
+    public String getWaterNeeds() {
+        return waterNeeds;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPlantName(String plantName) {
+        this.plantName = plantName;
+    }
+
+    public void setScientificName(String scientificName) {
+        this.scientificName = scientificName;
+    }
+
+    public void setPlantImage(String plantImage) {
+        this.plantImage = plantImage;
+    }
+
+    public void setWaterNeeds(String waterNeeds) {
+        this.waterNeeds = waterNeeds;
+    }
 }
