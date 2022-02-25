@@ -76,7 +76,8 @@ const Page_Create_Google_Username  = ({navigation}) => {
 					response.json().then((result) => {
 						global.userName = result.userName;
 						global.authTokenHash = result.authTokenHash;
-						navigation.navigate("Page_Profile_Google_Account");
+						navigation.navigate("Location_Permission");
+						// navigation.navigate("Page_Profile_Google_Account");
 					})
 				}				
 			})

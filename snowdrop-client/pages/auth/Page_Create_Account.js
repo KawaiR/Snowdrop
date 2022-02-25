@@ -64,7 +64,8 @@ const Page_Create_Account  = ({navigation}) => {
 						else {
 							response.json().then((result) => {
 								global.userName = result.userName;
-								navigation.navigate("Page_Profile_Google_Account")
+								navigation.navigate("Location_Permission");
+								// navigation.navigate("Page_Profile_Google_Account");
 							})
 						}
 					})	
@@ -109,7 +110,8 @@ const Page_Create_Account  = ({navigation}) => {
 						global.email = email;
 						global.authTokenHash = result.authTokenHash;
 						global.userName = result.userName;
-						navigation.navigate("Page_Profile_Email_Account");
+						navigation.navigate("Location_Permission");
+						// navigation.navigate("Page_Profile_Email_Account");
 					});
 				}
 			})
