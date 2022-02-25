@@ -16,9 +16,9 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     const [commonName, setCommonName] = React.useState(plant.nickname);
     const [scientificName, setScientificName] = React.useState("");
-    const [lastWatered, setLastWatered] = React.useState(plant.waterLast);
+    const [waterCurrent, setWaterCurrent] = React.useState(plant.waterCurrent);
     const [image, setImage] = React.useState("");
-    const [upcomingWatered, setUpcomingWatered] = React.useState("");
+    const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
 
     const hideWater = () => setWaterVisible(false);
     const hideFertilizer = () => setFertilizerVisible(false);
@@ -131,7 +131,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 <View style={styles.plantNameContent}>
                     <Text style={styles.plantNameText}>{commonName}</Text>
                     <Text style={styles.plantNameText}>{scientificName}</Text>
-                    <Text style={styles.plantNameText}>{lastWatered}</Text>
+                    <Text style={styles.plantNameText}>{waterCurrent}</Text>
                 </View>
             </View>
         </ImageBackground>
@@ -144,7 +144,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         titleStyle={styles.cardText}
                         subtitleStyle={styles.cardText}
                         title="Water"
-                        subtitle={plant.waterLast}
+                        subtitle={upcomingWatered}
                         left={(props) =>  <IconButton {...props} icon="water" size={50} color={'#4E4E4E'}/>}
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setWaterVisible(true);}} />}
                     />
