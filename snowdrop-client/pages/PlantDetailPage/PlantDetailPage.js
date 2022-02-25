@@ -4,13 +4,21 @@ import { Appbar, Avatar, Card, FAB, IconButton, Provider, Dialog, Portal, Button
 
 import styles from './PlantDetailPageStyle.js';
 
-const PlantDetailPage  = ({navigation}) => {
+const PlantDetailPage  = ({route, navigation}) => {
+    const { plant } = route.params;
+
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
 
     const [waterVisible, setWaterVisible] = React.useState(false);
     const [fertilizerVisible, setFertilizerVisible] = React.useState(false);
     const [healthVisible, setHealthVisible] = React.useState(false);
+
+    const [commonName, setCommonName] = React.useState("");
+    const [scientificName, setScientificName] = React.useState("");
+    const [lastWatered, setLastWatered] = React.useState(plant.waterLast);
+    const [image, setImage] = React.useState("");
+    const [upcomingWatered, setUpcomingWatered] = React.useState("");
 
     const hideWater = () => setWaterVisible(false);
     const hideFertilizer = () => setFertilizerVisible(false);
@@ -31,6 +39,39 @@ const PlantDetailPage  = ({navigation}) => {
         setFertilizerVisible(false);
     }
 
+    useEffect(() => {
+        getPlantName(id);
+    });
+
+    async function getPlantName(id) {
+        try {
+			let response = await fetch('http://localhost:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+                        console.log('fail');
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        if (result.plantName != null) {
+                            setCommonName(result.plantName);
+                        } else {
+                            setCommonName(result.scientificName);
+                        }
+                        setScientificName(result.scientificName);
+                        setImage(result.plantImage);
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
 
 	return (
     <Provider>
@@ -43,9 +84,9 @@ const PlantDetailPage  = ({navigation}) => {
         <ImageBackground style={styles.plantsImage} source={require('snowdrop-client/assets/plant-image.jpeg')}>
             <View style={styles.plantNameView}>
                 <View style={styles.plantNameContent}>
-                    <Text style={styles.plantNameText}>Name</Text>
-                    <Text style={styles.plantNameText}>Scientific Name</Text>
-                    <Text style={styles.plantNameText}>Last watered: hihi</Text>
+                    <Text style={styles.plantNameText}>{commonName}</Text>
+                    <Text style={styles.plantNameText}>{scientificName}</Text>
+                    <Text style={styles.plantNameText}>{lastWatered}</Text>
                 </View>
             </View>
         </ImageBackground>
@@ -58,7 +99,7 @@ const PlantDetailPage  = ({navigation}) => {
                         titleStyle={styles.cardText}
                         subtitleStyle={styles.cardText}
                         title="Water"
-                        subtitle="Date"
+                        subtitle={plant.waterLast}
                         left={(props) =>  <IconButton {...props} icon="water" size={50} color={'#4E4E4E'}/>}
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setWaterVisible(true);}} />}
                     />
@@ -127,7 +168,7 @@ const PlantDetailPage  = ({navigation}) => {
         style={styles.fab}
         icon="square-edit-outline"
         color="white"
-        onPress={() => console.log('Pressed')}
+        onPress={() => console.log(plant)}
     />
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={width*0.09}/>

@@ -64,6 +64,7 @@ export default StyleSheet.create({
         width: width * 0.91787,
         height: height * 0.1060,
         borderRadius: 25,
+        marginBottom: height * 11 / defaultH,
     },
     cardImage: {
         width: width * 0.18,

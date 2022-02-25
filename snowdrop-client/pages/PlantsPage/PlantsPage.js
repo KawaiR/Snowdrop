@@ -8,35 +8,70 @@ const PlantsPage  = ({navigation}) => {
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
 
+    const [plantsList, setPlantsList] = React.useState([]);
+
+    useEffect(() => {
+        getPlants();
+    });
+
     async function getPlants() {
         try {
-			let response = await fetch(`http://localhost:8080/users/plant-for-user`, {
-				method: "POST",
-				headers: {
-                    "Content-Type": "application/json; charset=utf-8",
-				},
-				body: JSON.stringify({
-                    authTokenHash: global.authTokenHash,
-                    userName: global.userName,
-				}),
-			})
+			let response = await fetch('http://localhost:8080/plants/' + global.userName + '/get-user-plants', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {
-						onChangeTitle(result.message);
+                        console.log('fail');
+						console.log(result.message);
+                        console.log('fail');
 					});
 				}
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
-						console.log(result);
+						//console.log(result);
+                        setPlantsList(result.caredFor);
 					});
 				}
-			})
-			
+			});
 		} catch (err) {
 			console.log("Fetch didnt work.");
 			console.log(err);
 		}
+    }
+
+    async function getPlantName(id) {
+        try {
+			let response = await fetch('http://localhost:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+                        console.log('fail');
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        if (result.plantName != null) {
+						    return 'result.plantName';
+                        }
+                        return 'result.scientificName';
+                        //setPlantsList(result.caredFor);
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
+    function processList() {
+        console.log('caredFor');
+        console.log(plantsList);
+        console.log('caredFor');
+        for (let i = 0; i < plantsList.length; i++) {
+            console.log(plantsList[i].id);
+        }
     }
 
 	return (
@@ -53,22 +88,36 @@ const PlantsPage  = ({navigation}) => {
             </View>
         </View>
 		<View style={styles.cardList}>
-            <Card.Title
+            {plantsList.map((plant) => 
+                <Card.Title
+                    key={plant.id}
+                    style={styles.card}
+                    titleStyle={styles.cardText}
+                    subtitleStyle={styles.cardText}
+                    title={(plant.nickname != null) ? nickname : 'getPlantName(plant.id)'}
+                    subtitle="waterLast"
+                    left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
+                    right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => navigation.navigate('Page_PlantDetail', {plant: plant, id: plant.id})} />}
+                />
+            
+            )}
+
+            {/* <Card.Title
                 style={styles.card}
                 titleStyle={styles.cardText}
                 subtitleStyle={styles.cardText}
                 title="Card Title"
                 subtitle="Card Subtitle"
                 left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
-                right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => getPlants()} />}
-            />
+                right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => processList()} />}
+            /> */}
         </View>
 	</ScrollView>
     <FAB
         style={styles.fab}
         icon="plus"
         color="white"
-        onPress={() => console.log('Pressed')}
+        onPress={() => console.log("")}
     />
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={width*0.09}/>

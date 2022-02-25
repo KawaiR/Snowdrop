@@ -93,8 +93,10 @@ public class UserController {
     public void updateEmail(@RequestBody UpdateEmailDomain updateEmailDomain) {
         userService.updateEmail(updateEmailDomain);
     }
+    /*
     @PostMapping(value = "/plant-for-user")
     public List<PlantCare> plantForUser(@RequestBody AuthConfirmDomain authConfirmDomain) {
         return userService.plantForUser(authConfirmDomain);
     }
+    */
 }
