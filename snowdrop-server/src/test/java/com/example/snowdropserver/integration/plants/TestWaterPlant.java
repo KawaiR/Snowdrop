@@ -16,8 +16,10 @@ public class TestWaterPlant {
                 "waterNewPlant",
                 201);
 
-        int plantCareId = TestingUtils.addUserPlant("waterNewPlant",
-                10,
+        int plantCareId = TestingUtils.addUserPlant(10,
+                "waterNewPlant",
+                "good",
+                "random",
                 201);
 
         WaterPlantDomain next = TestingUtils.waterPlant("waterNewPlant",
@@ -34,8 +36,10 @@ public class TestWaterPlant {
                 "waterPlantTwice",
                 201);
 
-        int plantCareId = TestingUtils.addUserPlant("waterPlantTwice",
-                10,
+        int plantCareId = TestingUtils.addUserPlant(10,
+                "waterPlantTwice",
+                "bad",
+                "poorPlant",
                 201);
 
         WaterPlantDomain next = TestingUtils.waterPlant("waterPlantTwice",
@@ -56,8 +60,10 @@ public class TestWaterPlant {
                 "waterPlantLow",
                 201);
 
-        int plantCareId = TestingUtils.addUserPlant("waterPlantLow",
-                5,
+        int plantCareId = TestingUtils.addUserPlant(5,
+                "waterPlantLow",
+                "medium",
+                "NM",
                 201);
 
         WaterPlantDomain next = TestingUtils.waterPlant("waterPlantLow",
@@ -74,8 +80,10 @@ public class TestWaterPlant {
                 "waterPlantVeryLow",
                 201);
 
-        int plantCareId = TestingUtils.addUserPlant("waterPlantVeryLow",
-                20,
+        int plantCareId = TestingUtils.addUserPlant(20,
+                "waterPlantVeryLow",
+                "good",
+                "strong plant",
                 201);
 
         WaterPlantDomain next = TestingUtils.waterPlant("waterPlantVeryLow",
@@ -92,8 +100,10 @@ public class TestWaterPlant {
                 "waterPlantModerate",
                 201);
 
-        int plantCareId = TestingUtils.addUserPlant("waterPlantModerate",
-                15,
+        int plantCareId = TestingUtils.addUserPlant(15,
+                "waterPlantModerate",
+                "medium",
+                "",
                 201);
 
         WaterPlantDomain next = TestingUtils.waterPlant("waterPlantModerate",

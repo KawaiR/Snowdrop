@@ -43,8 +43,9 @@ public class PlantController {
     }
 
     @PostMapping(value = "/{plantCareId}/water-plant")
-    public WaterPlantDomain logWaterDate(@PathVariable int plantCareId, @RequestBody String username) {
-        return plantService.logWaterDate(plantCareId, username);
+    public WaterPlantDomain logWaterDate(@PathVariable int plantCareId,
+                                         @RequestBody LogWaterPlantDomain logWaterPlantDomain) {
+        return plantService.logWaterDate(plantCareId, logWaterPlantDomain);
     }
 
     @GetMapping(value = "/{username}/get-user-plants")

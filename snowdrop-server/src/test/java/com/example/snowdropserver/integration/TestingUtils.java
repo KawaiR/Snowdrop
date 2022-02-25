@@ -196,14 +196,21 @@ public class TestingUtils {
         return plantInfoDomain;
     }
 
-    public static int addUserPlant(String username, int plantId, int expectedStatusCode) throws Exception {
+    public static int addUserPlant(int plantId, String userName, String plantHealth, String nickname,
+                                   int expectedStatusCode) throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
 
         HttpPost httpPost = new HttpPost(baseUrl + "/plants/" + plantId + "/add-plant");
 
-        System.out.println(username);
+        AddPlantDomain addPlantDomain = AddPlantDomain.builder()
+                .plantHealth(plantHealth)
+                .userName(userName)
+                .nickname(nickname)
+                .build();
 
-        String json = objectMapper.writeValueAsString(username);
+        System.out.println(addPlantDomain);
+
+        String json = objectMapper.writeValueAsString(addPlantDomain);
         System.out.println(json);
 
         StringEntity entity = new StringEntity(json);
@@ -290,9 +297,13 @@ public class TestingUtils {
 
         HttpPost httpPost = new HttpPost(baseUrl + "/plants/" + plantCareId + "/water-plant");
 
-        System.out.println(username);
+        LogWaterPlantDomain logWaterPlantDomain = LogWaterPlantDomain.builder()
+                .username(username)
+                .build();
 
-        String json = objectMapper.writeValueAsString(username);
+        System.out.println(logWaterPlantDomain);
+
+        String json = objectMapper.writeValueAsString(logWaterPlantDomain);
         System.out.println(json);
 
         StringEntity entity = new StringEntity(json);

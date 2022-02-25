@@ -92,6 +92,7 @@ public class UserService {
                 .googleID(null)
                 .comments(null)
                 .totalPoints(0)
+                .editorPrivilege(0)
                 .posts(null)
                 .build();
 

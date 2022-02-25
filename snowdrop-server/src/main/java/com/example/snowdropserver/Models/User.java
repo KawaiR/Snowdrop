@@ -39,6 +39,9 @@ public class User {
     @Column(name="google_id")
     String googleID;
 
+    @Column(name="editor_privilege")
+    int editorPrivilege;
+
 //    @OneToMany(mappedBy = "user")
 //    @JsonManagedReference
 //    @ToString.Exclude

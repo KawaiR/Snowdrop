@@ -89,11 +89,18 @@ public class PlantService {
 
         Plant plant = maybePlant.get();
 
+        String nickname;
+        if (addPlantDomain.getNickname().length() == 0) {
+            nickname = plant.getPlantName();
+        } else {
+            nickname = addPlantDomain.getNickname();
+        }
+
         PlantCare plantCare = PlantCare.builder()
                 .plant(plant)
                 .plantHealth(addPlantDomain.getPlantHealth())
                 .fertilizer(null)
-                .nickname(addPlantDomain.getNickname())
+                .nickname(nickname)
                 .sunlight(0)
                 .temperature(0)
                 .waterCurrent(null)
@@ -165,8 +172,8 @@ public class PlantService {
         System.out.println(plantCareRepository.findAll());
     }
 
-    public WaterPlantDomain logWaterDate(int plantCareId, String username) {
-        username = username.substring(1,username.length()-1);
+    public WaterPlantDomain logWaterDate(int plantCareId, LogWaterPlantDomain logWaterPlantDomain) {
+        String username = logWaterPlantDomain.getUsername();
         System.out.println(username);
 
         Optional<User> maybeUser = userRepository.getByUserName(username);
