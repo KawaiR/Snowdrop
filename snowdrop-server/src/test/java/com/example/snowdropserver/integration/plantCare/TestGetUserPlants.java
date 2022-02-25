@@ -27,7 +27,8 @@ public class TestGetUserPlants {
                 "userOnePlant",
                 201);
 
-        TestingUtils.addUserPlant("userOnePlant", 4, 201);
+        TestingUtils.addUserPlant(1, "userOnePlant", "good", "someNickname",
+                201);
         UserPlantsDomain userPlantsDomain = TestingUtils.getUserPlantsAndExpect("userOnePlant",
                 200);
 
@@ -41,8 +42,10 @@ public class TestGetUserPlants {
                 "userMultiplePlants",
                 201);
 
-        TestingUtils.addUserPlant("userMultiplePlants", 4, 201);
-        TestingUtils.addUserPlant("userMultiplePlants", 10, 201);
+        TestingUtils.addUserPlant(4, "userMultiplePlants", "bad",
+                "", 201);
+        TestingUtils.addUserPlant(10, "userMultiplePlants", "medium",
+                "",201);
 
         UserPlantsDomain userPlantsDomain = TestingUtils.getUserPlantsAndExpect("userMultiplePlants",
                 200);

@@ -11,7 +11,8 @@ public class TestAddPlant {
                 "userPlantSuccess",
                 201);
 
-        TestingUtils.addUserPlant("userPlantSuccess", 3, 201);
+        TestingUtils.addUserPlant(3, "userPlantSuccess", "good",
+                "someNickname", 201);
     }
 
     @Test
@@ -21,6 +22,7 @@ public class TestAddPlant {
                 "userPlantFailure",
                 201);
 
-        TestingUtils.addUserPlant("userPlantFail", 4, 400);
+        TestingUtils.addUserPlant(4, "userPlantFail", "medium",
+                "", 400);
     }
 }

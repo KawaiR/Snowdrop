@@ -12,8 +12,9 @@ public class TestUpdateNickname {
                 "updateNicknameSuccess",
                 201);
 
-        int plantCare = TestingUtils.addUserPlant("updateNicknameSuccess",
-                5,
+        int plantCare = TestingUtils.addUserPlant(5,"updateNicknameSuccess",
+                "good",
+                "nickname",
                 201);
 
         TestingUtils.updateNickName("updateNicknameSuccess",
@@ -50,8 +51,9 @@ public class TestUpdateNickname {
                 "changeNicknameTwice",
                 201);
 
-        int plantCare = TestingUtils.addUserPlant("changeNicknameTwice",
-                4,
+        int plantCare = TestingUtils.addUserPlant(4, "changeNicknameTwice",
+                "medium",
+                "someNickname",
                 201);
 
         TestingUtils.updateNickName("changeNicknameTwice",
