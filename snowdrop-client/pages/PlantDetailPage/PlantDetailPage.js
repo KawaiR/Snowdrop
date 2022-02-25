@@ -52,8 +52,10 @@ const PlantDetailPage  = ({route, navigation}) => {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
-				},
-                body: "\"" + global.userName + "\"",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                }),
             })
 			.then((response) => {
 				if (response.status == 400) {
@@ -65,7 +67,9 @@ const PlantDetailPage  = ({route, navigation}) => {
 				}
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
+                        console.log('success');
 						console.log(result);
+                        console.log('success');
                         //setPlantsList(result.caredFor);
 					});
 				}
@@ -76,38 +80,6 @@ const PlantDetailPage  = ({route, navigation}) => {
 		}
     }
 
-    async function updateNickname(nicknameGiven) {
-        try {
-			let response = await fetch('http://localhost:8080/plants/' + global.username + "/update-nickname", {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json; charset=utf-8",
-				},
-                body: JSON.stringify({
-                    plantCareId: id,
-                    nickname: nicknameGiven,
-                    }),
-            })
-			.then((response) => {
-				if (response.status == 400) {
-					response.json().then((result) => {
-                        console.log('fail');
-						console.log(result.message);
-                        console.log('fail');
-					});
-				}
-				if (response.status == 200 || response.status == 201 || response.status == 202) {
-					response.json().then((result) => {
-						console.log(result);
-                        //setPlantsList(result.caredFor);
-					});
-				}
-			});
-		} catch (err) {
-			console.log("Fetch didnt work.");
-			console.log(err);
-		}
-    }
 
     async function getPlantName(id) {
         try {
@@ -215,7 +187,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 </Dialog.Content>
                 <Dialog.Actions>
                 <Button onPress={waterYes}>Yes</Button>
-                <Button onPress={waterrNo}>No</Button>
+                <Button onPress={waterrNo}>Exit</Button>
                 </Dialog.Actions>
             </Dialog>
             <Dialog visible={fertilizerVisible} onDismiss={hideFertilizer}>
