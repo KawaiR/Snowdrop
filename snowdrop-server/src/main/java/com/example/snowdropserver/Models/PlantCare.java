@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"user", "plant"})
+//@EqualsAndHashCode(exclude = {"user", "plant"})
 public class PlantCare {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

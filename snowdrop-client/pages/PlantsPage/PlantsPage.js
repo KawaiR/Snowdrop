@@ -94,23 +94,14 @@ const PlantsPage  = ({navigation}) => {
                     style={styles.card}
                     titleStyle={styles.cardText}
                     subtitleStyle={styles.cardText}
-                    title={(plant.nickname != null) ? plant.nickname : 'getPlantName(plant.id)'}
-                    subtitle="waterLast"
+                    title={(plant.nickname != null) ? plant.nickname : 'No common name'}
+                    subtitle={(plant.waterCurrent != null) ? plant.waterCurrent : 'No water'}
                     left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
                     right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => navigation.navigate('Page_PlantDetail', {plant: plant, id: plant.id})} />}
                 />
             
             )}
 
-            {/* <Card.Title
-                style={styles.card}
-                titleStyle={styles.cardText}
-                subtitleStyle={styles.cardText}
-                title="Card Title"
-                subtitle="Card Subtitle"
-                left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
-                right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => processList()} />}
-            /> */}
         </View>
 	</ScrollView>
     <FAB

@@ -151,10 +151,13 @@ const noneModeStyles = StyleSheet.create({
         top: pxRD(596, height, base_height),
         backgroundColor: "#FF000099",
     },
-    _Plant_Page_Button: { 
+	_Plant_Page_Button: { 
 		top: pxRD(600,height,base_height),
 		backgroundColor: "#A4C400",
 	},
+
+
+
 
 
     _Cactus_Image: {

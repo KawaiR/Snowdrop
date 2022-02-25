@@ -14,11 +14,12 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [fertilizerVisible, setFertilizerVisible] = React.useState(false);
     const [healthVisible, setHealthVisible] = React.useState(false);
 
-    const [commonName, setCommonName] = React.useState("");
+    const [commonName, setCommonName] = React.useState(plant.nickname);
     const [scientificName, setScientificName] = React.useState("");
-    const [lastWatered, setLastWatered] = React.useState(plant.waterLast);
+    const [health, setHealth] = React.useState(plant.plantHealth);
+    const [waterCurrent, setWaterCurrent] = React.useState(plant.waterCurrent);
     const [image, setImage] = React.useState("");
-    const [upcomingWatered, setUpcomingWatered] = React.useState("");
+    const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
 
     const hideWater = () => setWaterVisible(false);
     const hideFertilizer = () => setFertilizerVisible(false);
@@ -44,6 +45,12 @@ const PlantDetailPage  = ({route, navigation}) => {
     useEffect(() => {
         console.log(plant);
         getPlantName(id);
+        if ((upcomingWatered != null) && (upcomingWatered != "")) {
+            setUpcomingWatered(upcomingWatered.substring(0, 10));
+        } else {
+            setUpcomingWatered("");
+        }
+        
     });
 
     async function waterPlant() {
@@ -52,8 +59,10 @@ const PlantDetailPage  = ({route, navigation}) => {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
-				},
-                body: "\"" + global.userName + "\"",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                }),
             })
 			.then((response) => {
 				if (response.status == 400) {
@@ -65,7 +74,10 @@ const PlantDetailPage  = ({route, navigation}) => {
 				}
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
+                        console.log('success');
 						console.log(result);
+                        console.log('success');
+                        setUpcomingWatered(result.waterNext)
                         //setPlantsList(result.caredFor);
 					});
 				}
@@ -76,38 +88,6 @@ const PlantDetailPage  = ({route, navigation}) => {
 		}
     }
 
-    async function updateNickname(nicknameGiven) {
-        try {
-			let response = await fetch('http://localhost:8080/plants/' + global.username + "/update-nickname", {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json; charset=utf-8",
-				},
-                body: JSON.stringify({
-                    plantCareId: id,
-                    nickname: nicknameGiven,
-                    }),
-            })
-			.then((response) => {
-				if (response.status == 400) {
-					response.json().then((result) => {
-                        console.log('fail');
-						console.log(result.message);
-                        console.log('fail');
-					});
-				}
-				if (response.status == 200 || response.status == 201 || response.status == 202) {
-					response.json().then((result) => {
-						console.log(result);
-                        //setPlantsList(result.caredFor);
-					});
-				}
-			});
-		} catch (err) {
-			console.log("Fetch didnt work.");
-			console.log(err);
-		}
-    }
 
     async function getPlantName(id) {
         try {
@@ -123,11 +103,13 @@ const PlantDetailPage  = ({route, navigation}) => {
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
                         console.log(result);
+                        /*
                         if (result.plantName != null) {
                             setCommonName(result.plantName);
                         } else {
                             setCommonName(result.scientificName);
                         }
+                        */
                         setScientificName(result.scientificName);
                         if (result.plantImage != null) {
                             setImage(result.plantImage);
@@ -157,7 +139,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 <View style={styles.plantNameContent}>
                     <Text style={styles.plantNameText}>{commonName}</Text>
                     <Text style={styles.plantNameText}>{scientificName}</Text>
-                    <Text style={styles.plantNameText}>{lastWatered}</Text>
+                    <Text style={styles.plantNameText}>{upcomingWatered}</Text>
                 </View>
             </View>
         </ImageBackground>
@@ -170,7 +152,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         titleStyle={styles.cardText}
                         subtitleStyle={styles.cardText}
                         title="Water"
-                        subtitle={plant.waterLast}
+                        subtitle={"Upcoming date: " + upcomingWatered}
                         left={(props) =>  <IconButton {...props} icon="water" size={50} color={'#4E4E4E'}/>}
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setWaterVisible(true);}} />}
                     />
@@ -197,8 +179,8 @@ const PlantDetailPage  = ({route, navigation}) => {
                         titleStyle={styles.cardText}
                         subtitleStyle={styles.cardText}
                         // leftStyle={styles.cardLeft}
-                        title="current health"
-                        subtitle="current health"
+                        title="Current health"
+                        subtitle={health}
                         left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setHealthVisible(true);}} />}
                     />
@@ -213,7 +195,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 </Dialog.Content>
                 <Dialog.Actions>
                 <Button onPress={waterYes}>Yes</Button>
-                <Button onPress={waterrNo}>No</Button>
+                <Button onPress={waterrNo}>Exit</Button>
                 </Dialog.Actions>
             </Dialog>
             <Dialog visible={fertilizerVisible} onDismiss={hideFertilizer}>
@@ -243,7 +225,7 @@ const PlantDetailPage  = ({route, navigation}) => {
     />
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={width*0.09}/>
-        <Appbar.Action icon="leaf" color="#005500" size={width*0.09} style={{marginLeft: '9%'}}/>
+        <Appbar.Action icon="leaf" color="#005500" size={width*0.09} style={{marginLeft: '9%'}} onPress={() => navigation.navigate("Page_Plant")}/>
         <Appbar.Action icon="account-supervisor" color="#005500" size={width*0.09} style={{marginLeft: '9%'}}/>
         <Appbar.Action icon="brightness-5" color="#005500" size={width*0.09} style={{marginLeft: '9%'}}/>
     </Appbar>
