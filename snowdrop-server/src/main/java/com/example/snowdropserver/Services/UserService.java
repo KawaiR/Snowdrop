@@ -92,7 +92,6 @@ public class UserService {
                 .googleID(null)
                 .comments(null)
                 .totalPoints(0)
-                .plants(null)
                 .posts(null)
                 .build();
 
@@ -131,7 +130,6 @@ public class UserService {
                 .googleID(userDomain.getGoogleID())
                 .comments(null)
                 .totalPoints(0)
-                .plants(null)
                 .posts(null)
                 .build();
 

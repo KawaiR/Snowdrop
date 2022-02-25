@@ -5,6 +5,8 @@ import com.example.snowdropserver.Exceptions.PlantNotFoundException;
 import com.example.snowdropserver.Exceptions.UserNotFoundException;
 import com.example.snowdropserver.Models.Domains.AddUserPlantDomain;
 import com.example.snowdropserver.Models.Domains.PlantInfoDomain;
+import com.example.snowdropserver.Models.Domains.SetNicknameDomain;
+import com.example.snowdropserver.Models.Domains.UserPlantsDomain;
 import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Models.User;
@@ -102,15 +104,76 @@ public class PlantService {
 
         plantCareRepository.save(plantCare);
 
-        user.getPlants().add(plantCare);
-        userRepository.save(user);
+        System.out.println("In addPlant: " + plantCare.getId());
+
+        //user.getPlants().add(plantCare);
+        //userRepository.save(user);
 
         return plantCare.getId();
     }
 
+    public UserPlantsDomain getUserPlants(String username) {
+        //username = username.substring(1,username.length()-1);
+        System.out.println(username);
+
+        Optional<User> maybeUser = userRepository.getByUserName(username);
+        if (!maybeUser.isPresent()) {
+            System.out.println("User not found");
+            throw new UserNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        UserPlantsDomain userPlantsDomain = UserPlantsDomain.builder()
+                .caredFor(plantCareRepository.getByUser(user))
+                .build();
+
+        return userPlantsDomain;
+    }
+
+    public void updateNickName(String username, SetNicknameDomain setNicknameDomain) {
+        System.out.println(setNicknameDomain.getPlantCareId());
+        System.out.println(setNicknameDomain.getNickname());
+
+        Optional<User> maybeUser = userRepository.getByUserName(username);
+        if (!maybeUser.isPresent()) {
+            System.out.println("User not found");
+            throw new UserNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        List<PlantCare> userPlants = plantCareRepository.getByUser(user);
+        int plantIndex = -1;
+
+        System.out.println("Send plantCareId: " + setNicknameDomain.getPlantCareId());
+        for (int i = 0; i < userPlants.size(); i++) {
+            System.out.println("Plant in list: " + userPlants.get(i).getId());
+            if (userPlants.get(i).getId() == setNicknameDomain.getPlantCareId()) {
+                plantIndex = i;
+                break;
+            }
+        }
+
+        if (plantIndex == -1) {
+            System.out.println("This info doesn't belong to the user specified");
+            throw new NoPlantUserComboException();
+        }
+
+        userPlants.get(plantIndex).setNickname(setNicknameDomain.getNickname());
+        plantCareRepository.save(userPlants.get(plantIndex));
+
+        System.out.println(plantCareRepository.findAll());
+    }
+
     //TODO: write test cases
 //    public LocalDateTime logWaterDate(String username, int plantId) {
-//        User user = userService.getUserByUserName(username);
+//        System.out.println(username);
+//
+//        Optional<User> maybeUser = userRepository.getByUserName(username);
+//        if (!maybeUser.isPresent()) {
+//            System.out.println("User not found");
+//            throw new UserNotFoundException();
+//        }
+//        User user = maybeUser.get();
 //
 //        Optional<Plant> maybePlant = plantRepository.getById(plantId);
 //

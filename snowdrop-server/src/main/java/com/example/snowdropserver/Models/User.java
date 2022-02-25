@@ -1,9 +1,10 @@
 package com.example.snowdropserver.Models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+
 import java.util.List;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"plants", "posts", "comments"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,92 +39,31 @@ public class User {
     @Column(name="google_id")
     String googleID;
 
-    @OneToMany(mappedBy = "user")
-    private List<PlantCare> plants;
+//    @OneToMany(mappedBy = "user")
+//    @JsonManagedReference
+//    @ToString.Exclude
+//    private List<PlantCare> plants;
 
     @OneToMany(mappedBy = "sender")
+    @ToString.Exclude
     private List<Post> posts;
 
     @OneToMany(mappedBy = "sender")
+    @ToString.Exclude
     private List<Comment> comments;
 
-    public int getId() {
-        return id;
+    /*
+    @Override
+    public String toString() {
+        return "User{" +
+                "id:" + id +
+                ",userName:" + userName +
+                ",email:" + email +
+                ",passwordHash:" + passwordHash +
+                ",totalPoints:" + totalPoints +
+                ",authTokenHash:" + authTokenHash +
+                ",googleID:" + googleID +
+                "}";
     }
-
-    public int getTotalPoints() {
-        return totalPoints;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public List<PlantCare> getPlants() {
-        return plants;
-    }
-
-    public String getAuthTokenHash() {
-        return authTokenHash;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getGoogleID() {
-        return googleID;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public void setTotalPoints(int totalPoints) {
-        this.totalPoints = totalPoints;
-    }
-
-    public void setAuthTokenHash(String authTokenHash) {
-        this.authTokenHash = authTokenHash;
-    }
-
-    public void setGoogleID(String googleID) {
-        this.googleID = googleID;
-    }
-
-    public void setPlants(List<PlantCare> plants) {
-        this.plants = plants;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
+     */
 }
