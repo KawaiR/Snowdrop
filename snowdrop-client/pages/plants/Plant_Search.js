@@ -114,13 +114,16 @@ class Plants_Search extends React.Component {
         }
     }
 
-    onItemPressed = (item) => {
+    onItemPressed = (id) => {
         // Function for click on an item
-        this.props.navigation.navigate('Save_Plant');
+        console.log("Item.id = " + id);
+        this.props.navigation.navigate('Save_Plant', {
+            plantId: id,
+        });
     };
 
     renderItem = ({ item }) => (
-        <TouchableOpacity onPress={() => this.onItemPressed(item)}>
+        <TouchableOpacity onPress={() => this.onItemPressed(item.id)}>
             <View style={styles.itemContainer}>
                 <Avatar.Image
                     source={{ uri: item.plantImage }}
@@ -183,7 +186,7 @@ class Plants_Search extends React.Component {
                     <Appbar.Action icon="home" color="#005500" size={this.state.width * 0.09} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
                     <Appbar.Action icon="leaf" color="#EDEECB" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} onPress={() => this.props.navigation.navigate("Plant_Search")} />
                     <Appbar.Action icon="account-supervisor" color="#005500" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />
-                    <Appbar.Action icon="brightness-5" color="#005500" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { this.props.navigation.navigate("Page_Profile_Email_Account"); } else { this.props.navigation.navigate("Page_Profile_Google_Account"); }}} />
+                    <Appbar.Action icon="brightness-5" color="#005500" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} onPress={() => { if (global.googleID == undefined) { this.props.navigation.navigate("Page_Profile_Email_Account"); } else { this.props.navigation.navigate("Page_Profile_Google_Account"); } }} />
                 </Appbar>
             </View>
         );

@@ -64,8 +64,11 @@ public class PlantService {
         return plantInfoDomain;
     }
 
-    public int addUserPlant(int plantId, String username) {
-        username = username.substring(1,username.length()-1);
+    public int addUserPlant(int plantId, AddPlantDomain addPlantDomain) {
+        String username = addPlantDomain.getUserName();
+        System.out.println(username);
+        System.out.println(addPlantDomain.getUserName());
+//        username = username.substring(1, username.length()-1);
         System.out.println(username);
 
         Optional<User> maybeUser = userRepository.getByUserName(username);
@@ -88,9 +91,9 @@ public class PlantService {
 
         PlantCare plantCare = PlantCare.builder()
                 .plant(plant)
-                .plantHealth(null)
+                .plantHealth(addPlantDomain.getPlantHealth())
                 .fertilizer(null)
-                .nickname(plant.getPlantName())
+                .nickname(addPlantDomain.getNickname())
                 .sunlight(0)
                 .temperature(0)
                 .waterCurrent(null)
@@ -102,6 +105,7 @@ public class PlantService {
         plantCareRepository.save(plantCare);
 
         System.out.println("In addPlant: " + plantCare.getId());
+        System.out.println("Plant care: " + plantCare);
 
         //user.getPlants().add(plantCare);
         //userRepository.save(user);
