@@ -117,7 +117,7 @@ const PlantsPage  = ({navigation}) => {
         style={styles.fab}
         icon="plus"
         color="white"
-        onPress={() => console.log("")}
+        onPress={() => navigation.navigate(Plant_Search)}
     />
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={width*0.09}/>
