@@ -95,7 +95,7 @@ const PlantsPage  = ({navigation}) => {
                     titleStyle={styles.cardText}
                     subtitleStyle={styles.cardText}
                     title={(plant.nickname != null) ? plant.nickname : 'No common name'}
-                    subtitle={(plant.waterLast != null) ? plant.waterLast : 'No water'}
+                    subtitle={(plant.waterCurrent != null) ? plant.waterCurrent : 'No water'}
                     left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
                     right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => navigation.navigate('Page_PlantDetail', {plant: plant, id: plant.id})} />}
                 />
