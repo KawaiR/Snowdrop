@@ -1,9 +1,6 @@
 package com.example.snowdropserver.Controllers;
 
-import com.example.snowdropserver.Models.Domains.AddUserPlantDomain;
-import com.example.snowdropserver.Models.Domains.PlantInfoDomain;
-import com.example.snowdropserver.Models.Domains.SetNicknameDomain;
-import com.example.snowdropserver.Models.Domains.UserPlantsDomain;
+import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Services.PlantService;
@@ -11,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -42,6 +40,11 @@ public class PlantController {
     @ResponseStatus(HttpStatus.CREATED)
     public int AddUserPlant(@PathVariable int id, @RequestBody String username) {
         return plantService.addUserPlant(id, username);
+    }
+
+    @PostMapping(value = "/{plantCareId}/water-plant")
+    public WaterPlantDomain logWaterDate(@PathVariable int plantCareId, @RequestBody String username) {
+        return plantService.logWaterDate(plantCareId, username);
     }
 
     @GetMapping(value = "/{username}/get-user-plants")
