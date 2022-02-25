@@ -1,11 +1,10 @@
 package com.example.snowdropserver.Controllers;
 
+import com.example.snowdropserver.Models.Domains.PlantInfoDomain;
 import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Services.PlantService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +26,10 @@ public class PlantController {
         // Have the logic in PlantService
         // Ideally, PlantController should just control the request mappings
         return plantService.getAllPlants();
+    }
+
+    @GetMapping(value = "/{id}/get-plant-info")
+    public PlantInfoDomain getPlantInfo(@PathVariable int id) {
+        return plantService.getPlantInfo(id);
     }
 }
