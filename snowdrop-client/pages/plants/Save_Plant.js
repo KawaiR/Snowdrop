@@ -88,7 +88,7 @@ const Save_Plant = ({ route, navigation }) => {
 
                 {/* Header Bar */}
                 <Appbar.Header style={styles.appbar}>
-                    <Appbar.BackAction color="white" />
+                    <Appbar.BackAction color="white" onPress={()=>navigation.navigate("Plant_Search")}/>
                 </Appbar.Header>
 
                 <Text style={styles.nameText}>{"Name your plant! (Optional)"}</Text>
