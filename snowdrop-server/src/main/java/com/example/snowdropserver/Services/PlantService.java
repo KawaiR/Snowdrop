@@ -122,7 +122,7 @@ public class PlantService {
 
     public UserPlantsDomain getUserPlants(String username) {
         //username = username.substring(1,username.length()-1);
-        System.out.println(username);
+//        System.out.println(username);
 
         Optional<User> maybeUser = userRepository.getByUserName(username);
         if (!maybeUser.isPresent()) {

@@ -16,6 +16,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     const [commonName, setCommonName] = React.useState(plant.nickname);
     const [scientificName, setScientificName] = React.useState("");
+    const [health, setHealth] = React.useState(plant.plantHealth);
     const [waterCurrent, setWaterCurrent] = React.useState(plant.waterCurrent);
     const [image, setImage] = React.useState("");
     const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
@@ -44,6 +45,12 @@ const PlantDetailPage  = ({route, navigation}) => {
     useEffect(() => {
         console.log(plant);
         getPlantName(id);
+        if ((upcomingWatered != null) && (upcomingWatered != "")) {
+            setUpcomingWatered(upcomingWatered.substring(0, 10));
+        } else {
+            setUpcomingWatered("");
+        }
+        
     });
 
     async function waterPlant() {
@@ -70,6 +77,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         console.log('success');
 						console.log(result);
                         console.log('success');
+                        setUpcomingWatered(result.waterNext)
                         //setPlantsList(result.caredFor);
 					});
 				}
@@ -131,7 +139,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 <View style={styles.plantNameContent}>
                     <Text style={styles.plantNameText}>{commonName}</Text>
                     <Text style={styles.plantNameText}>{scientificName}</Text>
-                    <Text style={styles.plantNameText}>{waterCurrent}</Text>
+                    <Text style={styles.plantNameText}>{upcomingWatered}</Text>
                 </View>
             </View>
         </ImageBackground>
@@ -144,7 +152,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         titleStyle={styles.cardText}
                         subtitleStyle={styles.cardText}
                         title="Water"
-                        subtitle={upcomingWatered}
+                        subtitle={"Upcoming date: " + upcomingWatered}
                         left={(props) =>  <IconButton {...props} icon="water" size={50} color={'#4E4E4E'}/>}
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setWaterVisible(true);}} />}
                     />
@@ -171,8 +179,8 @@ const PlantDetailPage  = ({route, navigation}) => {
                         titleStyle={styles.cardText}
                         subtitleStyle={styles.cardText}
                         // leftStyle={styles.cardLeft}
-                        title="current health"
-                        subtitle="current health"
+                        title="Current health"
+                        subtitle={health}
                         left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setHealthVisible(true);}} />}
                     />
