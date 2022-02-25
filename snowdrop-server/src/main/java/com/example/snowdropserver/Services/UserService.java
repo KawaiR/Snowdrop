@@ -276,11 +276,11 @@ public class UserService {
     }
 
 
-    public void changeEmail(String email) {
-        System.out.println(email);
+    public void changeEmail(SendResetTokenDomain sendResetTokenDomain) {
+        System.out.println(sendResetTokenDomain.getEmail());
 
         // check if user exists
-        Optional<User> maybeUser = userRepository.getByEmail(email);
+        Optional<User> maybeUser = userRepository.getByEmail(sendResetTokenDomain.getEmail());
 
         if (!maybeUser.isPresent()) {
             System.out.println("Email not registered.");

@@ -38,8 +38,8 @@ public class PlantController {
 
     @PostMapping(value = "/{id}/add-plant")
     @ResponseStatus(HttpStatus.CREATED)
-    public int AddUserPlant(@PathVariable int id, @RequestBody String username) {
-        return plantService.addUserPlant(id, username);
+    public int AddUserPlant(@PathVariable int id, @RequestBody AddPlantDomain addPlantDomain) {
+        return plantService.addUserPlant(id, addPlantDomain);
     }
 
     @PostMapping(value = "/{plantCareId}/water-plant")
