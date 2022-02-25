@@ -77,6 +77,11 @@ const Page_Profile_Email_Account  = ({navigation}) => {
                     Change Password
 				</Text>
 			</TouchableOpacity>
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Change_Email_Button]}  onPress={()=>navigation.navigate("Page_Change_Email")}  >
+				<Text style = {noneModeStyles._Main_Button_Description}   >
+                    Change Email
+				</Text>
+			</TouchableOpacity>
 		</View>
 	</ScrollView>
 	</KeyboardAvoidingView>
@@ -111,6 +116,10 @@ const noneModeStyles = StyleSheet.create({
     },
 	_Change_Password_Button: { 
 		top: pxRD(396,height,base_height),
+		backgroundColor: "#A4C400",
+	},
+	_Change_Email_Button: { 
+		top: pxRD(330,height,base_height),
 		backgroundColor: "#A4C400",
 	},
 	_Edit_Account_Button: { 

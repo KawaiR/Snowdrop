@@ -84,8 +84,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/change-email-request")
-    public void changeEmail(@RequestBody String email) {
-        userService.changeEmail(email);
+    public void changeEmail(@RequestBody SendResetTokenDomain sendResetTokenDomain) {
+        userService.changeEmail(sendResetTokenDomain);
     }
 
     @PostMapping(value = "/update-email")
