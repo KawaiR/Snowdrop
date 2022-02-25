@@ -9,7 +9,7 @@ class Plants_Search extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            search: [],
+            search: "",
             masterDataSource: [],
             filteredDataSource: [],
             width: Dimensions.get('window').width,
@@ -153,6 +153,7 @@ class Plants_Search extends React.Component {
             onChangeText={(text) => this.searchFilterFunction(text)}
             onClear={(text) => this.searchFilterFunction('')}
             placeholder="Search for a plant..."
+            textContentType="name"
             value={this.state.search}
         />
     );
@@ -179,10 +180,10 @@ class Plants_Search extends React.Component {
 
                 {/* Bottom Nav Bar */}
                 <Appbar style={styles.bottom}>
-                    <Appbar.Action icon="home" color="#005500" size={this.state.width * 0.09} />
-                    <Appbar.Action icon="leaf" color="#EDEECB" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} />
-                    <Appbar.Action icon="account-supervisor" color="#005500" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} />
-                    <Appbar.Action icon="brightness-5" color="#005500" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} />
+                    <Appbar.Action icon="home" color="#005500" size={this.state.width * 0.09} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
+                    <Appbar.Action icon="leaf" color="#EDEECB" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} onPress={() => this.props.navigation.navigate("Plant_Search")} />
+                    <Appbar.Action icon="account-supervisor" color="#005500" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />
+                    <Appbar.Action icon="brightness-5" color="#005500" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { this.props.navigation.navigate("Page_Profile_Email_Account"); } else { this.props.navigation.navigate("Page_Profile_Google_Account"); }}} />
                 </Appbar>
             </View>
         );
