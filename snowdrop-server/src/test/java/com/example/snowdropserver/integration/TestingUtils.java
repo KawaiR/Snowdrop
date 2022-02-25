@@ -4,6 +4,8 @@ import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.PlantCare;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -15,6 +17,8 @@ import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -276,5 +280,43 @@ public class TestingUtils {
         CloseableHttpResponse response = client.execute(httpPost);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();
+    }
+
+    public static WaterPlantDomain waterPlant(String username, int plantCareId, int expectedStatusCode)
+            throws Exception {
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/plants/" + plantCareId + "/water-plant");
+
+        System.out.println(username);
+
+        String json = objectMapper.writeValueAsString(username);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING WATER PLANT REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+        WaterPlantDomain futureWater = null;
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println(jsonResponse);
+//            futureWater = objectMapper.readValue(jsonResponse,
+//                    new TypeReference<WaterPlantDomain>() {
+//                    });
+        }
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+
+        System.out.println("in helper function: " + futureWater);
+
+        return futureWater;
     }
 }
