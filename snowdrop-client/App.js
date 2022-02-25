@@ -1,7 +1,9 @@
+import { registerRootComponent } from 'expo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-
+import Plant_Search from './pages/plants/Plant_Search.js'
+import Save_Plant from './pages/plants/Save_Plant.js'
 import Page_Sign_In from "./pages/auth/Page_Sign_In.js";
 import Page_Create_Account from "./pages/auth/Page_Create_Account.js";
 import Page_Create_Google_Username from "./pages/auth/Page_Create_Google_Username.js";
@@ -16,6 +18,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Plant_Search" component={Plant_Search} />
+        <Stack.Screen name="Save_Plant" component={Save_Plant} />
         <Stack.Screen name="Page_Sign_In" component={Page_Sign_In} />
         <Stack.Screen name="Page_Create_Account" component={Page_Create_Account} />
         <Stack.Screen name="Page_Profile_Email_Account" component={Page_Profile_Email_Account} />
@@ -28,3 +32,5 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+registerRootComponent(App);
