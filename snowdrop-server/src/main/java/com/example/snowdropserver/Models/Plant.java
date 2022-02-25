@@ -1,10 +1,7 @@
 package com.example.snowdropserver.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -32,8 +29,9 @@ public class Plant {
     @Column(name = "water_needs")
     String waterNeeds;
 
-    @OneToMany(mappedBy = "plant")
-    List<PlantCare> caredFor;
+//    @OneToMany(mappedBy = "plant")
+//    @ToString.Exclude
+//    List<PlantCare> caredFor;
 
     public int getId() {
         return id;
@@ -55,10 +53,6 @@ public class Plant {
         return waterNeeds;
     }
 
-    public List<PlantCare> getCaredFor() {
-        return caredFor;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -77,9 +71,5 @@ public class Plant {
 
     public void setWaterNeeds(String waterNeeds) {
         this.waterNeeds = waterNeeds;
-    }
-
-    public void setCaredFor(List<PlantCare> caredFor) {
-        this.caredFor = caredFor;
     }
 }
