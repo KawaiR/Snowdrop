@@ -129,7 +129,11 @@ const PlantDetailPage  = ({route, navigation}) => {
                             setCommonName(result.scientificName);
                         }
                         setScientificName(result.scientificName);
-                        setImage(result.plantImage);
+                        if (result.plantImage != null) {
+                            setImage(result.plantImage);
+                        } else {
+                            setImage(require('snowdrop-client/assets/plant-image.jpeg'));
+                        }
 					});
 				}
 			});
@@ -148,7 +152,7 @@ const PlantDetailPage  = ({route, navigation}) => {
         <Appbar.Action icon="brightness-5" color="white" style={{marginLeft: 'auto'}}/>
     </Appbar.Header>
 	<ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
-        <ImageBackground style={styles.plantsImage} source={require('snowdrop-client/assets/plant-image.jpeg')}>
+        <ImageBackground style={styles.plantsImage} source={image}>
             <View style={styles.plantNameView}>
                 <View style={styles.plantNameContent}>
                     <Text style={styles.plantNameText}>{commonName}</Text>
