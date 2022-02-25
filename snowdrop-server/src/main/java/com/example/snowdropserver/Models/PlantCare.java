@@ -1,10 +1,9 @@
 package com.example.snowdropserver.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"user", "plant"})
 public class PlantCare {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,97 +40,27 @@ public class PlantCare {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
+    @ToString.Exclude
     User user;
 
     @JsonIgnore
     @ManyToOne
+    @ToString.Exclude
     Plant plant;
-
-    public int getId() {
-        return id;
+/*
+    @Override
+    public String toString() {
+        return "PlantCare{" +
+                "id:" + id +
+                ",nickname:" + nickname +
+                ",temperature:" + temperature +
+                ",sunlight:" + sunlight +
+                ",waterCurrent:" + waterCurrent +
+                ",waterLast:" + waterLast +
+                ",waterNext:" + waterNext +
+                ",plantHealth:" + plantHealth +
+                ",fertilizer:" + fertilizer +
+                "}";
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
-    }
-
-    public int getSunlight() {
-        return sunlight;
-    }
-
-    public void setSunlight(int sunlight) {
-        this.sunlight = sunlight;
-    }
-
-    public LocalDateTime getWaterCurrent() {
-        return waterCurrent;
-    }
-
-    public void setWaterCurrent(LocalDateTime waterCurrent) {
-        this.waterCurrent = waterCurrent;
-    }
-
-    public LocalDateTime getWaterLast() {
-        return waterLast;
-    }
-
-    public void setWaterLast(LocalDateTime waterLast) {
-        this.waterLast = waterLast;
-    }
-
-    public LocalDateTime getWaterNext() {
-        return waterNext;
-    }
-
-    public void setWaterNext(LocalDateTime waterNext) {
-        this.waterNext = waterNext;
-    }
-
-    public String getPlantHealth() {
-        return plantHealth;
-    }
-
-    public void setPlantHealth(String plantHealth) {
-        this.plantHealth = plantHealth;
-    }
-
-    public String getFertilizer() {
-        return fertilizer;
-    }
-
-    public void setFertilizer(String fertilizer) {
-        this.fertilizer = fertilizer;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Plant getPlant() {
-        return plant;
-    }
-
-    public void setPlant(Plant plant) {
-        this.plant = plant;
-    }
+ */
 }

@@ -1,8 +1,10 @@
 package com.example.snowdropserver.integration;
 
 import com.example.snowdropserver.Models.Domains.*;
+import com.example.snowdropserver.Models.PlantCare;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -10,6 +12,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.junit.Assert;
 
 
 import java.util.List;
@@ -189,7 +192,7 @@ public class TestingUtils {
         return plantInfoDomain;
     }
 
-    public static void addUserPlant(String username, int plantId, int expectedStatusCode) throws Exception {
+    public static int addUserPlant(String username, int plantId, int expectedStatusCode) throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
 
         HttpPost httpPost = new HttpPost(baseUrl + "/plants/" + plantId + "/add-plant");
@@ -206,6 +209,70 @@ public class TestingUtils {
 
 
         System.out.println("**** MAKING ADD USER PLANT REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+        int plantCare = -1;
+        if (expectedStatusCode == 201) {
+            plantCare = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
+        }
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+
+        System.out.println("in helper function: " + plantCare);
+        return plantCare;
+    }
+
+    public static UserPlantsDomain getUserPlantsAndExpect(String username, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(baseUrl + "/plants/" + username + "/get-user-plants");
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING GET PLANT INFO REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpGet);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        UserPlantsDomain userPlantsDomain = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            userPlantsDomain = objectMapper.readValue(jsonResponse,
+                    new TypeReference<UserPlantsDomain>() {
+                    });
+        }
+        client.close();
+
+        return userPlantsDomain;
+    }
+
+    public static void updateNickName(String username, int plantCareId, String nickname, int expectedStatusCode)
+                                                                                                    throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/plants/" + username + "/update-nickname");
+
+        SetNicknameDomain setNicknameDomain = SetNicknameDomain.builder()
+                        .nickname(nickname)
+                        .plantCareId(plantCareId)
+                        .build();
+
+        System.out.println(setNicknameDomain);
+
+        String json = objectMapper.writeValueAsString(setNicknameDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING UPDATE NICKNAME REQUEST ****");
         CloseableHttpResponse response = client.execute(httpPost);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();

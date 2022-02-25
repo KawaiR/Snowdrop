@@ -11,7 +11,7 @@ public class TestAddPlant {
                 "userPlantSuccess",
                 201);
 
-        TestingUtils.addUserPlant("userPlantSuccess", 3, 200);
+        TestingUtils.addUserPlant("userPlantSuccess", 3, 201);
     }
 
     @Test
