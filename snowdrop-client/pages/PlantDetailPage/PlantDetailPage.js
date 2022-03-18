@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, ScrollView, Image, Dimensions, ImageBackground } from "react-native";
-import { Appbar, Avatar, Card, FAB, IconButton, Provider, Dialog, Portal, Button } from 'react-native-paper';
+import { Appbar, Avatar, Card, FAB, IconButton, Provider, Dialog, Portal, Button, ToggleButton } from 'react-native-paper';
+import { DebugInstructions } from "react-native/Libraries/NewAppScreen";
 
 import styles from './PlantDetailPageStyle.js';
 
@@ -13,6 +14,8 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [waterVisible, setWaterVisible] = React.useState(false);
     const [fertilizerVisible, setFertilizerVisible] = React.useState(false);
     const [healthVisible, setHealthVisible] = React.useState(false);
+    const [deleteVisible, setDeleteVisible] = React.useState(false);
+    const [sunVisible, setSunVisible] = React.useState(false);
 
     const [commonName, setCommonName] = React.useState(plant.nickname);
     const [scientificName, setScientificName] = React.useState("");
@@ -20,10 +23,13 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [waterCurrent, setWaterCurrent] = React.useState(plant.waterCurrent);
     const [image, setImage] = React.useState("");
     const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
+    const [value, setValue] = React.useState("0");
 
     const hideWater = () => setWaterVisible(false);
     const hideFertilizer = () => setFertilizerVisible(false);
     const hideHealth = () => setHealthVisible(false);
+    const hideDelete = () => setDeleteVisible(false);
+    const hideSun = () => setSunVisible(false);
 
     const waterYes = () => {
         console.log("waterYes");
@@ -40,6 +46,14 @@ const PlantDetailPage  = ({route, navigation}) => {
     }
     const fertilizerNo = () => {
         setFertilizerVisible(false);
+    }
+    const deleteYes = () => {
+        navigation.navigate("Page_Plant");
+        setDeleteVisible(false);
+    }
+    
+    const sunYes = () => {
+        setSunVisible(false);
     }
 
     useEffect(() => {
@@ -103,13 +117,6 @@ const PlantDetailPage  = ({route, navigation}) => {
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
                         console.log(result);
-                        /*
-                        if (result.plantName != null) {
-                            setCommonName(result.plantName);
-                        } else {
-                            setCommonName(result.scientificName);
-                        }
-                        */
                         setScientificName(result.scientificName);
                         if (result.plantImage != null) {
                             setImage(result.plantImage);
@@ -131,7 +138,7 @@ const PlantDetailPage  = ({route, navigation}) => {
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_Plant")}/>
-        <Appbar.Action icon="brightness-5" color="white" style={{marginLeft: 'auto'}}/>
+        <Appbar.Action icon="delete" color="white" style={{marginLeft: 'auto'}} onPress={() => {setDeleteVisible(true);}}/>
     </Appbar.Header>
 	<ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
         <ImageBackground style={styles.plantsImage} source={require('snowdrop-client/assets/plant-image.jpeg')}>
@@ -185,6 +192,17 @@ const PlantDetailPage  = ({route, navigation}) => {
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setHealthVisible(true);}} />}
                     />
                 </Card>
+                <Card mode="outlined" style={styles.card}>
+                    <Card.Title
+                        style={styles.cardTitle}
+                        titleStyle={styles.cardText}
+                        subtitleStyle={styles.cardText}
+                        title="Sunlight Exposure"
+                        subtitle={"TODO"}
+                        left={(props) =>  <IconButton {...props} icon="weather-sunny" size={50} color={'#4E4E4E'}/>}
+                        right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setSunVisible(true);}} />}
+                    />
+                </Card>
             </View>
         </View>
         <Portal>
@@ -213,6 +231,36 @@ const PlantDetailPage  = ({route, navigation}) => {
                 <Dialog.Actions>
                 <Button onPress={hideHealth}>Yes</Button>
                 <Button onPress={hideHealth}>No</Button>
+                </Dialog.Actions>
+            </Dialog>
+        </Portal>
+        <Portal>
+            <Dialog visible={deleteVisible} onDismiss={hideDelete}>
+                <Dialog.Title>Deleting Plant</Dialog.Title>
+                <Dialog.Content>
+                    <Text>Are you sure that you want to delete this plant?</Text>
+                </Dialog.Content>
+                <Dialog.Actions>
+                <Button onPress={deleteYes}>Yes</Button>
+                <Button onPress={hideDelete}>No</Button>
+                </Dialog.Actions>
+            </Dialog>
+            <Dialog visible={sunVisible} onDismiss={hideSun}>
+                <Dialog.Title>Sunlight Exposure</Dialog.Title>
+                <Dialog.Content>
+                    <Text>How much sunlight does your plant get?</Text>
+                    <ToggleButton.Row onValueChange={value => setValue(value)} value={value}>
+                        <ToggleButton icon="format-align-left" value="0" />
+                        <ToggleButton icon="format-align-right" value="1" />
+                    </ToggleButton.Row>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    {/* <ToggleButton.Row onValueChange={value => setValue(value)} value={value}>
+                        <ToggleButton icon="format-align-left" value="0" />
+                        <ToggleButton icon="format-align-right" value="1" />
+                    </ToggleButton.Row> */}
+                    <Button onPress={sunYes}>Confirm</Button>
+                    <Button onPress={hideSun}>Cancel</Button>
                 </Dialog.Actions>
             </Dialog>
         </Portal>
