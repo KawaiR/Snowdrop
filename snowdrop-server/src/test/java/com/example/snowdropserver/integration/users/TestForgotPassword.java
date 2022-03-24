@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.equalTo;
 //NOTE: this class has to be manually changed each time it's tested
 public class TestForgotPassword {
 
-
+/*
     @Test
     public void forgotPasswordSuccess() throws Exception {
         TestingUtils.createUserAndExpect("resetPassword",
@@ -68,4 +68,5 @@ public class TestForgotPassword {
                 "updatePasswordSuccess",
                 200);
     }
+ */
 }

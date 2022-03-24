@@ -228,4 +228,41 @@ public class PlantService {
 
         return waterPlantDomain;
     }
+
+    public void deleteUserPlant(int plantCareId, DeleteUserPlantDomain deleteUserPlantDomain) {
+        String username = deleteUserPlantDomain.getUsername();
+        System.out.println(username);
+
+        Optional<User> maybeUser = userRepository.getByUserName(username);
+        if (!maybeUser.isPresent()) {
+            System.out.println("User not found");
+            throw new UserNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        List<PlantCare> userPlants = plantCareRepository.getByUser(user);
+        int plantIndex = -1;
+
+        System.out.println("Send plantCareId: " + plantCareId);
+        for (int i = 0; i < userPlants.size(); i++) {
+            System.out.println("Plant in list: " + userPlants.get(i).getId());
+            if (userPlants.get(i).getId() == plantCareId) {
+                plantIndex = i;
+                break;
+            }
+        }
+
+        if (plantIndex == -1) {
+            System.out.println("User doesn't have this plant");
+            throw new NoPlantUserComboException();
+        }
+
+        PlantCare userPlant = userPlants.get(plantIndex);
+        userPlants.remove(userPlant);
+
+        userRepository.save(user);
+        plantCareRepository.delete(userPlant);
+
+        System.out.println("The plant was deleted!");
+    }
 }
