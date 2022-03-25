@@ -22,8 +22,11 @@ public class Tag {
     @Column(name="tag_name")
     String tagName;
 
-    @OneToMany(mappedBy = "tag")
-    private List<Post> posts;
+    @Column(name="scientific_name")
+    String scientificName;
+
+//    @OneToMany(mappedBy = "tag")
+//    private List<Post> posts;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "plant_id", referencedColumnName = "id")

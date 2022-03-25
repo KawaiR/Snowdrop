@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class TestUpdateEmail {
 
+    /*
     @Test
     public void requestChangeSuccess() throws Exception {
         TestingUtils.createUserAndExpect("requestChangeSuccess",
@@ -92,4 +93,5 @@ public class TestUpdateEmail {
         assertThat(response.getStatusLine().getStatusCode(), equalTo(400));
         client.close();
     }
+     */
 }

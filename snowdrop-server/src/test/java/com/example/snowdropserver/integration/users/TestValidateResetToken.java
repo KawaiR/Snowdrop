@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 public class TestValidateResetToken {
-
+/*
     @Test
     public void sendTokenSuccess() throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
@@ -48,4 +48,5 @@ public class TestValidateResetToken {
         TestingUtils.validateTokenAndExpect(validateResetTokenDomain,
                 400);
     }
+ */
 }

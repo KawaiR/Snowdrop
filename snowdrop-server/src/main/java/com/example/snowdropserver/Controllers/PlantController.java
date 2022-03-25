@@ -57,4 +57,10 @@ public class PlantController {
     public void updateNickName(@PathVariable String username, @RequestBody SetNicknameDomain setNicknameDomain) {
         plantService.updateNickName(username, setNicknameDomain);
     }
+
+    @PostMapping(value = "/{plantCareId}/delete-plant")
+    public void deleteUserPlant(@PathVariable int plantCareId,
+                                @RequestBody DeleteUserPlantDomain deleteUserPlantDomain) {
+        plantService.deleteUserPlant(plantCareId, deleteUserPlantDomain);
+    }
 }
