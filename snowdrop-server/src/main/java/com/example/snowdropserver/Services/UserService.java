@@ -92,6 +92,7 @@ public class UserService {
                 .googleID(null)
                 .comments(null)
                 .totalPoints(0)
+                .editorPrivilege(0)
                 .posts(null)
                 .build();
 
@@ -276,11 +277,11 @@ public class UserService {
     }
 
 
-    public void changeEmail(String email) {
-        System.out.println(email);
+    public void changeEmail(SendResetTokenDomain sendResetTokenDomain) {
+        System.out.println(sendResetTokenDomain.getEmail());
 
         // check if user exists
-        Optional<User> maybeUser = userRepository.getByEmail(email);
+        Optional<User> maybeUser = userRepository.getByEmail(sendResetTokenDomain.getEmail());
 
         if (!maybeUser.isPresent()) {
             System.out.println("Email not registered.");
@@ -461,4 +462,10 @@ public class UserService {
                 .hashString(toHash, StandardCharsets.UTF_8)
                 .toString();
     }
+    /*
+    public List<PlantCare> plantForUser(AuthConfirmDomain domain) {
+        Optional<User> user = userRepository.getByUserName(domain.getUserName());
+        return user.get().getPlants();
+    }
+    */
 }

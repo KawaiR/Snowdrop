@@ -38,13 +38,14 @@ public class PlantController {
 
     @PostMapping(value = "/{id}/add-plant")
     @ResponseStatus(HttpStatus.CREATED)
-    public int AddUserPlant(@PathVariable int id, @RequestBody String username) {
-        return plantService.addUserPlant(id, username);
+    public int AddUserPlant(@PathVariable int id, @RequestBody AddPlantDomain addPlantDomain) {
+        return plantService.addUserPlant(id, addPlantDomain);
     }
 
     @PostMapping(value = "/{plantCareId}/water-plant")
-    public WaterPlantDomain logWaterDate(@PathVariable int plantCareId, @RequestBody String username) {
-        return plantService.logWaterDate(plantCareId, username);
+    public WaterPlantDomain logWaterDate(@PathVariable int plantCareId,
+                                         @RequestBody LogWaterPlantDomain logWaterPlantDomain) {
+        return plantService.logWaterDate(plantCareId, logWaterPlantDomain);
     }
 
     @GetMapping(value = "/{username}/get-user-plants")

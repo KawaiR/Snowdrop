@@ -4,7 +4,6 @@ import { TouchableOpacity, PixelRatio } from "react-native";
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import {Lato_400Regular, Lato_700Bold} from '@expo-google-fonts/lato';
-import * as Google from 'expo-google-app-auth';
 
 const {
 	width,
@@ -24,100 +23,68 @@ function pxRD (px, cur_screen, base) {
 	return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
 }
 
-const Page_Create_Account  = ({navigation}) => {
+const Page_Email_Reset  = ({navigation}) => {
+	
+	const [resetToken, onChangeResetToken] = React.useState(global.resetToken);
+	const [oldEmail, onChangeOldEmail] = React.useState(global.oldEmail);
+	global.resetToken = undefined;
+	global.oldEmail = undefined;
+	const [title, onChangeTitle] = React.useState("Create an new email,\nRecover your account to continue.");
+	const [newEmail, onChangeNewEmail] = React.useState("");
+	const [confirm, onChangeConfirm] = React.useState("");
+	const [optionalPageDescription, onChangeOptionalPageDescription] = React.useState("Want to keep the old email?");
+	const [optionalButtonDescription, onChangeOptionalButtonDescription] = React.useState("Sign In");
 	useEffect(() => {
-	}, []);
-	const [title, onChangeTitle] = React.useState("Welcome aboard,\nCreate an account to start your journey");
-	const [email, onChangeEmail] = React.useState("");
-	const [password, onChangePassword] = React.useState("");
-	const [username, onChangeUsername] = React.useState("");
-	
-	async function signInWithGoogleAsync() {
-		try {
-			const result = await Google.logInAsync({
-			androidClientId: "1057168519364-q6ubd34uinifouhjccbfa17nsgngvhgn.apps.googleusercontent.com",
-			iosClientId: "1057168519364-13l42e2uflp9m7898h7vvug7hogr9cjt.apps.googleusercontent.com",
-			scopes: ['profile', 'email'],
-			});
-	
-			if (result.type === 'success') {
-				global.isEmail = false;
-				global.googleID = result.user.id;
-				global.accessToken = result.accessToken;
-				global.idToken = result.idToken;
-				global.refreshToken = result.refreshToken;
-				try {
-					let response = await fetch(`http://localhost:8080/users/get-google-user`, {
-						method: "POST",
-						headers: {
-						"Content-Type": "application/json; charset=utf-8",
-						},
-						body: JSON.stringify({
-							googleID: global.googleID,
-							userName: null,
-						}),
-					})
-					.then((response) => {
-						if (response.status == 404 || response.status == 400) {
-							navigation.navigate("Page_Create_Google_Username");
-						}
-						else {
-							response.json().then((result) => {
-								global.userName = result.userName;
-								navigation.navigate("Location_Permission");
-								// navigation.navigate("Page_Profile_Google_Account");
-							})
-						}
-					})	
-				} catch (err) {
-					console.log("Fetch didnt work.");
-					console.log(err);
-				}
-			} else {
-				return { cancelled: true };
-			}
-		} catch (e) {
-			return { error: true };
+		if (resetToken == undefined) {
+			onChangeOptionalPageDescription("Changed your mind?");
+			onChangeOptionalButtonDescription("Profile");
 		}
-	}
+	}, []);
 
-	async function createAccountAsync() {
-		if (!email || !username || !password) {
-			onChangeTitle("All Fields Are Required!");
+	function OptionalNavigation() {
+		if (resetToken == undefined) navigation.navigate("Page_Profile_Email_Account")
+		else navigation.navigate("Page_Sign_In");
+	}
+	async function UpdateEmail() {
+		if (!newEmail || !confirm) {
+			onChangeTitle("Email Cannot Be Empty!");
 			return;
 		}
-		try {
-			let response = await fetch(`http://localhost:8080/users`, {
-				method: "POST",
-				headers: {
-				"Content-Type": "application/json; charset=utf-8",
-				},
-				body: JSON.stringify({
-				email: email,
-				password: password,
-				userName: username,
-				}),
-			})
-			.then((response) => {
-				if (response.status == 400) {
-					response.json().then((result) => {
-						onChangeTitle(result.message);
-					});
-				}
-				else if (response.status == 200 || response.status == 201 || response.status == 202) {
-					response.json().then((result) => {
-						global.isEmail = true;
-						global.email = email;
-						global.authTokenHash = result.authTokenHash;
-						global.userName = result.userName;
-						navigation.navigate("Location_Permission");
-						// navigation.navigate("Page_Profile_Email_Account");
-					});
-				}
-			})
-		} catch (err) {
-			console.log("Fetch didnt work.");
-			console.log(err);
+		if (newEmail != confirm) {
+			onChangeTitle("Email Does Not Match!");
+			return;
+		}
+		if (resetToken != undefined) {
+			try {
+				let response = await fetch(`http://localhost:8080/users/update-email`, {
+					method: "POST",
+					headers: {
+					"Content-Type": "application/json; charset=utf-8",
+					},
+					body: JSON.stringify({
+						oldEmail: email,
+						newEmail: newEmail,
+						emailToken: resetToken,
+					}),
+				})
+				.then((response) => {
+					if (response.status == 400) {
+						response.json().then((result) => {
+							onChangeTitle(result.message);
+						});
+					}
+					else if (response.status == 200 || response.status == 201) {
+                        navigation.navigate('Page_Sign_In');
+					}
+				})
+			} catch (err) {
+				console.log("Fetch didnt work.");
+				console.log(err);
+			}
+		}
+		else {
+            Alert.alert("Error", "Token expired", [{ text: 'OK' }],);
+            navigation.navigate('Page_Sign_In');
 		}
 	}
 
@@ -141,64 +108,53 @@ const Page_Create_Account  = ({navigation}) => {
 			<Image style = {noneModeStyles._Right_Leaf_Image} source = {require("../../assets/background/rightleaf.png")}/>
 			<View style = {noneModeStyles._Optional_Navigation_Button}>
 				<Text style = {noneModeStyles._Optional_Page_Description}>
-				Remember the password?
+					{optionalPageDescription}
 				</Text>
-				<Text style = {noneModeStyles._Optional_Button_Description} onPress={() => navigation.navigate('Page_Sign_In')}>
-					Sign In
+				<Text style = {noneModeStyles._Optional_Button_Description} onPress={() => OptionalNavigation()}>
+					{optionalButtonDescription}
 				</Text>
 			</View>
 			<View style = {noneModeStyles._White_Box}/>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Google_Button]} onPress={()=>signInWithGoogleAsync()} >
-				<Text style = {noneModeStyles._Main_Button_Description}   >
-					Continue with Google
+			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Submit_Button]} onPress={()=>UpdateEmail()}>
+				<Text style = {noneModeStyles._Main_Button_Description} >
+					Submit
 				</Text>
 			</TouchableOpacity>
-			<TouchableOpacity style = {[noneModeStyles._Main_Navigation_Button, noneModeStyles._Email_Button]} onPress={()=>createAccountAsync()}   >
-				<Text style = {noneModeStyles._Main_Button_Description}   >
-					Sign Up
-				</Text>
-			</TouchableOpacity>
-			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Password_Line]}></View>
-			<TextInput
+			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Verification_Code_Line]}></View>
+			<TextInput 
 				autoCapitalized='none'
 				autoCorrect={false}
-				onChangeText={onChangePassword}
-				value={password}
-				placeholder="Password"
-				secureTextEntry={true}
-				textContentType="password"
-				style = {[noneModeStyles._Text_Field,noneModeStyles._Password_Location]}
+				onChangeText={onChangeConfirm}
+				value={confirm}
+				placeholder="Re-enter Email"
+				secureTextEntry={false}
+				textContentType="emailAddress"
+				style = {[noneModeStyles._Text_Field,noneModeStyles._Verification_Code_Location]}
 			/>
 			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Email_Line]}></View>
-			<TextInput
+			<TextInput 
 				autoCapitalized='none'
 				autoCorrect={false}
 				autoFocus={true}
-				onChangeText={onChangeEmail}
-				value={email}
-				placeholder="Email"
+				onChangeText={onChangeNewEmail}
+				value={newEmail}
+				placeholder="New Email"
+				secureTextEntry={false}
+				textContentType="emailAddress"
 				style = {[noneModeStyles._Text_Field,noneModeStyles._Email_Location]}
-			/>
-			<View style = {[noneModeStyles._Text_Field_Line,noneModeStyles._Username_Line]}></View>
-			<TextInput
-				autoFocus={true}
-				onChangeText={onChangeUsername}
-				value={username}
-				placeholder="Username"
-				style = {[noneModeStyles._Text_Field,noneModeStyles._Username_Location]}
 			/>
 			<Text style = {noneModeStyles._Title_Description}   >
 				{title}
 			</Text>
 			<View style = {noneModeStyles._Icon_Frame}>
-				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle.png")}/>
+				<Image style = {noneModeStyles._Icon_Image} source = {require("../../assets/auth/icon_circle_light.png")}/>
 				<Text  style = {noneModeStyles._App_Name}>SNOWDROP</Text>
 			</View>
 		</View>
 	</ScrollView>
 	</KeyboardAvoidingView>
 )}
-export default Page_Create_Account
+export default Page_Email_Reset
 
 const noneModeStyles = StyleSheet.create({	
 	_Page: { 
@@ -251,23 +207,31 @@ const noneModeStyles = StyleSheet.create({
 		height: pxRD(2,height,base_height),
 		backgroundColor: color_description,
 	},
-	_Username_Line: {
+	_Email_Line: {
 		top: pxRD(364,height,base_height),
 	},
-	_Email_Line: {
+	_Verification_Code_Line: {
 		top: pxRD(431,height,base_height),
 	},
-	_Password_Line: {
-		top: pxRD(498,height,base_height),
-	},
-	_Username_Location: { 
+	_Email_Location: { 
 		top: pxRD(319,height,base_height),
 	},
-	_Email_Location: { 
+	_Verification_Code_Location: { 
 		top: pxRD(386,height,base_height),
 	},
-	_Password_Location: { 
-		top: pxRD(453,height,base_height),
+	_Send_Code_Button: { 
+		position: "absolute",
+		alignSelf: "center",
+		width: pxRD(344,width,base_width),
+		top: pxRD(338,height,base_height),
+	},
+	_Send_Code_Button_Text: { 
+		position: "absolute",
+		alignSelf: "flex-end",
+		fontSize: pxRD(15,height,base_height),
+		fontFamily: "Lato_700Bold",
+		textAlign: "right",
+		color: color_opt_button,
 	},
 	_Main_Navigation_Button: { 
 		position: "absolute",
@@ -284,19 +248,15 @@ const noneModeStyles = StyleSheet.create({
 		textAlign: "center",
 		color: "white",
 	},
-	_Email_Button: { 
-		top: pxRD(530,height,base_height),
+	_Submit_Button: { 
+		top: pxRD(463,height,base_height),
 		backgroundColor: "#A4C400",
-	},
-	_Google_Button: {
-		top: pxRD(597,height,base_height),
-		backgroundColor: "#FF000099",
 	},
 	_White_Box: {
 		alignSelf: "center",
 		top: pxRD(319,height,base_height),
 		width: pxRD(364,width,base_width),
-		height: pxRD(325,height,base_height),
+		height: pxRD(191,height,base_height),
 		backgroundColor: "white",
 	},
 	_Optional_Navigation_Button: {
@@ -307,7 +267,7 @@ const noneModeStyles = StyleSheet.create({
 		justifyContent: "center",
 		width: pxRD(364,width,base_width),
 		height: pxRD(58,height,base_height),
-		top: pxRD(654,height,base_height),
+		top: pxRD(520,height,base_height),
 	},
 	_Optional_Page_Description: {
 		marginRight: pxRD(5,width,base_width),
@@ -362,4 +322,3 @@ const noneModeStyles = StyleSheet.create({
 		left: pxRD(320,width,base_width),
 	}
 })
-
