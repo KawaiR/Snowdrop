@@ -17,7 +17,7 @@ public class TestValidateResetToken {
     @Test
     public void sendTokenSuccess() throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost("http://localhost:8080/users/razankawai99@gmail.com/forgot-password");
+        HttpPost httpPost = new HttpPost("https://quiet-reef-93741.herokuapp.com/users/razankawai99@gmail.com/forgot-password");
 
         StringEntity entity = new StringEntity("razankawai99@gmail.com");
         httpPost.setEntity(entity);

@@ -118,4 +118,8 @@ public class PostService {
         return postRepository.getByTag(tag);
     }
 
+    public int upvotePost(int postId) {
+        return -1;
+    }
+
 }
