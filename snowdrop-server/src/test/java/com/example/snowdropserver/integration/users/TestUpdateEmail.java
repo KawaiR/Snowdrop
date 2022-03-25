@@ -25,7 +25,7 @@ public class TestUpdateEmail {
                 201);
 
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost("http://localhost:8080/users/change-email-request");
+        HttpPost httpPost = new HttpPost("https://quiet-reef-93741.herokuapp.com/users/change-email-request");
 
         StringEntity entity = new StringEntity("razankawai99@hotmail.com");
         httpPost.setEntity(entity);
@@ -41,7 +41,7 @@ public class TestUpdateEmail {
     public void updatePasswordSuccess() throws Exception {
 
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost("http://localhost:8080/users/update-email");
+        HttpPost httpPost = new HttpPost("https://quiet-reef-93741.herokuapp.com/users/update-email");
 
         UpdateEmailDomain updateEmailDomain = UpdateEmailDomain.builder()
                 .oldEmail("razankawai99@hotmail.com")
@@ -73,7 +73,7 @@ public class TestUpdateEmail {
     public void updatePasswordFailure() throws Exception {
 
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost("http://localhost:8080/users/update-email");
+        HttpPost httpPost = new HttpPost("https://quiet-reef-93741.herokuapp.com/users/update-email");
 
         UpdateEmailDomain updateEmailDomain = UpdateEmailDomain.builder()
                 .oldEmail("pyunj70@gmail.com")
