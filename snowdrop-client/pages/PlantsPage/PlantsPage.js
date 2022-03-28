@@ -104,6 +104,7 @@ const PlantsPage  = ({navigation}) => {
 
         </View>
 	</ScrollView>
+    {global.plantSearchFromWritePost = false}
     <FAB
         style={styles.fab}
         icon="plus"

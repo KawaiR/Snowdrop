@@ -117,9 +117,15 @@ class Plants_Search extends React.Component {
     onItemPressed = (id) => {
         // Function for click on an item
         console.log("Item.id = " + id);
-        this.props.navigation.navigate('Save_Plant', {
-            plantId: id,
-        });
+        if (global.plantSearchFromWritePost) {
+            // Make fetch call POST request
+            // Navigate to View Community post
+            // On view community post, clear out to avoid weird values global.postTitle, global.postContent, global.postTag once used
+        } else {
+            this.props.navigation.navigate('Save_Plant', {
+                plantId: id,
+            });
+        }
     };
 
     renderItem = ({ item }) => (

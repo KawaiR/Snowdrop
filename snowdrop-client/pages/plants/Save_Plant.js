@@ -88,6 +88,7 @@ const Save_Plant = ({ route, navigation }) => {
 
                 {/* Header Bar */}
                 <Appbar.Header style={styles.appbar}>
+                    {global.plantSearchFromWritePost = false}
                     <Appbar.BackAction color="white" onPress={()=>navigation.navigate("Plant_Search")}/>
                 </Appbar.Header>
 
@@ -142,6 +143,7 @@ const Save_Plant = ({ route, navigation }) => {
 
                 {/* Bottom Nav Bar */}
                 <Appbar style={styles.bottom}>
+                    {global.plantSearchFromWritePost = false}
                     <Appbar.Action icon="home" color="#005500" size={width * 0.09} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
                     <Appbar.Action icon="leaf" color="#EDEECB" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Plant_Search")} />
                     <Appbar.Action icon="account-supervisor" color="#005500" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />

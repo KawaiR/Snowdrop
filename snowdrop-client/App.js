@@ -17,6 +17,7 @@ import Page_Profile_Google_Account from "./pages/profile/Page_Profile_Google_Acc
 import Page_Profile_Email_Account from "./pages/profile/Page_Profile_Email_Account.js"; 
 import Page_Change_Email from './pages/auth/Page_Change_Email.js';
 import Page_Email_Reset from './pages/auth/Page_Email_Reset.js';
+import Write_Post from './pages/write_posts/Write_Post.js';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -40,6 +41,7 @@ export default function App() {
         <Stack.Screen name="Page_Plant" component={PlantsPage} />
         <Stack.Screen name="Plant_Search" component={Plant_Search} />
         <Stack.Screen name="Save_Plant" component={Save_Plant} />
+        <Stack.Screen name="Write_Post" component={Write_Post} />
 
       </Stack.Navigator>
     </NavigationContainer>
