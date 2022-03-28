@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, PixelRatio } from 'react-native';
 
 var width = Dimensions.get('window').width; 
 var height = Dimensions.get('window').height;
@@ -10,6 +10,10 @@ var backgroundcolor = '#EDEECB';
 var textcolor = '#2e2b36';
 var green = '#82B47D';
 var blue = '#A8C1DD';
+
+function pxRD(px, cur_screen, base) {
+    return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
+}
 
 export default StyleSheet.create({
     container: {
@@ -104,6 +108,29 @@ export default StyleSheet.create({
         backgroundColor: 'white',
         borderColor: '#D3D3D3',
         borderWidth: 1,
+    },
+    plantCareButton: {
+        top: pxRD(210, height, defaultH),
+        width: pxRD(defaultW * 0.6, width, defaultW),
+        height: pxRD(defaultH * 0.06, height, defaultH),
+        backgroundColor: '#82B47D',
+        borderRadius: 25,
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: 'center',
+        padding: 10,
+        shadowColor: '#EDEECB',
+        shadowOpacity: 0.8,
+        shadowOffset: {
+            width: 0,
+            height: 3
+        },
+    },
+    plantCareText: {
+        justifyContent: 'center',
+        color: 'white',
+        fontFamily: "Lato_700Bold",
+        fontSize: 20,
     },
     fab: {
         position: 'absolute',
