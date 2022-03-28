@@ -197,6 +197,36 @@ public class TestingUtils {
         return plantInfoDomain;
     }
 
+    public static void addNewPlant(String commonName, String scientificName, String plantImageUrl,
+                                   int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/plants/add-new-plant");
+
+        AddNewPlantDomain addNewPlantDomain = AddNewPlantDomain.builder()
+                .commonName(commonName)
+                .scientificName(scientificName)
+                .plantImageUrl(plantImageUrl)
+                .build();
+
+        System.out.println(addNewPlantDomain);
+
+        String json = objectMapper.writeValueAsString(addNewPlantDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING ADD NEW PLANT REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+    }
+
     public static int addUserPlant(int plantId, String userName, String plantHealth, String nickname,
                                    int expectedStatusCode) throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();

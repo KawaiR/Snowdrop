@@ -9,28 +9,28 @@
         <modifyDataType columnName="scientific_name"
                         newDataType="varchar(2000)"
                         tableName="plants"/>
-        <loadUpdateData encoding="UTF-8"
-                        relativeToChangelogFile="true"
-                        file="Common names and scientific names.csv"
-                        schemaName="snowdrop"
-                        separator=","
-                        tableName="plants"
-                        primaryKey="id">
-            <column name="id"
-                    type="skip"/>
-            <column header="Symbol"
-                    type="skip"/>
-            <column header="Synonym Symbol"
-                    type="skip"/>
-            <column header="Family"
-                    type="skip"/>
-            <column header="Common Name"
-                    name="plant_name"
-                    type="varchar"/>
-            <column header="Scientific Name with Author"
-                    name="scientific_name"
-                    type="varchar"/>
-        </loadUpdateData>
+<!--        <loadUpdateData encoding="UTF-8"-->
+<!--                        relativeToChangelogFile="true"-->
+<!--                        file="Common names and scientific names.csv"-->
+<!--                        schemaName="snowdrop"-->
+<!--                        separator=","-->
+<!--                        tableName="plants"-->
+<!--                        primaryKey="id">-->
+<!--            <column name="id"-->
+<!--                    type="skip"/>-->
+<!--            <column header="Symbol"-->
+<!--                    type="skip"/>-->
+<!--            <column header="Synonym Symbol"-->
+<!--                    type="skip"/>-->
+<!--            <column header="Family"-->
+<!--                    type="skip"/>-->
+<!--            <column header="Common Name"-->
+<!--                    name="plant_name"-->
+<!--                    type="varchar"/>-->
+<!--            <column header="Scientific Name with Author"-->
+<!--                    name="scientific_name"-->
+<!--                    type="varchar"/>-->
+<!--        </loadUpdateData>-->
     </changeSet>
 
 </databaseChangeLog>
