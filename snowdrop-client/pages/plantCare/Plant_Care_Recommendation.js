@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text, View, StyleSheet, Dimensions, ScrollView, ImageBackground, Image } from 'react-native';
-import { Appbar } from 'react-native-paper';
+import { Text, View, StyleSheet, Dimensions, ScrollView, Image } from 'react-native';
+import { Appbar, Card, Paragraph } from 'react-native-paper';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
@@ -27,10 +27,12 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
+            {/* Header */}
             <Appbar.Header style={styles.appbar}>
-                <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_PlantDetail", {plant: plant, id: plant.id} )} />
+                <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_PlantDetail", { plant: plant, id: plant.id })} />
                 <Appbar.Content title={<Text style={styles.headerTitle}>Recommendations</Text>} style={styles.headerTitle} />
             </Appbar.Header>
+
             <ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
                 <View style={styles.plantContainer}>
                     <Image style={styles.plantImage} source={require('snowdrop-client/assets/plant-image.jpeg')}></Image>
@@ -45,9 +47,56 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                         </View>
                     </View>
                 </View>
-                <Text style={styles.paragraph}>Some text goes here</Text>
+
+                <View style={styles.recommendationsView}>
+                    <Card mode="outlined" style={styles.card}>
+                        <Card.Title
+                            style={styles.cardTitle}
+                            titleStyle={styles.cardTitle}
+                            title="Water"
+                        />
+                        <Card.Content>
+                            <Paragraph style={styles.cardText}>Requires moderate watering</Paragraph>
+                            <Paragraph style={styles.cardText}>Touch top layer of soil, if dry only then water.</Paragraph>
+                        </Card.Content>
+                    </Card>
+                    <Card mode="outlined" style={styles.card}>
+                        <Card.Title
+                            style={styles.cardTitle}
+                            titleStyle={styles.cardTitle}
+                            title="Fertilizer"
+                        />
+                        <Card.Content>
+                            <Paragraph style={styles.cardText}>Fertilize every 2 weeks</Paragraph>
+                        </Card.Content>
+                    </Card>
+                    <Card mode="outlined" style={styles.card}>
+                        <Card.Title
+                            style={styles.cardTitle}
+                            titleStyle={styles.cardTitle}
+                            title="Sunlight"
+                        />
+                        <Card.Content>
+                            <Paragraph style={styles.cardText}>Requires moderate sunlight</Paragraph>
+                            <Paragraph style={[styles.cardText, { alignSelf: 'center', color: "green" }]}>Sunlight in your area meets requirement</Paragraph>
+                        </Card.Content>
+                    </Card>
+                    <Card mode="outlined" style={styles.card}>
+                        <Card.Title
+                            style={styles.cardTitle}
+                            titleStyle={styles.cardTitle}
+                            title="Temperature"
+                        />
+                        <Card.Content>
+                            <Paragraph style={styles.cardText}>Requires temperatures between 65 and 75 F</Paragraph>
+                            <Paragraph style={[styles.cardText, { alignSelf: 'center', color: "red" }]}>Temperature in your area higher than required</Paragraph>
+                        </Card.Content>
+                    </Card>
+                </View>
             </ScrollView>
+
             {/* Add navigation to bottom appbar */}
+            {/* Bottom Nav bar */}
             <Appbar style={styles.bottom}>
                 <Appbar.Action icon="home" color="#005500" size={width * 0.09} />
                 <Appbar.Action icon="leaf" color="#EDEECB" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
@@ -90,6 +139,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#EDEECB',
+        paddingBottom: height * 0.078125,
     },
 
     // Plant image and details style
@@ -125,13 +175,35 @@ const styles = StyleSheet.create({
         letterSpacing: -0.24,
     },
 
-    // Remove paragraph style
-    paragraph: {
-        fontSize: 18,
-        textAlign: 'center',
-        margin: 20,
-        fontFamily: "Lato_400Regular",
+    // Recommendations style
+    recommendationsView: {
+        marginTop: 30,
+        marginBottom: height * 27 / defaultH,
     },
-
-    
+    card: {
+        alignSelf: 'center',
+        backgroundColor: 'white',
+        width: width * 390 / defaultW,
+        height: height * 0.14,
+        borderRadius: 25,
+        marginBottom: height * 8 / defaultH,
+        shadowColor: 'grey',
+        shadowOpacity: 0.2,
+        shadowOffset: {
+            width: 0,
+            height: 3
+        },
+    },
+    cardTitle: {
+        justifyContent: 'center',
+        fontFamily: "Lato_700Bold",
+        // flex: 1,
+    },
+    cardText: {
+        // marginLeft: width * 0.06,
+        fontFamily: "Lato_400Regular",
+        fontSize: 15,
+        color: "#4E4E4E",
+        marginBottom: 3,
+    },
 }); 
