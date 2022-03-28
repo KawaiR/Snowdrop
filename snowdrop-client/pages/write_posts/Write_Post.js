@@ -31,7 +31,7 @@ const Write_Post = ({ navigation }) => {
         return <AppLoading />
     }
 
-    const cancelPost = () => {
+    function cancelPost() {
         Alert.alert(
             'Cancel post',
             'Are you sure you want to delete the post you were working on?',
@@ -46,7 +46,19 @@ const Write_Post = ({ navigation }) => {
         );
     }
 
-    const onPressSubmit = () => {
+    function onPressSubmit() {
+        console.log("title = ", title)
+        console.log("content = ", content)
+
+        if (title === "" || content === "") {
+            Alert.alert(
+                'Missing Information',
+                'Post title and content are both required to make a post',
+                [{ text: 'OK' }],
+            );
+            return;
+        }
+
         global.postTitle = title
         global.postContent = content
         global.postTag = tag
@@ -66,7 +78,7 @@ const Write_Post = ({ navigation }) => {
         <View style={styles.container}>
             {/* Header */}
             <Appbar.Header style={styles.appbar}>
-                <Appbar.BackAction color="white" onPress={() => cancelPost} />
+                <Appbar.BackAction color="white" onPress={() => cancelPost()} />
                 <Appbar.Content title={<Text style={styles.headerTitle}>New Post</Text>} style={styles.headerTitle} />
             </Appbar.Header>
 
@@ -122,7 +134,7 @@ const Write_Post = ({ navigation }) => {
                     </View>
                 </View>
 
-                <TouchableOpacity disabled={title.trim()==="" || content.trim()===""} style={styles.submitButton} onPress={() => onPressSubmit} >
+                <TouchableOpacity style={styles.submitButton} onPress={() => onPressSubmit()} >
                     <Text style={styles.submitText}>{(tag==="General" || tag==="") ? "Post" : "Next"}</Text>
                 </TouchableOpacity>
             </ScrollView>
