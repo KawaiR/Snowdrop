@@ -166,7 +166,7 @@ class Plants_Search extends React.Component {
             <View style={styles.container}>
                 {/* Header Bar */}
                 <Appbar.Header style={styles.appbar}>
-                    <Appbar.BackAction color="white" />
+                    <Appbar.BackAction color="white" onPress={()=>this.props.navigation.navigate("Page_Plant")}/>
                 </Appbar.Header>
 
                 <SafeAreaView style={styles.safeAreaContainer}>

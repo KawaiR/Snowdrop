@@ -3,6 +3,7 @@ package com.example.snowdropserver.Services;
 import com.example.snowdropserver.Exceptions.NoPlantUserComboException;
 import com.example.snowdropserver.Exceptions.PlantNotFoundException;
 import com.example.snowdropserver.Exceptions.UserNotFoundException;
+import com.example.snowdropserver.Exceptions.DuplicatePlantException;
 import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Models.PlantCare;
@@ -62,6 +63,31 @@ public class PlantService {
                 .build();
 
         return plantInfoDomain;
+    }
+
+    public void addNewPlant(AddNewPlantDomain addNewPlantDomain) {
+        if (check_common_name_exists(addNewPlantDomain.getCommonName()) && check_scientific_name_exists(addNewPlantDomain.getScientificName())) {
+            System.out.println("plant found already");
+            throw new DuplicatePlantException();
+        }
+
+        Plant plant = Plant.builder()
+                .plantName(addNewPlantDomain.getCommonName())
+                .scientificName(addNewPlantDomain.getScientificName())
+                .plantImage(addNewPlantDomain.getPlantImageUrl())
+                .build();
+
+        plantRepository.save(plant);
+    }
+
+    public boolean check_common_name_exists(String commonName) {
+        List<Plant> plants = plantRepository.findAllByPlantName(commonName);
+        return !plants.isEmpty();
+    }
+
+    public boolean check_scientific_name_exists(String scientificName) {
+        List<Plant> plants = plantRepository.findAllByScientificName(scientificName);
+        return !plants.isEmpty();
     }
 
     public int addUserPlant(int plantId, AddPlantDomain addPlantDomain) {
