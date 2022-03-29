@@ -29,6 +29,15 @@ public class Plant {
     @Column(name = "water_needs")
     String waterNeeds;
 
+    @Column(name="soil_type")
+    String soilType;
+
+    @Column(name="sunlight_level")
+    int sunlightLevel;
+
+    @Column(name="min_temperature")
+    double minTemperature;
+
 //    @OneToMany(mappedBy = "plant")
 //    @ToString.Exclude
 //    List<PlantCare> caredFor;

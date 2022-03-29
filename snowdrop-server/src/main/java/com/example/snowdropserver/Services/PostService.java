@@ -9,6 +9,7 @@ import com.example.snowdropserver.Models.Domains.CreatePostDomain;
 import com.example.snowdropserver.Models.Domains.PostInfoDomain;
 import com.example.snowdropserver.Models.Domains.VoteOnPostDomain;
 import com.example.snowdropserver.Repositories.*;
+import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,6 +116,7 @@ public class PostService {
         return postRepository.getByTag(tag);
     }
 
+    // TODO: extensively test all cases
     public int voteOnPost(int postId, VoteOnPostDomain voteOnPostDomain) {
         // verify user
         Optional<User> maybeUser = userRepository.getByUserName(voteOnPostDomain.getUsername());
@@ -132,25 +134,56 @@ public class PostService {
         }
         Post post = maybePost.get();
 
-        int newScore;
-        if (voteOnPostDomain.getUpvote() == 1) {
-            newScore = post.getTotalScore() + 1;
-            post.setTotalScore(newScore);
-            post.setUpvotes(post.getUpvotes()+1);
-        } else {
-            newScore = post.getTotalScore() - 1;
-            post.setTotalScore(newScore);
-            post.setDownvotes(post.getDownvotes()+1);
+        // confirm user hasn't interacted with this post yet
+        int adjustment = 0;
+        Optional<UserPostMappings> votedByUser = userPostRepository.findByPostAndUser(post, user);
+        if (votedByUser.isPresent()) {
+            UserPostMappings mapping = votedByUser.get();
+            if (mapping.getUpvote() == 1) {
+                adjustment = 1;
+            } else {
+                adjustment = 2;
+            }
+
+            UserPostMappings userPostMappings = UserPostMappings.builder()
+                    .post(post)
+                    .user(user)
+                    .upvote(voteOnPostDomain.getUpvote())
+                    .build();
+
+            userPostRepository.save(userPostMappings);
         }
 
-        UserPostMappings userPostMappings = UserPostMappings.builder()
-                .post(post)
-                .user(user)
-                .upvote(voteOnPostDomain.getUpvote())
-                .build();
+        int newScore;
+        int numVotes;
+        if (voteOnPostDomain.getUpvote() == 1) {
+            numVotes = post.getUpvotes();
+            if (adjustment != 1) {
+                newScore = post.getTotalScore() + 1;
+                numVotes++;
+                if (adjustment == 2) {
+                    post.setDownvotes(post.getDownvotes() - 1);
+                }
+            } else {
+                newScore = post.getTotalScore() - 1;
+            }
+            post.setUpvotes(numVotes);
+        } else {
+            numVotes = post.getDownvotes();
+            if (adjustment != 2) {
+                newScore = post.getTotalScore() - 1;
+                numVotes++;
+                if (adjustment == 1) {
+                    post.setUpvotes(post.getUpvotes() - 1);
+                }
+            } else {
+                newScore = post.getTotalScore() + 1;
+            }
+            post.setDownvotes(numVotes);
+        }
+        post.setTotalScore(newScore);
 
         postRepository.save(post);
-        userPostRepository.save(userPostMappings);
 
         return newScore;
     }
