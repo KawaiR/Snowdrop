@@ -27,7 +27,8 @@ public class PlantService {
     private final PlantCareRepository plantCareRepository;
 
     @Autowired
-    public PlantService(PlantRepository plantRepository, UserRepository userRepository, UserService userService, PlantCareRepository plantCareRepository) {
+    public PlantService(PlantRepository plantRepository, UserRepository userRepository, UserService userService,
+                        PlantCareRepository plantCareRepository) {
         this.plantRepository = plantRepository;
         this.userRepository = userRepository;
         this.userService = userService;
@@ -136,6 +137,8 @@ public class PlantService {
                 .fertilizer(null)
                 .nickname(nickname)
                 .sunlight(0)
+                .sunlightSecond(0)
+                .sunlightThird(0)
                 .temperature(0)
                 .waterCurrent(null)
                 .waterLast(null)
@@ -299,4 +302,6 @@ public class PlantService {
 
         System.out.println("The plant was deleted!");
     }
+
+    
 }
