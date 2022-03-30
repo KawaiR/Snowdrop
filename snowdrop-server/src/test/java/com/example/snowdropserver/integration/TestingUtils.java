@@ -2,6 +2,7 @@ package com.example.snowdropserver.integration;
 
 import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.PlantCare;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -26,7 +27,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class TestingUtils {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String baseUrl = "http://localhost:8080";
+    private static final String baseUrl = "https://quiet-reef-93741.herokuapp.com";
 
     public static void createUserAndExpect(String username, String email,
                                            String password, int expectedStatusCode) throws Exception {
@@ -329,5 +330,99 @@ public class TestingUtils {
         System.out.println("in helper function: " + futureWater);
 
         return futureWater;
+    }
+
+    public static void deletePlantAndExpect(String username, int plantCareId, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/plants/" + plantCareId + "/delete-plant");
+
+        DeleteUserPlantDomain deleteUserPlantDomain = DeleteUserPlantDomain.builder()
+                .username(username)
+                .build();
+
+        System.out.println(deleteUserPlantDomain);
+
+        String json = objectMapper.writeValueAsString(deleteUserPlantDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING DELETE PLANT REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+    }
+
+    public static int createPostAndExpect(String username, String postTitle, String content, int plantId,
+                                          int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/posts/create-post");
+
+        System.out.println(username);
+        System.out.println("in util function");
+
+        CreatePostDomain createPostDomain = CreatePostDomain.builder()
+                .username(username)
+                .postTitle(postTitle)
+                .content(content)
+                .plantId(plantId)
+                .build();
+
+        System.out.println(createPostDomain);
+
+        String json = objectMapper.writeValueAsString(createPostDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING CREATE POST REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        int postId = -1;
+        if (expectedStatusCode == 201) {
+            postId = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
+        }
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+
+        System.out.println("post created: " + postId);
+
+        return postId;
+    }
+
+    public static int addTagAndExpect(int plantId, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/tags/" + plantId + "/add-tag");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING ADD TAG REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        int tagId = -1;
+        if (expectedStatusCode == 201) {
+            tagId = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
+        }
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+
+        System.out.println("tag created: " + tagId);
+
+        return tagId;
     }
 }

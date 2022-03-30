@@ -1,11 +1,12 @@
 package com.example.snowdropserver.Controllers;
 
+import com.example.snowdropserver.Models.Domains.CreatePostDomain;
+import com.example.snowdropserver.Models.Domains.PostInfoDomain;
 import com.example.snowdropserver.Models.Post;
 import com.example.snowdropserver.Services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,4 +29,21 @@ public class PostController {
         // Ideally, PostController should just control the request mappings
         return postService.getAllPosts();
     }
+
+    @GetMapping(value = "/{tagId}/get-posts")
+    public List<Post> getPostsByTag(@PathVariable int tagId) {
+        return postService.getPostsByTag(tagId);
+    }
+
+    @PostMapping(value = "/create-post")
+    @ResponseStatus(HttpStatus.CREATED)
+    public int createPost(@RequestBody CreatePostDomain createPostDomain) {
+        return postService.createPost(createPostDomain);
+    }
+
+    @GetMapping(value = "/{postId}/get-info")
+    public PostInfoDomain getPostInfo(@PathVariable int postId) {
+        return postService.getPostInfo(postId);
+    }
+
 }

@@ -3,9 +3,8 @@ package com.example.snowdropserver.Controllers;
 import com.example.snowdropserver.Models.Tag;
 import com.example.snowdropserver.Services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +26,11 @@ public class TagController {
         // Have the logic in TagService
         // Ideally, TagController should just control the request mappings
         return tagService.getAllTags();
+    }
+
+    @PostMapping(value = "/{plantId}/add-tag")
+    @ResponseStatus(HttpStatus.CREATED)
+    public int addTag(@PathVariable int plantId) {
+        return tagService.addTag(plantId);
     }
 }
