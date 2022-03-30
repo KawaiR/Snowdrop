@@ -11,8 +11,8 @@
                         tableName="plants"/>
         <loadUpdateData encoding="UTF-8"
                         relativeToChangelogFile="true"
-                        file="Common names and scientific names.csv"
-                        schemaName="snowdrop"
+                        file="xab.csv"
+                        schemaName="heroku_046af99c4115233"
                         separator=","
                         tableName="plants"
                         primaryKey="id">

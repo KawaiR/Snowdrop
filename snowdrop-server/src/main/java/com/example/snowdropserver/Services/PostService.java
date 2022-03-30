@@ -4,16 +4,12 @@ import com.example.snowdropserver.Exceptions.PlantNotFoundException;
 import com.example.snowdropserver.Exceptions.PostNotFoundException;
 import com.example.snowdropserver.Exceptions.TagNotFoundException;
 import com.example.snowdropserver.Exceptions.UserNotFoundException;
+import com.example.snowdropserver.Models.*;
 import com.example.snowdropserver.Models.Domains.CreatePostDomain;
 import com.example.snowdropserver.Models.Domains.PostInfoDomain;
-import com.example.snowdropserver.Models.Plant;
-import com.example.snowdropserver.Models.Post;
-import com.example.snowdropserver.Models.Tag;
-import com.example.snowdropserver.Models.User;
-import com.example.snowdropserver.Repositories.PlantRepository;
-import com.example.snowdropserver.Repositories.PostRepository;
-import com.example.snowdropserver.Repositories.TagRepository;
-import com.example.snowdropserver.Repositories.UserRepository;
+import com.example.snowdropserver.Models.Domains.VoteOnPostDomain;
+import com.example.snowdropserver.Repositories.*;
+import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +23,15 @@ public class PostService {
     private final UserRepository userRepository;
     private final PlantRepository plantRepository;
     private final TagRepository tagRepository;
+    private final UserPostMappingsRepository userPostRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, PlantRepository plantRepository, TagRepository tagRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PlantRepository plantRepository, TagRepository tagRepository, UserPostMappingsRepository userPostRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.plantRepository = plantRepository;
         this.tagRepository = tagRepository;
+        this.userPostRepository = userPostRepository;
     }
 
     public List<Post> getAllPosts() {
@@ -118,8 +116,76 @@ public class PostService {
         return postRepository.getByTag(tag);
     }
 
-    public int upvotePost(int postId) {
-        return -1;
+    // TODO: debug double upvote/downvote case
+    public int voteOnPost(int postId, VoteOnPostDomain voteOnPostDomain) {
+        // verify user
+        Optional<User> maybeUser = userRepository.getByUserName(voteOnPostDomain.getUsername());
+        if (!maybeUser.isPresent()) {
+            System.out.println("no user found with this username.");
+            throw new UserNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        // verify post
+        Optional<Post> maybePost = postRepository.findById(postId);
+        if (!maybePost.isPresent()) {
+            System.out.println("no post was found with this id");
+            throw new PostNotFoundException();
+        }
+        Post post = maybePost.get();
+
+        // confirm user hasn't interacted with this post yet
+        int adjustment = 0;
+        Optional<UserPostMappings> votedByUser = userPostRepository.findByPostAndUser(post, user);
+        if (votedByUser.isPresent()) {
+            UserPostMappings mapping = votedByUser.get();
+            if (mapping.getUpvote() == 1) {
+                adjustment = 1;
+            } else {
+                adjustment = 2;
+            }
+
+            UserPostMappings userPostMappings = UserPostMappings.builder()
+                    .post(post)
+                    .user(user)
+                    .upvote(voteOnPostDomain.getUpvote())
+                    .build();
+
+            userPostRepository.save(userPostMappings);
+        }
+
+        int newScore;
+        int numVotes;
+        if (voteOnPostDomain.getUpvote() == 1) {
+            numVotes = post.getUpvotes();
+            if (adjustment != 1) {
+                newScore = post.getTotalScore() + 1;
+                numVotes++;
+                if (adjustment == 2) {
+                    post.setDownvotes(post.getDownvotes() - 1);
+                }
+            } else {
+                newScore = post.getTotalScore() - 1;
+            }
+            post.setUpvotes(numVotes);
+        } else {
+            numVotes = post.getDownvotes();
+            if (adjustment != 2) {
+                newScore = post.getTotalScore() - 1;
+                numVotes++;
+                if (adjustment == 1) {
+                    post.setUpvotes(post.getUpvotes() - 1);
+                }
+            } else {
+                newScore = post.getTotalScore() + 1;
+            }
+            post.setDownvotes(numVotes);
+        }
+        post.setTotalScore(newScore);
+
+        postRepository.save(post);
+
+        return newScore;
     }
 
 }
