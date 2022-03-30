@@ -47,7 +47,7 @@ const PlantDetailPage  = ({route, navigation}) => {
     const fertilizerNo = () => {
         setFertilizerVisible(false);
     }
-    const deleteYes = () => {
+    async function deleteYes() {
         navigation.navigate("Page_Plant");
         setDeleteVisible(false);
     }
@@ -249,16 +249,17 @@ const PlantDetailPage  = ({route, navigation}) => {
                 <Dialog.Title>Sunlight Exposure</Dialog.Title>
                 <Dialog.Content>
                     <Text>How much sunlight does your plant get?</Text>
-                    <ToggleButton.Row onValueChange={value => setValue(value)} value={value}>
-                        <ToggleButton icon="format-align-left" value="0" />
-                        <ToggleButton icon="format-align-right" value="1" />
+                    <ToggleButton.Row style={styles.toggle} onValueChange={value => setValue(value)} value={value}>
+                        <ToggleButton icon="apple-icloud" value="0" />
+                        <ToggleButton icon="numeric-1" value="1" />
+                        <ToggleButton icon="numeric-3" value="3" />
+                        <ToggleButton icon="numeric-5" value="5" />
+                        <ToggleButton icon="numeric-7" value="7" />
+                        <ToggleButton icon="numeric-9" value="9" />
+                        <ToggleButton icon="white-balance-sunny" value="11" />
                     </ToggleButton.Row>
                 </Dialog.Content>
                 <Dialog.Actions>
-                    {/* <ToggleButton.Row onValueChange={value => setValue(value)} value={value}>
-                        <ToggleButton icon="format-align-left" value="0" />
-                        <ToggleButton icon="format-align-right" value="1" />
-                    </ToggleButton.Row> */}
                     <Button onPress={sunYes}>Confirm</Button>
                     <Button onPress={hideSun}>Cancel</Button>
                 </Dialog.Actions>

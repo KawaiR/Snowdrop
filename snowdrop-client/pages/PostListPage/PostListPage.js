@@ -82,10 +82,10 @@ const PostListPage  = ({navigation}) => {
 		}
     };
 
-    // useEffect(() => {
-    //     getPosts();
+    useEffect(() => {
+        getPosts();
         
-    // });
+    });
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.post} onPress={() => console.log("TODO - " + item.id)}>

@@ -105,6 +105,10 @@ export default StyleSheet.create({
         borderColor: '#D3D3D3',
         borderWidth: 1,
     },
+    toggle: {
+        alignSelf: 'center',
+        marginTop: height * 0.02,
+    },
     fab: {
         position: 'absolute',
         //width: width * 0.1449,
