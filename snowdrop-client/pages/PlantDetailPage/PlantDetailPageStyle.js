@@ -1,4 +1,6 @@
-import { StyleSheet, Dimensions, PixelRatio } from 'react-native';
+import { StyleSheet, Dimensions, PixelRatio } from 'react-native'; 
+import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
+import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 
 var width = Dimensions.get('window').width; 
 var height = Dimensions.get('window').height;
@@ -110,8 +112,6 @@ export default StyleSheet.create({
         borderWidth: 1,
     },
     plantCareButton: {
-        top: pxRD(210, height, defaultH),
-        width: pxRD(defaultW * 0.6, width, defaultW),
         height: pxRD(defaultH * 0.06, height, defaultH),
         backgroundColor: '#82B47D',
         borderRadius: 25,
@@ -119,6 +119,8 @@ export default StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
         padding: 10,
+        marginTop: 10,
+        marginBottom: 10,
         shadowColor: '#EDEECB',
         shadowOpacity: 0.8,
         shadowOffset: {
@@ -130,7 +132,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
         color: 'white',
         fontFamily: "Lato_700Bold",
-        fontSize: 20,
+        fontSize: 18,
     },
     fab: {
         position: 'absolute',

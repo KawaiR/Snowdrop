@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, Dimensions, ScrollView, Image } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, ScrollView, Image, TextInput, TouchableOpacity } from 'react-native';
 import { Appbar, Card, Paragraph } from 'react-native-paper';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
@@ -14,7 +14,8 @@ const defaultW = 414;
 const defaultH = 896;
 
 const Plant_Care_Recommendation = ({ route, navigation }) => {
-    // const { plant, id } = route.params;
+    const { plant, id } = route.params; // plant here is actually a plant care object
+    const [fertilizeTimes, onChangeNumber] = React.useState(global.fertilizeTimes);
 
     let [fontsLoaded] = useFonts({
         Alata_400Regular,
@@ -38,12 +39,12 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                     <Image style={styles.plantImage} source={require('snowdrop-client/assets/plant-image.jpeg')}></Image>
                     <View style={styles.plantNameView}>
                         <View style={styles.plantNameContent}>
-                            {/* <Text style={styles.plantNameText}>{commonName}</Text> */}
-                            <Text style={styles.plantNameText}>Common Name</Text>
-                            {/* <Text style={styles.plantNameText}>{scientificName}</Text> */}
-                            <Text style={styles.plantNameText}>Scientific Name</Text>
-                            {/* <Text style={styles.plantNameText}>{upcomingWatered}</Text> */}
-                            <Text style={styles.plantNameText}>Upcoming watered</Text>
+                            <Text style={styles.plantNameText}>{plant.name}</Text>
+                            {/* <Text style={styles.plantNameText}>Common Name</Text> */}
+                            <Text style={styles.plantNameText}>{plant.scientificName}</Text>
+                            {/* <Text style={styles.plantNameText}>Scientific Name</Text> */}
+                            <Text style={styles.plantNameText}>{plant.waterNext}</Text>
+                            {/* <Text style={styles.plantNameText}>Upcoming watered</Text> */}
                         </View>
                     </View>
                 </View>
@@ -67,8 +68,23 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                             title="Fertilizer"
                         />
                         <Card.Content>
-                            <Paragraph style={styles.cardText}>Fertilize every 2 weeks</Paragraph>
+                            <Paragraph style={styles.cardText}>Keep track of how often you fertilize here</Paragraph>
+                            <Paragraph style={styles.cardText}>Fertilize every {fertilizeTimes} weeks</Paragraph>
                         </Card.Content>
+                        <View style={styles.rowContainer}>
+                        <TextInput
+                            style={styles.fertilizerInput}
+                            onChangeText={onChangeNumber}
+                            value={fertilizeTimes}
+                            keyboardType="numeric"
+                            borderRadius={25}
+                            selectionColor={'grey'}
+                            underlineColorAndroid='transparent'
+                        />
+                        <TouchableOpacity style={styles.setFertilizerButton} onPress={() => {global.fertilizeTimes = fertilizeTimes}} >
+                            <Text style={styles.setFertilizerText}>Set</Text>
+                        </TouchableOpacity>
+                        </View>
                     </Card>
                     <Card mode="outlined" style={styles.card}>
                         <Card.Title
@@ -90,6 +106,16 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                         <Card.Content>
                             <Paragraph style={styles.cardText}>Requires temperatures between 65 and 75 F</Paragraph>
                             <Paragraph style={[styles.cardText, { alignSelf: 'center', color: "red" }]}>Temperature in your area higher than required</Paragraph>
+                        </Card.Content>
+                    </Card>
+                    <Card mode="outlined" style={styles.card}>
+                        <Card.Title
+                            style={styles.cardTitle}
+                            titleStyle={styles.cardTitle}
+                            title="Soil Type"
+                        />
+                        <Card.Content>
+                            <Paragraph style={styles.cardText}>Requires acidic soil type</Paragraph>
                         </Card.Content>
                     </Card>
                 </View>
@@ -184,7 +210,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         backgroundColor: 'white',
         width: width * 390 / defaultW,
-        height: height * 0.14,
+        // height: height * 0.14,
         borderRadius: 25,
         marginBottom: height * 8 / defaultH,
         shadowColor: 'grey',
@@ -205,5 +231,47 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: "#4E4E4E",
         marginBottom: 3,
+    },
+    rowContainer: {
+        flex: 1,
+        flexDirection: "row",
+        alignSelf: "center",
+    },
+    fertilizerInput: {
+        alignSelf: "center",
+        alignContent: "center",
+        alignItems: "center",
+        borderRadius: 25,
+        backgroundColor: 'white',
+        fontFamily: "Lato_400Regular",
+        fontSize: 20,
+        height: 40,
+        width: width / 5,
+        margin: 15,
+        borderWidth: 1,
+        padding: 10,
+    },
+    setFertilizerButton: {
+        backgroundColor: '#82B47D',
+        borderRadius: 25,
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: 'center',
+        width: width / 5,
+        padding: 10,
+        paddingHorizontal: 15,
+        margin: 2,
+        shadowColor: '#EDEECB',
+        shadowOpacity: 0.8,
+        shadowOffset: {
+            width: 0,
+            height: 3
+        },
+    },
+    setFertilizerText: {
+        justifyContent: 'center',
+        color: 'white',
+        fontFamily: "Lato_400Regular",
+        fontSize: 18,
     },
 }); 
