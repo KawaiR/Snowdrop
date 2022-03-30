@@ -1,6 +1,7 @@
 import { registerRootComponent } from 'expo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as Notifications from 'expo-notifications';
 
 import Location_Permission from "./pages/location/Location_Permission.js"; 
 import Plant_Search from './pages/plants/Plant_Search.js'
@@ -19,9 +20,15 @@ import Page_Change_Email from './pages/auth/Page_Change_Email.js';
 import Page_Email_Reset from './pages/auth/Page_Email_Reset.js';
 const Stack = createNativeStackNavigator();
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 export default function App() {
   return (
-    //<PlantsPage/>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
 

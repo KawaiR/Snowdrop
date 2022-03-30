@@ -5,6 +5,78 @@ import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import {Lato_400Regular, Lato_700Bold} from '@expo-google-fonts/lato';
 import * as Google from 'expo-google-app-auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+
+async function registerForPushNotificationsAsync() {
+	let token;
+	if (Constants.isDevice) {
+		const { status: existingStatus } =
+		await Notifications.getPermissionsAsync();
+		let finalStatus = existingStatus;
+		if (existingStatus !== 'granted') {
+		const { status } = await Notifications.requestPermissionsAsync();
+		finalStatus = status;
+		}
+		if (finalStatus !== 'granted') {
+		alert('Failed to get push token for push notification!');
+		return;
+		}
+		token = (await Notifications.getExpoPushTokenAsync()).data;
+		console.log(token);
+	} else {
+		alert('Must use physical device for Push Notifications');
+	}
+
+	if (Platform.OS === 'android') {
+		Notifications.setNotificationChannelAsync('default', {
+		name: 'default',
+		importance: Notifications.AndroidImportance.MAX,
+		vibrationPattern: [0, 250, 250, 250],
+		lightColor: '#FF231F7C',
+		});
+	}
+
+	return token;
+}
+
+async function setLocation() {
+	let { status } = await Location.requestForegroundPermissionsAsync();
+	if (status !== 'granted') return;
+	let location = await Location.getCurrentPositionAsync({});
+	registerForPushNotificationsAsync().then((expoPushToken) => {
+		if (expoPushToken == null) {
+			global.expoPushToken = "null";
+			AsyncStorage.setItem("expoPushToken","null");
+			return;
+		}
+		global.expoPushToken = expoPushToken;
+		AsyncStorage.setItem("expoPushToken",expoPushToken);
+		try {
+			fetch('http://192.168.1.15:8080/devices', {
+				method: 'POST',
+				headers: {
+					"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+					username: global.userName,
+					expoPushToken: expoPushToken,
+					location: location.coords.latitude.toString()+","+location.coords.longitude.toString(),
+				}),
+			})
+			.then((response) => {
+				response.json().then((result) => {
+				console.log("Device POST Response: ", result);
+				})
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+	})
+}
 
 const {
 	width,
@@ -43,11 +115,10 @@ const Page_Create_Account  = ({navigation}) => {
 			if (result.type === 'success') {
 				global.isEmail = false;
 				global.googleID = result.user.id;
-				global.accessToken = result.accessToken;
-				global.idToken = result.idToken;
-				global.refreshToken = result.refreshToken;
+				AsyncStorage.setItem("isEmail","false");
+				AsyncStorage.setItem("googleID",global.googleID);
 				try {
-					let response = await fetch(`http://localhost:8080/users/get-google-user`, {
+					let response = await fetch(`http://192.168.1.15:8080/users/get-google-user`, {
 						method: "POST",
 						headers: {
 						"Content-Type": "application/json; charset=utf-8",
@@ -64,8 +135,10 @@ const Page_Create_Account  = ({navigation}) => {
 						else {
 							response.json().then((result) => {
 								global.userName = result.userName;
-								navigation.navigate("Location_Permission");
-								// navigation.navigate("Page_Profile_Google_Account");
+								AsyncStorage.setItem("userName",global.userName);
+								// navigation.navigate("Location_Permission");
+								setLocation();
+								navigation.navigate("Page_Profile_Google_Account");
 							})
 						}
 					})	
@@ -87,7 +160,7 @@ const Page_Create_Account  = ({navigation}) => {
 			return;
 		}
 		try {
-			let response = await fetch(`http://localhost:8080/users`, {
+			let response = await fetch(`http://192.168.1.15:8080/users`, {
 				method: "POST",
 				headers: {
 				"Content-Type": "application/json; charset=utf-8",
@@ -108,10 +181,15 @@ const Page_Create_Account  = ({navigation}) => {
 					response.json().then((result) => {
 						global.isEmail = true;
 						global.email = email;
-						global.authTokenHash = result.authTokenHash;
+						// global.authTokenHash = result.authTokenHash;
 						global.userName = result.userName;
-						navigation.navigate("Location_Permission");
-						// navigation.navigate("Page_Profile_Email_Account");
+						AsyncStorage.setItem("isEmail","true");
+						AsyncStorage.setItem("email",global.email);
+						// AsyncStorage.setItem("authTokenHash",global.authTokenHash);
+						AsyncStorage.setItem("userName",global.userName);
+						// navigation.navigate("Location_Permission");
+						setLocation();
+						navigation.navigate("Page_Profile_Email_Account");
 					});
 				}
 			})

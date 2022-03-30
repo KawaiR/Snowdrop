@@ -5,6 +5,78 @@ import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import {Lato_400Regular, Lato_700Bold} from '@expo-google-fonts/lato';
 import * as Google from 'expo-google-app-auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+
+async function registerForPushNotificationsAsync() {
+	let token;
+	if (Constants.isDevice) {
+		const { status: existingStatus } =
+		await Notifications.getPermissionsAsync();
+		let finalStatus = existingStatus;
+		if (existingStatus !== 'granted') {
+		const { status } = await Notifications.requestPermissionsAsync();
+		finalStatus = status;
+		}
+		if (finalStatus !== 'granted') {
+		alert('Failed to get push token for push notification!');
+		return;
+		}
+		token = (await Notifications.getExpoPushTokenAsync()).data;
+		console.log(token);
+	} else {
+		alert('Must use physical device for Push Notifications');
+	}
+
+	if (Platform.OS === 'android') {
+		Notifications.setNotificationChannelAsync('default', {
+		name: 'default',
+		importance: Notifications.AndroidImportance.MAX,
+		vibrationPattern: [0, 250, 250, 250],
+		lightColor: '#FF231F7C',
+		});
+	}
+
+	return token;
+}
+
+async function setLocation() {
+	let { status } = await Location.requestForegroundPermissionsAsync();
+	if (status !== 'granted') return;
+	let location = await Location.getCurrentPositionAsync({});
+	registerForPushNotificationsAsync().then((expoPushToken) => {
+		if (expoPushToken == null) {
+			global.expoPushToken = "null";
+			AsyncStorage.setItem("expoPushToken","null");
+			return;
+		}
+		global.expoPushToken = expoPushToken;
+		AsyncStorage.setItem("expoPushToken",expoPushToken);
+		try {
+			fetch('http://192.168.1.15:8080/devices', {
+				method: 'POST',
+				headers: {
+					"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+					username: global.userName,
+					expoPushToken: expoPushToken,
+					location: location.coords.latitude.toString()+","+location.coords.longitude.toString(),
+				}),
+			})
+			.then((response) => {
+				response.json().then((result) => {
+				console.log("Device POST Response: ", result);
+				})
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+	})
+}
 
 const {
 	width,
@@ -32,22 +104,13 @@ const Page_Create_Google_Username  = ({navigation}) => {
 	const [userName, onChangeUserName] = React.useState("");
 
 	async function signOutWithGoogleAsync() {
-		try {
-			const result = await Google.logOutAsync({
-            accessToken: global.accessToken,
-			androidClientId: "1057168519364-q6ubd34uinifouhjccbfa17nsgngvhgn.apps.googleusercontent.com",
-			iosClientId: "1057168519364-13l42e2uflp9m7898h7vvug7hogr9cjt.apps.googleusercontent.com",
-			});
-            global.isEmail = undefined;
-			global.googleID = undefined;
-            global.accessToken = undefined;
-			global.idToken = undefined;
-			global.refreshToken = undefined;
-			global.userName = undefined;
-            navigation.navigate("Page_Sign_In")
-		} catch (e) {
-			onChangeTitle("Logout Error")
-		}
+		global.isEmail = undefined;
+		global.googleID = undefined;
+		global.userName = undefined;
+		AsyncStorage.removeItem("isEmail");
+		AsyncStorage.removeItem("googleID");
+		AsyncStorage.removeItem("userName");
+		navigation.navigate("Page_Sign_In");
 	}
 
 	async function createAccountAsync() {
@@ -56,7 +119,7 @@ const Page_Create_Google_Username  = ({navigation}) => {
 			return;
 		}
 		try {
-			let response = await fetch(`http://localhost:8080/users/add-google-user`, {
+			let response = await fetch(`http://192.168.1.15:8080/users/add-google-user`, {
 				method: "POST",
 				headers: {
 				"Content-Type": "application/json; charset=utf-8",
@@ -75,9 +138,12 @@ const Page_Create_Google_Username  = ({navigation}) => {
 				else {
 					response.json().then((result) => {
 						global.userName = result.userName;
-						global.authTokenHash = result.authTokenHash;
-						navigation.navigate("Location_Permission");
-						// navigation.navigate("Page_Profile_Google_Account");
+						// global.authTokenHash = result.authTokenHash;
+						AsyncStorage.setItem("userName",global.userName);
+						// AsyncStorage.setItem("authTokenHash",global.authTokenHash);
+						// navigation.navigate("Location_Permission");
+						setLocation();
+						navigation.navigate("Page_Profile_Google_Account");
 					})
 				}				
 			})

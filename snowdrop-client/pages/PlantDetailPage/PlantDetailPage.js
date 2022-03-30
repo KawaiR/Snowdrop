@@ -55,7 +55,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     async function waterPlant() {
         try {
-			let response = await fetch('http://localhost:8080/plants/' + id + "/water-plant", {
+			let response = await fetch('http://192.168.1.15:8080/plants/' + id + "/water-plant", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
@@ -91,7 +91,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     async function getPlantName(id) {
         try {
-			let response = await fetch('http://localhost:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
+			let response = await fetch('http://192.168.1.15:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {

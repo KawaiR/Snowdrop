@@ -58,7 +58,7 @@ const Page_Password_Reset  = ({navigation}) => {
 		}
 		if (resetToken != undefined) {
 			try {
-				let response = await fetch(`http://localhost:8080/users/update-forgot-password`, {
+				let response = await fetch(`http://192.168.1.15:8080/users/update-forgot-password`, {
 					method: "POST",
 					headers: {
 					"Content-Type": "application/json; charset=utf-8",
@@ -86,7 +86,7 @@ const Page_Password_Reset  = ({navigation}) => {
 		}
 		else {
 			try {
-				let response = await fetch(`http://localhost:8080/users/update-password`, {
+				let response = await fetch(`http://192.168.1.15:8080/users/update-password`, {
 					method: "POST",
 					headers: {
 					"Content-Type": "application/json; charset=utf-8",

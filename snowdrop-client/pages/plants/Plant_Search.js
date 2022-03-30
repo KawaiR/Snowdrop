@@ -60,7 +60,7 @@ class Plants_Search extends React.Component {
 
     getPlants = () => {
         console.log("Before fetch call");
-        fetch('http://localhost:8080/plants', { method: 'GET' })
+        fetch('http://192.168.1.15:8080/plants', { method: 'GET' })
             .then(res => res.json())
             .then(data => {
                 if (data.error) {

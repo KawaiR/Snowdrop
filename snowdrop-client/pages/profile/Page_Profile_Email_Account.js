@@ -5,6 +5,7 @@ import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import { Appbar } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {
     width,
@@ -30,7 +31,30 @@ const Page_Profile_Email_Account = ({ navigation }) => {
             global.isEmail = undefined;
             global.email = undefined;
             global.username = undefined;
-
+            AsyncStorage.removeItem("isEmail");
+            AsyncStorage.removeItem("email");
+            AsyncStorage.removeItem("userName");
+            if (global.expoPushToken != "null") {
+                AsyncStorage.removeItem("expoPushToken");
+                fetch('http://192.168.1.15:8080/devices/remove', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                    },
+                    body: JSON.stringify({
+                        username: global.userName,
+                        expoPushToken: global.expoPushToken,
+                        location: null,
+                    }),
+                }).then((response)=>{
+                    response.json().then((result)=>{
+                        console.log(result);
+                    })
+                    global.expoPushToken = undefined;
+                })
+            } else {
+                global.expoPushToken = undefined;
+            }
             navigation.navigate("Page_Sign_In")
         } catch (e) {
             onChangeEmail("Error")
