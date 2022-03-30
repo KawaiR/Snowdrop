@@ -82,42 +82,42 @@ public class TestVoteOnPost {
 
     @Test
     public void testUpvoteTwice() throws Exception {
-        TestingUtils.createUserAndExpect("testUpvoteTwice",
-                "testUpvoteTwice@test.com",
-                "testUpvoteTwice",
+        TestingUtils.createUserAndExpect("testUpvoteTwice1",
+                "testUpvoteTwice1@test.com",
+                "testUpvoteTwice1",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testUpvoteTwice",
-                "testUpvoteTwice",
-                "testUpvoteTwice",
+        int postId = TestingUtils.createPostAndExpect("testUpvoteTwice1",
+                "testUpvoteTwice1",
+                "testUpvoteTwice1",
                 74,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteTwice",
+                "testUpvoteTwice1",
                 1,
                 200);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteTwice",
+                "testUpvoteTwice1",
                 1,
                 200);
     }
 
     @Test
     public void testDownvoteTwice() throws Exception {
-        TestingUtils.createUserAndExpect("testDownvoteTwice",
-                "testDownvoteTwice@test.com",
-                "testDownvoteTwice",
+        TestingUtils.createUserAndExpect("testDownvoteTwice1",
+                "testDownvoteTwice1@test.com",
+                "testDownvoteTwice1",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testDownvoteTwice",
-                "testDownvoteTwice",
-                "testDownvoteTwice",
+        int postId = TestingUtils.createPostAndExpect("testDownvoteTwice1",
+                "testDownvoteTwice1",
+                "testDownvoteTwice1",
                 74,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testDownvoteTwice",
+                "testDownvoteTwice1",
                 0,
                 200);
         TestingUtils.voteAndExpect(postId,
-                "testDownvoteTwice",
+                "testDownvoteTwice1",
                 0,
                 200);
     }

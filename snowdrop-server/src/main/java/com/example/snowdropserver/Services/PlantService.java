@@ -60,6 +60,10 @@ public class PlantService {
                 .plantName(plant.getPlantName())
                 .scientificName(plant.getScientificName())
                 .waterNeeds(plant.getWaterNeeds())
+                .plantImage(plant.getPlantImage())
+                .soilType(plant.getSoilType())
+                .sunlightLevel(plant.getSunlightLevel())
+                .minTemperature(plant.getMinTemperature())
                 .build();
 
         return plantInfoDomain;
