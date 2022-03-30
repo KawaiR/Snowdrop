@@ -31,6 +31,55 @@ const Write_Post = ({ navigation }) => {
         return <AppLoading />
     }
 
+    async function savePostInformation() {
+        console.log(global.userName)
+        try {
+            let response = await fetch('https://quiet-reef-93741.herokuapp.com/posts/create-post', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    userName: global.userName,
+                    postTitle: global.postTitle,
+                    content: global.postContent,
+                }),
+            })
+                .then((response) => {
+                    if (response.status == 400) {
+                        response.json().then((result) => {
+                            console.log(result.message);
+                        });
+                        Alert.alert(
+                            'Error',
+                            'Unable to save post at this time, please try again later.',
+                            [{ text: 'OK' }],
+                        );
+                    }
+                    if (response.status == 200 || response.status == 201 || response.status == 202) {
+                        response.json().then((result) => {
+                            console.log(result);
+                            global.postId = data;
+                            Alert.alert(
+                                'Success',
+                                'Post created!',
+                                [{
+                                    text: 'OK',
+                                    onPress: () => {
+                                        // Navigate to view current post page
+                                        // On view community post, clear out global.postTitle, global.postContent, global.postTag once used to avoid weird values
+                                    },
+                                }],
+                            );
+                        });
+                    }
+                });
+        } catch (err) {
+            console.log("Fetch didnt work.");
+            console.log(err);
+        }
+    }
+
     function cancelPost() {
         Alert.alert(
             'Cancel post',
@@ -69,6 +118,7 @@ const Write_Post = ({ navigation }) => {
             navigation.navigate("Plant_Search")
         } else {
             // call fetch call
+            savePostInformation()
             // show alert on success
             // navigate to view post on community
         }
