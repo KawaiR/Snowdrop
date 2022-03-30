@@ -60,7 +60,7 @@ class Plants_Search extends React.Component {
 
     getPlants = () => {
         console.log("Before fetch call");
-        fetch('http://localhost:8080/plants', { method: 'GET' })
+        fetch('https://quiet-reef-93741.herokuapp.com/plants', { method: 'GET' })
             .then(res => res.json())
             .then(data => {
                 if (data.error) {
@@ -76,6 +76,56 @@ class Plants_Search extends React.Component {
                 }
             });
     };
+
+    savePostInformation = (id) => {
+        console.log(global.userName)
+        try {
+            let response = fetch('https://quiet-reef-93741.herokuapp.com/posts/create-post', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    userName: global.userName,
+                    postTitle: global.postTitle,
+                    content: global.postContent,
+                    plantId: id,
+                }),
+            })
+                .then((response) => {
+                    if (response.status == 400) {
+                        response.json().then((result) => {
+                            console.log(result.message);
+                        });
+                        Alert.alert(
+                            'Error',
+                            'Unable to save post at this time, please try again later.',
+                            [{ text: 'OK' }],
+                        );
+                    }
+                    if (response.status == 200 || response.status == 201 || response.status == 202) {
+                        response.json().then((result) => {
+                            console.log(result);
+                            global.postId = data;
+                            Alert.alert(
+                                'Success',
+                                'Post created!',
+                                [{
+                                    text: 'OK',
+                                    onPress: () => {
+                                        // Navigate to view current post page
+                                        // On view community post, clear out global.postTitle, global.postContent, global.postTag once used to avoid weird values
+                                    },
+                                }],
+                            );
+                        });
+                    }
+                });
+        } catch (err) {
+            console.log("Fetch didnt work.");
+            console.log(err);
+        }
+    }
 
     checkImage = (url) => {
         //define some image formats 
@@ -118,9 +168,8 @@ class Plants_Search extends React.Component {
         // Function for click on an item
         console.log("Item.id = " + id);
         if (global.plantSearchFromWritePost) {
-            // Make fetch call POST request
-            // Navigate to View Community post
-            // On view community post, clear out to avoid weird values global.postTitle, global.postContent, global.postTag once used
+            // Make fetch call POST request with username, postTitle, content, plantId
+            this.savePostInformation(id)
         } else {
             this.props.navigation.navigate('Save_Plant', {
                 plantId: id,
@@ -172,7 +221,7 @@ class Plants_Search extends React.Component {
             <View style={styles.container}>
                 {/* Header Bar */}
                 <Appbar.Header style={styles.appbar}>
-                    <Appbar.BackAction color="white" onPress={()=>this.props.navigation.navigate("Page_Plant")}/>
+                    <Appbar.BackAction color="white" onPress={() => this.props.navigation.navigate("Page_Plant")} />
                 </Appbar.Header>
 
                 <SafeAreaView style={styles.safeAreaContainer}>
