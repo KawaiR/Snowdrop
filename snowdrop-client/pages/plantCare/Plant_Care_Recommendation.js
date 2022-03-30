@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import { Text, View, StyleSheet, Dimensions, ScrollView, Image, TextInput, TouchableOpacity } from 'react-native';
 import { Appbar, Card, Paragraph } from 'react-native-paper';
 import AppLoading from 'expo-app-loading';
@@ -17,6 +17,13 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
     const { plant, id } = route.params; // plant here is actually a plant care object
     const [fertilizeTimes, onChangeNumber] = React.useState(global.fertilizeTimes);
 
+    const [commonName, setCommonName] = React.useState(plant.nickname);
+    const [scientificName, setScientificName] = React.useState("");
+    const [health, setHealth] = React.useState(plant.plantHealth);
+    const [waterCurrent, setWaterCurrent] = React.useState(plant.waterCurrent);
+    const [image, setImage] = React.useState("");
+    const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
+
     let [fontsLoaded] = useFonts({
         Alata_400Regular,
         Lato_400Regular,
@@ -26,11 +33,58 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
         return <AppLoading />
     }
 
+    useEffect(() => {
+        console.log(plant);
+        getPlantName(id);
+        if ((upcomingWatered != null) && (upcomingWatered != "")) {
+            setUpcomingWatered(upcomingWatered.substring(0, 10));
+        } else {
+            setUpcomingWatered("");
+        }
+
+    });
+
+    async function getPlantName(id) {
+        try {
+            let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + id + '/get-plant-info', { method: 'GET' })
+                .then((response) => {
+                    if (response.status == 400) {
+                        response.json().then((result) => {
+                            console.log('get plant info fail');
+                            console.log(result.message);
+                            console.log('get plant info fail');
+                        });
+                    }
+                    if (response.status == 200 || response.status == 201 || response.status == 202) {
+                        response.json().then((result) => {
+                            console.log(result);
+                            /*
+                            if (result.plantName != null) {
+                                setCommonName(result.plantName);
+                            } else {
+                                setCommonName(result.scientificName);
+                            }
+                            */
+                            setScientificName(result.scientificName);
+                            if (result.plantImage != null) {
+                                setImage(result.plantImage);
+                            } else {
+                                setImage(require('snowdrop-client/assets/plant-image.jpeg'));
+                            }
+                        });
+                    }
+                });
+        } catch (err) {
+            console.log("Fetch didnt work.");
+            console.log(err);
+        }
+    }
+
     return (
         <View style={styles.container}>
             {/* Header */}
             <Appbar.Header style={styles.appbar}>
-                <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_PlantDetail", { plant: plant, id: plant.id })} />
+                <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_PlantDetail", { plant: plant, id: id })} />
                 <Appbar.Content title={<Text style={styles.headerTitle}>Recommendations</Text>} style={styles.headerTitle} />
             </Appbar.Header>
 
@@ -39,11 +93,11 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                     <Image style={styles.plantImage} source={require('snowdrop-client/assets/plant-image.jpeg')}></Image>
                     <View style={styles.plantNameView}>
                         <View style={styles.plantNameContent}>
-                            <Text style={styles.plantNameText}>{plant.name}</Text>
+                            <Text style={styles.plantNameText}>{commonName}</Text>
                             {/* <Text style={styles.plantNameText}>Common Name</Text> */}
-                            <Text style={styles.plantNameText}>{plant.scientificName}</Text>
+                            <Text style={styles.plantNameText}>{scientificName}</Text>
                             {/* <Text style={styles.plantNameText}>Scientific Name</Text> */}
-                            <Text style={styles.plantNameText}>{plant.waterNext}</Text>
+                            <Text style={styles.plantNameText}>{upcomingWatered}</Text>
                             {/* <Text style={styles.plantNameText}>Upcoming watered</Text> */}
                         </View>
                     </View>

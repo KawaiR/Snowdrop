@@ -168,9 +168,9 @@ const PlantDetailPage  = ({route, navigation}) => {
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setFertilizerVisible(true);}} />}
                     />
                 </Card>
-                <TouchableOpacity style={styles.plantCareButton} onPress={() => navigation.navigate("Plant_Care_Recommendation", {plant: plant, id: plant.id} )} >
+                <TouchableOpacity style={styles.plantCareButton} onPress={() => navigation.navigate("Plant_Care_Recommendation", { plant: plant, id: id })} >
                     <Text style={styles.plantCareText}>
-                        Submit
+                        View plant care recommendations
 				    </Text>
                 </TouchableOpacity>
             </View>
