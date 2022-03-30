@@ -36,6 +36,12 @@ public class PlantController {
         return plantService.getPlantInfo(id);
     }
 
+    @PostMapping(value = "/add-new-plant")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void AddNewPlant(@RequestBody AddNewPlantDomain addNewPlantDomain) {
+        plantService.addNewPlant(addNewPlantDomain);
+    }
+
     @PostMapping(value = "/{id}/add-plant")
     @ResponseStatus(HttpStatus.CREATED)
     public int AddUserPlant(@PathVariable int id, @RequestBody AddPlantDomain addPlantDomain) {
@@ -56,5 +62,11 @@ public class PlantController {
     @PostMapping(value = "/{username}/update-nickname")
     public void updateNickName(@PathVariable String username, @RequestBody SetNicknameDomain setNicknameDomain) {
         plantService.updateNickName(username, setNicknameDomain);
+    }
+
+    @PostMapping(value = "/{plantCareId}/delete-plant")
+    public void deleteUserPlant(@PathVariable int plantCareId,
+                                @RequestBody DeleteUserPlantDomain deleteUserPlantDomain) {
+        plantService.deleteUserPlant(plantCareId, deleteUserPlantDomain);
     }
 }

@@ -1,0 +1,17 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+    <changeSet id="20220329172800" author="razanalkawai">
+        <addColumn tableName="plants">
+            <column name="soil_type" type="text">
+                <constraints nullable="true" />
+            </column>
+            <column name="sunlight_level" type="int">
+                <constraints nullable="true" />
+            </column>
+            <column name="min_temperature" type="float">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

@@ -29,6 +29,18 @@ public class Plant {
     @Column(name = "water_needs")
     String waterNeeds;
 
+    // A: Acidic, N: Neutral, B: Basic
+    @Column(name="soil_type")
+    String soilType;
+
+    // 1-2: Low, 3-5: Moderate, 6-7: High, 8-10: Very High, 11+: Extreme
+    @Column(name="sunlight_level")
+    int sunlightLevel;
+
+    // from USDA database
+    @Column(name="min_temperature")
+    double minTemperature;
+
 //    @OneToMany(mappedBy = "plant")
 //    @ToString.Exclude
 //    List<PlantCare> caredFor;
