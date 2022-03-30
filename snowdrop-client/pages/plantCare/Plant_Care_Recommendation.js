@@ -15,7 +15,7 @@ const defaultH = 896;
 
 const Plant_Care_Recommendation = ({ route, navigation }) => {
     const { plant, id } = route.params; // plant here is actually a plant care object
-    const [fertilizeTimes, onChangeNumber] = React.useState(global.fertilizeTimes);
+    const [fertilizeTimes, onChangeNumber] = React.useState(global.fertilizeTimes.has(id) ? global.fertilizeTimes.get(id) : 0);
 
     const [commonName, setCommonName] = React.useState(plant.nickname);
     const [scientificName, setScientificName] = React.useState("");
@@ -23,15 +23,6 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
     const [waterCurrent, setWaterCurrent] = React.useState(plant.waterCurrent);
     const [image, setImage] = React.useState("");
     const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
-
-    let [fontsLoaded] = useFonts({
-        Alata_400Regular,
-        Lato_400Regular,
-        Lato_700Bold,
-    });
-    if (!fontsLoaded) {
-        return <AppLoading />
-    }
 
     useEffect(() => {
         console.log(plant);
@@ -43,6 +34,15 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
         }
 
     });
+
+    let [fontsLoaded] = useFonts({
+        Alata_400Regular,
+        Lato_400Regular,
+        Lato_700Bold,
+    });
+    if (!fontsLoaded) {
+        return <AppLoading />
+    }
 
     async function getPlantName(id) {
         try {
@@ -135,7 +135,7 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                             selectionColor={'grey'}
                             underlineColorAndroid='transparent'
                         />
-                        <TouchableOpacity style={styles.setFertilizerButton} onPress={() => {global.fertilizeTimes = fertilizeTimes}} >
+                        <TouchableOpacity style={styles.setFertilizerButton} onPress={() => {global.fertilizeTimes.set(id, fertilizeTimes); global.fertilizeTimes.forEach((id, fertilizeTimes) => console.log(`${id}: ${fertilizeTimes}`));}} >
                             <Text style={styles.setFertilizerText}>Set</Text>
                         </TouchableOpacity>
                         </View>
