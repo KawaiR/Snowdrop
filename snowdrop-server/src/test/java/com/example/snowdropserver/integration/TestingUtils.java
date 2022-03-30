@@ -455,4 +455,60 @@ public class TestingUtils {
 
         return tagId;
     }
+
+    public static void voteAndExpect(int postId, String username, int upvote, int expectedStatusCode)
+            throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(baseUrl + "/posts/" + postId + "/vote");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        VoteOnPostDomain voteOnPostDomain = VoteOnPostDomain.builder()
+                        .username(username)
+                        .upvote(upvote)
+                        .build();
+
+
+        String json = objectMapper.writeValueAsString(voteOnPostDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        System.out.println("**** MAKING VOTE REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+    }
+
+    public static PostInfoDomain getPostInfoAndExpect(int postId, int expectedStatusCode) throws Exception {
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(baseUrl + "/posts/" + postId + "/get-info");
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING GET PLANT INFO REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpGet);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        PostInfoDomain postInfoDomain = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            postInfoDomain = objectMapper.readValue(jsonResponse,
+                    new TypeReference<PostInfoDomain>() {
+                    });
+        }
+        client.close();
+
+        return postInfoDomain;
+    }
 }

@@ -13,6 +13,7 @@ public class AddNewPlantDomain {
     String scientificName;
     String plantImageUrl;
 
+
     public AddNewPlantDomain() {
         commonName = null;
         scientificName = null;

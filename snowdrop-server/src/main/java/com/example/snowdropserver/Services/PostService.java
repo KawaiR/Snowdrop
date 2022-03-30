@@ -116,7 +116,7 @@ public class PostService {
         return postRepository.getByTag(tag);
     }
 
-    // TODO: extensively test all cases
+    // TODO: debug double upvote/downvote case
     public int voteOnPost(int postId, VoteOnPostDomain voteOnPostDomain) {
         // verify user
         Optional<User> maybeUser = userRepository.getByUserName(voteOnPostDomain.getUsername());

@@ -9,15 +9,32 @@ public class TestAddNewPlant {
         TestingUtils.addNewPlant("abietinella moss",
                 "Abietinella abietina (Hedw.) Fleisch.",
                 "https://upload.wikimedia.org/wikipedia/commons/7/74/Abietinella_abietina_0293.JPG",
-                200);
+                201);
     }
+
+    @Test
+    public void addPlant2Success() throws Exception {
+        TestingUtils.addNewPlant("shrubby Indian mallow",
+                "Abutilon abutiloides (Jacq.) Garcke ex Hochr.",
+                "https://upload.wikimedia.org/wikipedia/commons/7/74/Abietinella_abietina_0293.JPG%22",
+                201);
+    }
+
+    @Test
+    public void addPlant3Success() throws Exception {
+        TestingUtils.addNewPlant("Pacific silver fir",
+                "Abies amabilis (Douglas ex Loudon) Douglas ex Forbes",
+                "https://upload.wikimedia.org/wikipedia/commons/7/74/Abietinella_abietina_0293.JPG%22",
+                201);
+    }
+
 
     @Test
     public void addDuplicatePlantFailure() throws Exception {
         TestingUtils.addNewPlant("abietinella moss",
                 "Abietinella abietina (Hedw.) Fleisch.",
                 "https://upload.wikimedia.org/wikipedia/commons/7/74/Abietinella_abietina_0293.JPG",
-                200);
+                201);
         TestingUtils.addNewPlant("abietinella moss",
                 "Abietinella abietina (Hedw.) Fleisch.",
                 "https://upload.wikimedia.org/wikipedia/commons/7/74/Abietinella_abietina_0293.JPG",

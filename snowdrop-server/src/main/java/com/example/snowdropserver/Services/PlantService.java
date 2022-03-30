@@ -75,6 +75,10 @@ public class PlantService {
                 .plantName(addNewPlantDomain.getCommonName())
                 .scientificName(addNewPlantDomain.getScientificName())
                 .plantImage(addNewPlantDomain.getPlantImageUrl())
+                .minTemperature(0)
+                .soilType("A")
+                .sunlightLevel(3)
+                .waterNeeds("H")
                 .build();
 
         plantRepository.save(plant);
