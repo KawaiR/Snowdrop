@@ -40,7 +40,7 @@ const Write_Post = ({ navigation }) => {
                     "Content-Type": "application/json; charset=utf-8",
                 },
                 body: JSON.stringify({
-                    userName: global.userName,
+                    username: global.userName,
                     postTitle: global.postTitle,
                     content: global.postContent,
                 }),
@@ -59,7 +59,7 @@ const Write_Post = ({ navigation }) => {
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
                             console.log(result);
-                            global.postId = data;
+                            global.postId = result;
                             Alert.alert(
                                 'Success',
                                 'Post created!',

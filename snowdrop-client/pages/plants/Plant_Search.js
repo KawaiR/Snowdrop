@@ -86,7 +86,7 @@ class Plants_Search extends React.Component {
                     "Content-Type": "application/json; charset=utf-8",
                 },
                 body: JSON.stringify({
-                    userName: global.userName,
+                    username: global.userName,
                     postTitle: global.postTitle,
                     content: global.postContent,
                     plantId: id,
@@ -106,7 +106,7 @@ class Plants_Search extends React.Component {
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
                             console.log(result);
-                            global.postId = data;
+                            global.postId = result;
                             Alert.alert(
                                 'Success',
                                 'Post created!',
