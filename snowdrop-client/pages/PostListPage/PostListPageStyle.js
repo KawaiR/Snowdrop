@@ -19,6 +19,7 @@ export default StyleSheet.create({
     },
     scroll: {
         backgroundColor: backgroundcolor,
+        flex: 1,
     },
     appbar: {
         width: width,
@@ -32,7 +33,7 @@ export default StyleSheet.create({
         width: width * 0.95,
         // height: height * 0.1060,
         borderRadius: 25,
-        marginTop: height * 0.02,
+        margin: height * 0.01,
     },
     postContent: {
         marginVertical: height * 0.015,
@@ -48,25 +49,22 @@ export default StyleSheet.create({
         marginVertical: height * 0.01,
     },
     title: {
-        fontSize: 32,
+        fontSize: 22,
         letterSpacing: -0.24,
         fontWeight: '400',
-        marginBottom: height * 0.01,
+        marginBottom: height * 0.007,
     },
-    postVotes: {
-        marginVertical: height * 0.015,
-        marginHorizontal: height * 0.015,
-        flex: 1,
+    voteRowStyle: {
         flexDirection: 'row',
-        justifyContent: "center",
+        marginTop: height * 0.01,
     },
-    toggle: {
-        borderRadius: 10,
-        marginBottom: height * 0.01,
+    chip: {
+        marginRight: height * 0.015,
     },
     bottom: {
         justifyContent: 'center',
         backgroundColor: green,
         height: height * 0.078125,
     },
+    
 });

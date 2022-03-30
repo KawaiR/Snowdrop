@@ -8,6 +8,8 @@ const IndPostPage  = ({navigation}) => {
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
 
+    const [id, setID] = React.useState(""); // change to route later
+
     const [userName, setUserName] = React.useState("User");
     const [date, setDate] = React.useState("date");
     const [title, setTitle] = React.useState("title");
@@ -15,6 +17,35 @@ const IndPostPage  = ({navigation}) => {
     const [vote, setVote] = React.useState("null");
     const [upvote, setUpvote] = React.useState(10);
     const [downvote, setDownvote] = React.useState(5);
+
+    async function getPost(id) {
+        try {
+			let response = await fetch('http://localhost:8080/posts/' + id + '/get-info', { method: 'GET' })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log(result);
+                        setUserName(result.username);
+                        setDate(result.uploadDate);
+                        setTitle(result.postTitle);
+                        // setPostContent(result.username); TODO
+                        setUpvote(result.upvotes);
+                        setDownvote(result.downvotes);
+                        
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
 
 
     const votePost = (newVote) => {
