@@ -23,6 +23,7 @@ public class PlantCare {
     String nickname;
     double temperature;
 
+    // UV categories: only populated when location is outside
     @Column(name="sunlight")
     int sunlight;
 
@@ -43,6 +44,20 @@ public class PlantCare {
 
     @Column(name = "plant_health")
     String plantHealth;
+
+    //when inside the house to recommend moving location
+    @Column(name="reported_exposure")
+    int reportedExposure;
+
+    @Column(name="reported_second")
+    int reportedSecond;
+
+    @Column(name="reported_third")
+    int reportedThird;
+
+    // 0: inside 1: outside
+    @Column(name="house_location")
+    int houseLocation;
 
     String fertilizer;
 

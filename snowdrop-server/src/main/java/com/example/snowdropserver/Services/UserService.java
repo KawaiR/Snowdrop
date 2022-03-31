@@ -13,6 +13,7 @@ import com.example.snowdropserver.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.google.common.hash.Hashing;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@EnableScheduling
 public class UserService {
     private final UserRepository userRepository;
     private final ResetTokenRepository resetTokenRepository;
