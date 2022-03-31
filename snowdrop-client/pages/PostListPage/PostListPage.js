@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, SafeAreaView, FlatList, Dimensions, Alert, TouchableOpacity } from "react-native";
 import { Appbar, Chip, Card, Title, Paragraph } from 'react-native-paper';
+import { useIsFocused } from "@react-navigation/native";
 
 import styles from './PostListPageStyle.js';
 
@@ -10,7 +11,6 @@ const PostListPage  = ({navigation}) => {
 
     const [tag, setTag] = React.useState(""); // change to route later
     const [posts, setPosts] = React.useState([]);
-    const [fetched, setFetched] = React.useState(0);
 
     async function getPosts() {
         // console.log("get post")
@@ -42,19 +42,16 @@ const PostListPage  = ({navigation}) => {
 		}
     };
 
+    const isFocused = useIsFocused();
     useEffect(() => {
-        if (fetched == 0) {
-            setFetched(1);
-            console.log("use effect");
+        if (isFocused) {
             getPosts();
         }
-        // setFetched(0);
         
-    });
+    }, [isFocused]);
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.post} onPress={() => {
-            setFetched(0);
             navigation.navigate('Page_IndPost', {id: item.id});
             }}>
             <View style={styles.postContent}>

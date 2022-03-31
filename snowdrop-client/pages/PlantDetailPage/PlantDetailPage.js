@@ -27,6 +27,8 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [sunlight, setSunlight] = React.useState("" + plant.reportedExposure + "");
     const [test, setTest] = React.useState(0);
 
+    const [sunlightBool, setSunlightBool] = React.useState(0);
+
     const hideWater = () => setWaterVisible(false);
     const hideFertilizer = () => setFertilizerVisible(false);
     const hideHealth = () => setHealthVisible(false);
@@ -110,6 +112,10 @@ const PlantDetailPage  = ({route, navigation}) => {
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
                     console.log('success');
                     setSunlight(value);
+                    response.json().then((result) => {
+                        console.log('success');
+						setSunlightBool(result);
+					});
 				}
 			});
 		} catch (err) {
@@ -131,8 +137,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 setUpcomingWatered("");
             }
         }
-        
-    });
+    }, [isFocused]);
 
     async function waterPlant() {
         try {
@@ -318,7 +323,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 <Dialog.Title>Sunlight Exposure</Dialog.Title>
                 <Dialog.Content>
                     <Text>How much sunlight does your plant get?</Text>
-                    <ToggleButton.Row style={styles.toggle} onValueChange={value => setValue(value)} value={sunlight}>
+                    <ToggleButton.Row style={styles.toggle} onValueChange={value => setValue(value)} value={value}>
                         <ToggleButton icon="numeric-1" value="1" />
                         <ToggleButton icon="numeric-2" value="2" />
                         <ToggleButton icon="numeric-3" value="3" />
