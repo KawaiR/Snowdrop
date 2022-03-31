@@ -99,8 +99,9 @@ export default StyleSheet.create({
         marginLeft: width * 0.06,
     },
     cardImage: {
-        width: width * 0.18,
-        height: width * 0.18,
+        width: height * 0.08,
+        height: height * 0.08,
+        borderRadius: 1000,
         backgroundColor: 'white',
         borderColor: '#D3D3D3',
         borderWidth: 1,

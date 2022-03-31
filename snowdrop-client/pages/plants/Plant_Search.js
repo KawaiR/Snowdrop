@@ -13,6 +13,7 @@ class Plants_Search extends React.Component {
             masterDataSource: [],
             filteredDataSource: [],
             width: Dimensions.get('window').width,
+            height: Dimensions.get('window').height,
         };
     }
 
@@ -183,10 +184,10 @@ class Plants_Search extends React.Component {
 
                 {/* Bottom Nav Bar */}
                 <Appbar style={styles.bottom}>
-                    <Appbar.Action icon="home" color="#005500" size={this.state.width * 0.09} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
-                    <Appbar.Action icon="leaf" color="#EDEECB" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} onPress={() => this.props.navigation.navigate("Page_Plant")} />
-                    <Appbar.Action icon="account-supervisor" color="#005500" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />
-                    <Appbar.Action icon="brightness-5" color="#005500" size={this.state.width * 0.09} style={{ marginLeft: '9%' }} onPress={() => { if (global.googleID == undefined) { this.props.navigation.navigate("Page_Profile_Email_Account"); } else { this.props.navigation.navigate("Page_Profile_Google_Account"); } }} />
+                    <Appbar.Action icon="home" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
+                    <Appbar.Action icon="leaf" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
+                    <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />
+                    <Appbar.Action icon="brightness-5" color="#EDEECB" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
                 </Appbar>
             </View>
         );

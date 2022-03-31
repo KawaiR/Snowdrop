@@ -181,7 +181,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         // leftStyle={styles.cardLeft}
                         title="Current health"
                         subtitle={health}
-                        left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
+                        left={(props) => <Avatar.Image {...props} size={height * 0.08} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setHealthVisible(true);}} />}
                     />
                 </Card>
@@ -223,11 +223,12 @@ const PlantDetailPage  = ({route, navigation}) => {
         color="white"
         onPress={() => console.log(plant)}
     />
+    {/* Bottom Nav Bar */}
     <Appbar style={styles.bottom}>
-        <Appbar.Action icon="home" color="#005500" size={width*0.09}/>
-        <Appbar.Action icon="leaf" color="#005500" size={width*0.09} style={{marginLeft: '9%'}} onPress={() => navigation.navigate("Page_Plant")}/>
-        <Appbar.Action icon="account-supervisor" color="#005500" size={width*0.09} style={{marginLeft: '9%'}}/>
-        <Appbar.Action icon="brightness-5" color="#005500" size={width*0.09} style={{marginLeft: '9%'}}/>
+        <Appbar.Action icon="home" color="#005500" size={Math.min(width * 0.09, height * 0.05)} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
+        <Appbar.Action icon="leaf" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
+        <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />
+        <Appbar.Action icon="brightness-5" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
     </Appbar>
     </View>
     </Provider>
