@@ -59,12 +59,10 @@ public class PlantCare {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @ToString.Exclude
     User user;
 
-    @JsonIgnore
+    //@JsonIgnore
     @ManyToOne
-    @ToString.Exclude
     Plant plant;
 /*
     @Override
