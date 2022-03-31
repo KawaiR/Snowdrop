@@ -80,10 +80,11 @@ public class PlantService {
                 .plantName(addNewPlantDomain.getCommonName())
                 .scientificName(addNewPlantDomain.getScientificName())
                 .plantImage(addNewPlantDomain.getPlantImageUrl())
-                .minTemperature(0)
-                .soilType("A")
-                .sunlightLevel(3)
-                .waterNeeds("H")
+                .minTemperature(addNewPlantDomain.getMinTemperature())
+                .soilType(addNewPlantDomain.getSoilType())
+                .sunlightLevel(addNewPlantDomain.getSunlightLevel())
+                .waterNeeds(addNewPlantDomain.getWaterNeeds())
+                .reportedSunlight(addNewPlantDomain.getReportedSunlight())
                 .build();
 
         plantRepository.save(plant);
@@ -306,6 +307,7 @@ public class PlantService {
         System.out.println("The plant was deleted!");
     }
 
+    // reported exposure not UV
     public void logSunlightExposure(int plantCareId, SunlightExposureDomain sunlightDomain) {
         String username = sunlightDomain.getUsername();
         System.out.println(username);
@@ -341,6 +343,4 @@ public class PlantService {
 
         plantCareRepository.save(plantCare);
     }
-
-    
 }
