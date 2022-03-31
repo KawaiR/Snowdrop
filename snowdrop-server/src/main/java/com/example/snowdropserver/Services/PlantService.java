@@ -27,7 +27,8 @@ public class PlantService {
     private final PlantCareRepository plantCareRepository;
 
     @Autowired
-    public PlantService(PlantRepository plantRepository, UserRepository userRepository, UserService userService, PlantCareRepository plantCareRepository) {
+    public PlantService(PlantRepository plantRepository, UserRepository userRepository, UserService userService,
+                        PlantCareRepository plantCareRepository) {
         this.plantRepository = plantRepository;
         this.userRepository = userRepository;
         this.userService = userService;
@@ -136,6 +137,8 @@ public class PlantService {
                 .fertilizer(null)
                 .nickname(nickname)
                 .sunlight(0)
+                .sunlightSecond(0)
+                .sunlightThird(0)
                 .temperature(0)
                 .waterCurrent(null)
                 .waterLast(null)
@@ -299,4 +302,42 @@ public class PlantService {
 
         System.out.println("The plant was deleted!");
     }
+
+    public void logSunlightExposure(int plantCareId, SunlightExposureDomain sunlightDomain) {
+        String username = sunlightDomain.getUsername();
+        System.out.println(username);
+
+        Optional<User> maybeUser = userRepository.getByUserName(username);
+        if (!maybeUser.isPresent()) {
+            System.out.println("User not found");
+            throw new UserNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        List<PlantCare> userPlants = plantCareRepository.getByUser(user);
+        int plantIndex = -1;
+
+        System.out.println("Send plantCareId: " + plantCareId);
+        for (int i = 0; i < userPlants.size(); i++) {
+            System.out.println("Plant in list: " + userPlants.get(i).getId());
+            if (userPlants.get(i).getId() == plantCareId) {
+                plantIndex = i;
+                break;
+            }
+        }
+
+        if (plantIndex == -1) {
+            System.out.println("User doesn't have this plant");
+            throw new NoPlantUserComboException();
+        }
+
+        PlantCare plantCare = userPlants.get(plantIndex);
+        plantCare.setSunlightThird(plantCare.getSunlightSecond());
+        plantCare.setSunlightSecond(plantCare.getSunlight());
+        plantCare.setSunlight(sunlightDomain.getSunlightLevel());
+
+        plantCareRepository.save(plantCare);
+    }
+
+    
 }

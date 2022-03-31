@@ -13,6 +13,7 @@ public class PostInfoDomain {
     String postTitle;
     String username;
     int totalScore;
+    String content;
     int downvotes;
     int upvotes;
     LocalDateTime uploadDate;
@@ -20,6 +21,7 @@ public class PostInfoDomain {
     public PostInfoDomain() {
         postTitle = "";
         username = "";
+        content = "";
         totalScore = 0;
         uploadDate = LocalDateTime.now();
         downvotes = 0;
