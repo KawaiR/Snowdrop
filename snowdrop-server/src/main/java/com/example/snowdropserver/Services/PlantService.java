@@ -340,14 +340,16 @@ public class PlantService {
 
         PlantCare plantCare = userPlants.get(plantIndex);
         plantCare.setReportedThird(plantCare.getReportedSecond());
-        plantCare.setReportedExposure(plantCare.getReportedExposure());
+        plantCare.setReportedSecond(plantCare.getReportedExposure());
         plantCare.setReportedExposure(sunlightDomain.getReportedSunlight());
 
         plantCareRepository.save(plantCare);
 
         System.out.println(plantCare);
 
-        return calculateReportedAverage(plantCare);
+        boolean alert = calculateReportedAverage(plantCare);
+        System.out.println(alert);
+        return alert;
     }
 
     // Pre-condition: logSunlightExposure() validated input

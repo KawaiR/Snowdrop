@@ -587,7 +587,7 @@ public class TestingUtils {
         return plantCareInfoDomain;
     }
 
-    public static void reportedExposureAndExpect(int plantCareId, String username,
+    public static boolean reportedExposureAndExpect(int plantCareId, String username,
                                                     int reportedExposure, int expectedStatusCode) throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(baseUrl + "/plants/" + plantCareId + "/sunlight-exposure");
@@ -609,7 +609,21 @@ public class TestingUtils {
 
         System.out.println("**** MAKING VOTE REQUEST ****");
         CloseableHttpResponse response = client.execute(httpPost);
+
+        boolean alert = false;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            alert = objectMapper.readValue(jsonResponse,
+                    new TypeReference<Boolean>() {
+                    });
+        }
+
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();
+
+        return alert;
     }
 }
