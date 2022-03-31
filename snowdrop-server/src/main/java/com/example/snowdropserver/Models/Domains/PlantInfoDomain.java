@@ -13,11 +13,17 @@ public class PlantInfoDomain {
     String scientificName;
     String plantImage;
     String waterNeeds;
+    String soilType;
+    int sunlightLevel;
+    double minTemperature;
 
     public PlantInfoDomain() {
         plantImage = null;
         scientificName = null;
         plantName = null;
         waterNeeds = null;
+        soilType = null;
+        sunlightLevel = 0;
+        minTemperature = 0;
     }
 }

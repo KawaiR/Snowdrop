@@ -8,7 +8,7 @@ public class TestGetPlantInfo {
 
     @Test
     public void TestPlantInfoExists() throws Exception {
-        PlantInfoDomain plantInfoDomain = TestingUtils.getPlantInfoAndExpect(1, 200);
+        PlantInfoDomain plantInfoDomain = TestingUtils.getPlantInfoAndExpect(74, 200);
         System.out.println(plantInfoDomain);
     }
 
