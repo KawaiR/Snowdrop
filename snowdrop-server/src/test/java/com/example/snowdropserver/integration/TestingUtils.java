@@ -568,7 +568,7 @@ public class TestingUtils {
         httpGet.setHeader("Content-type", "application/json");
 
 
-        System.out.println("**** MAKING GET PLANT INFO REQUEST ****");
+        System.out.println("**** MAKING GET PLANT CARE INFO REQUEST ****");
         CloseableHttpResponse response = client.execute(httpGet);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
 
@@ -585,5 +585,31 @@ public class TestingUtils {
         client.close();
 
         return plantCareInfoDomain;
+    }
+
+    public static void reportedExposureAndExpect(int plantCareId, String username,
+                                                    int reportedExposure, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(baseUrl + "/plants/" + plantCareId + "/sunlight-exposure");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        SunlightExposureDomain sunlightExposureDomain = SunlightExposureDomain.builder()
+                .username(username)
+                .reportedSunlight(reportedExposure)
+                .build();
+
+        String json = objectMapper.writeValueAsString(sunlightExposureDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        System.out.println("**** MAKING VOTE REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
     }
 }
