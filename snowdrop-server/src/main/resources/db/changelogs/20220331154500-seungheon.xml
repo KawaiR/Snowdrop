@@ -1,0 +1,20 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+    <changeSet id="20220331154500" author="seungheon">
+        <dropColumn tableName="user_plant_mappings" columnName="sunlight"/>
+        <dropColumn tableName="user_plant_mappings" columnName="sunlight_second"/>
+        <dropColumn tableName="user_plant_mappings" columnName="sunlight_third"/>
+        <addColumn tableName="user_plant_mappings">
+            <column name="sunlight" type="float">
+                <constraints nullable="true" />
+            </column>
+            <column name="sunlight_second" type="float">
+                <constraints nullable="true" />
+            </column>
+            <column name="sunlight_third" type="float">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

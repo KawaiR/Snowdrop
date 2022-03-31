@@ -46,8 +46,8 @@ public class DeviceService {
             WeatherDomain weatherDomain = getWeather(device.getLocation());
             if (weatherDomain == null) continue;
             for (PlantCare userPlant: plantCareRepository.getByUser(device.getUser())) {
-                double minTemperature = userPlant.getPlant().getMinTemperature();
-                if (weatherDomain.getTemp_f() < minTemperature) {
+                double scale = ((double)userPlant.getReportedExposure() - 1.0) / 2.0; // 0 is inside 0.5 is half 1 is outside
+                if (scale > 0.5 && weatherDomain.getTemp_f() < userPlant.getPlant().getMinTemperature()) {
                     SendNotification(
                             device.getExpoPushToken(),
                             "Weather Alert for "+userPlant.getNickname(),
@@ -56,11 +56,38 @@ public class DeviceService {
                                     "\tMinimum Required Temperature: "+userPlant.getPlant().getMinTemperature()+"\u00B0F"
                     );
                 }
-
+                double average_uv = updateUV((double) weatherDomain.getUv() * scale,userPlant);
+                if (average_uv > userPlant.getPlant().getSunlightLevel() + 3 && average_uv < userPlant.getPlant().getSunlightLevel() - 3) {
+                    SendNotification(
+                            device.getExpoPushToken(),
+                            "Weather Alert for "+userPlant.getNickname(),
+                            "Your Plant need to change position\n"+
+                                    "\tCurrent UV: "+(double)weatherDomain.getUv()+"\n"+
+                                    "\tAverage Exposed UV: "+average_uv+"\n"+
+                                    "\tRecommended Exposure: "+userPlant.getPlant().getSunlightLevel()
+                    );
+                }
             }
+
         }
     }
 
+    public double updateUV(double current_uv, PlantCare userPlant) {
+        userPlant.setSunlightThird(userPlant.getSunlightSecond());
+        userPlant.setSunlightSecond(userPlant.getSunlight());
+        userPlant.setSunlight(current_uv);
+        double n = 1.0;
+        double sum = current_uv;
+        if (userPlant.getSunlightSecond() != -1) {
+            n += 1.0;
+            sum += userPlant.getSunlightSecond();
+        }
+        if (userPlant.getSunlightThird() != -1) {
+            n += 1.0;
+            sum += userPlant.getSunlightThird();
+        }
+        return sum/n;
+    }
 
     public WeatherDomain getWeather(String location) {
         HttpURLConnection connection = null;

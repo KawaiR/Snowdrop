@@ -25,13 +25,13 @@ public class PlantCare {
 
     // UV categories: only populated when location is outside
     @Column(name="sunlight")
-    int sunlight;
+    double sunlight;
 
     @Column(name="sunlight_second")
-    int sunlightSecond;
+    double sunlightSecond;
 
     @Column(name="sunlight_third")
-    int sunlightThird;
+    double sunlightThird;
 
     @Column(name = "water_current")
     LocalDateTime waterCurrent;

@@ -20,4 +20,6 @@
     <include file="db/changelogs/20220330175600-razanalkawai.xml" />
     <include file="db/changelogs/20220331135700-razanalkawai.xml" />
     <include file="db/changelogs/20220331144500-razanalkawai.xml" />
+    <include file="db/changelogs/20220331154500-seungheon.xml" />
+
 </databaseChangeLog>
