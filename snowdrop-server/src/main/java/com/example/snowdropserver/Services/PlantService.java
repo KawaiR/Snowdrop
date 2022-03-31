@@ -345,6 +345,8 @@ public class PlantService {
 
         plantCareRepository.save(plantCare);
 
+        System.out.println(plantCare);
+
         return calculateReportedAverage(plantCare);
     }
 
