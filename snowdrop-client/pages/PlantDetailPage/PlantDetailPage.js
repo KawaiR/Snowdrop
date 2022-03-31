@@ -48,8 +48,41 @@ const PlantDetailPage  = ({route, navigation}) => {
         setFertilizerVisible(false);
     }
     async function deleteYes() {
-        navigation.navigate("Page_Plant");
         setDeleteVisible(false);
+        try {
+			let response = await fetch('http://localhost:8080/plants/' + id + "/delete-plant", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                }),
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+                        console.log('fail');
+                        setDeleteVisible(false);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log('success');
+						console.log(result);
+                        console.log('success');
+                        //setUpcomingWatered(result.waterNext)
+                        navigation.navigate("Page_Plant");
+                        //setPlantsList(result.caredFor);
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
     }
     
     const sunYes = () => {
@@ -250,7 +283,6 @@ const PlantDetailPage  = ({route, navigation}) => {
                 <Dialog.Content>
                     <Text>How much sunlight does your plant get?</Text>
                     <ToggleButton.Row style={styles.toggle} onValueChange={value => setValue(value)} value={value}>
-                        <ToggleButton icon="apple-icloud" value="0" />
                         <ToggleButton icon="numeric-1" value="1" />
                         <ToggleButton icon="numeric-3" value="3" />
                         <ToggleButton icon="numeric-5" value="5" />
