@@ -25,8 +25,8 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [waterCurrent, setWaterCurrent] = React.useState(plant.waterCurrent);
     const [image, setImage] = React.useState("");
     const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
-    const [value, setValue] = React.useState("TODO");
-    const [sunlight, setSunlight] = React.useState("TODO");
+    const [value, setValue] = React.useState("" + plant.reportedExposure + "");
+    const [sunlight, setSunlight] = React.useState("" + plant.reportedExposure + "");
 
     const hideWater = () => setWaterVisible(false);
     const hideFertilizer = () => setFertilizerVisible(false);
@@ -101,7 +101,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 					response.json().then((result) => {
                         console.log('fail');
 						console.log(result.message);
-                        // todo update sunlight ui
+                        setSunlight(value);
 					});
 				}
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
@@ -169,7 +169,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     async function getPlantName(id) {
         try {
-			let response = await fetch('http://localhost:8080/plants/' + "TODO" + '/get-plant-info', { method: 'GET' })
+			let response = await fetch('http://localhost:8080/plants/' + plant.plant.id + '/get-plant-info', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {
@@ -264,7 +264,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         titleStyle={styles.cardText}
                         subtitleStyle={styles.cardText}
                         title="Sunlight Exposure"
-                        subtitle={"TODO"}
+                        subtitle={sunlight}
                         left={(props) =>  <IconButton {...props} icon="weather-sunny" size={50} color={'#4E4E4E'}/>}
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setSunVisible(true);}} />}
                     />
