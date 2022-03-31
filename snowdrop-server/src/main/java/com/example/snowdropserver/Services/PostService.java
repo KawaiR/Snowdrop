@@ -8,6 +8,7 @@ import com.example.snowdropserver.Models.*;
 import com.example.snowdropserver.Models.Domains.CreatePostDomain;
 import com.example.snowdropserver.Models.Domains.PostInfoDomain;
 import com.example.snowdropserver.Models.Domains.VoteOnPostDomain;
+import com.example.snowdropserver.Models.Domains.VoteResultDomain;
 import com.example.snowdropserver.Repositories.*;
 import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,7 +118,7 @@ public class PostService {
     }
 
     // TODO: debug double upvote/downvote case
-    public int voteOnPost(int postId, VoteOnPostDomain voteOnPostDomain) {
+    public VoteResultDomain voteOnPost(int postId, VoteOnPostDomain voteOnPostDomain) {
         // verify user
         Optional<User> maybeUser = userRepository.getByUserName(voteOnPostDomain.getUsername());
         if (!maybeUser.isPresent()) {
@@ -185,7 +186,13 @@ public class PostService {
 
         postRepository.save(post);
 
-        return newScore;
+        VoteResultDomain voteResultDomain = VoteResultDomain.builder()
+                .newScore(newScore)
+                .downvotes(post.getDownvotes())
+                .upvotes(post.getUpvotes())
+                .build();
+
+        return voteResultDomain;
     }
 
 }

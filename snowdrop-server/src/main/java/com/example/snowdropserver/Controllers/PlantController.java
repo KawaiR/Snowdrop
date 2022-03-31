@@ -69,4 +69,10 @@ public class PlantController {
                                 @RequestBody DeleteUserPlantDomain deleteUserPlantDomain) {
         plantService.deleteUserPlant(plantCareId, deleteUserPlantDomain);
     }
+
+    @PostMapping(value = "/{plantCareId}/sunlight-exposure")
+    public void logSunlightExposure(@PathVariable int plantCareId,
+                                    @RequestBody SunlightExposureDomain sunlightExposureDomain) {
+        plantService.logSunlightExposure(plantCareId, sunlightExposureDomain);
+    }
 }
