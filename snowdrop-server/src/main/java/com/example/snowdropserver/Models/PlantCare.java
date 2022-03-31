@@ -49,10 +49,6 @@ public class PlantCare {
     @Column(name="reported_third")
     int reportedThird;
 
-    // 0: inside 1: outside
-    @Column(name="house_location")
-    int houseLocation;
-
     String fertilizer;
 
     @JsonIgnore
