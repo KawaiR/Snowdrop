@@ -39,8 +39,8 @@ public class DeviceService {
         this.userRepository = userRepository;
         this.plantCareRepository = plantCareRepository;
     }
-    // 1000 is one second. right now set to per 30 second
-    @Scheduled(fixedRate = 30, initialDelay = 5, timeUnit = TimeUnit.SECONDS)
+    // 1000 is one second. right now set to per hour
+    @Scheduled(fixedRate = 3600, initialDelay = 0, timeUnit = TimeUnit.SECONDS)
     public void SendNotification() {
         for (Device device:getAllDevices()) {
             WeatherDomain weatherDomain = getWeather(device.getLocation());
@@ -58,7 +58,6 @@ public class DeviceService {
                 }
 
             }
-
         }
     }
 
