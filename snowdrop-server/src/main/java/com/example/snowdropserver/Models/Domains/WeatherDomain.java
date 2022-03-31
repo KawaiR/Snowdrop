@@ -21,6 +21,38 @@ public class WeatherDomain {
         this.uv = (int)(double)brand.get("uv");
     }
 
+    public double getTemp_c() {
+        return temp_c;
+    }
+
+    public void setTemp_c(double temp_c) {
+        this.temp_c = temp_c;
+    }
+
+    public double getTemp_f() {
+        return temp_f;
+    }
+
+    public void setTemp_f(double temp_f) {
+        this.temp_f = temp_f;
+    }
+
+    public int getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(int humidity) {
+        this.humidity = humidity;
+    }
+
+    public int getUv() {
+        return uv;
+    }
+
+    public void setUv(int uv) {
+        this.uv = uv;
+    }
+
     @Override
     public String toString() {
         return "WeatherDomain{" +

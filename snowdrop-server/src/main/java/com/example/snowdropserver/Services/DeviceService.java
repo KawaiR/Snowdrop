@@ -3,8 +3,10 @@ package com.example.snowdropserver.Services;
 import com.example.snowdropserver.Models.Device;
 import com.example.snowdropserver.Models.Domains.DeviceDomain;
 import com.example.snowdropserver.Models.Domains.WeatherDomain;
+import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Repositories.DeviceRepository;
+import com.example.snowdropserver.Repositories.PlantCareRepository;
 import com.example.snowdropserver.Repositories.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONException;
@@ -29,11 +31,13 @@ import java.util.concurrent.TimeUnit;
 public class DeviceService {
     private final DeviceRepository deviceRepository;
     private final UserRepository userRepository;
+    private final PlantCareRepository plantCareRepository;
     // this autowired annotation is magic that will link the correct repository into this constructor to make the service
     @Autowired
-    public DeviceService(DeviceRepository deviceRepository,UserRepository userRepository) {
+    public DeviceService(DeviceRepository deviceRepository,UserRepository userRepository, PlantCareRepository plantCareRepository) {
         this.deviceRepository = deviceRepository;
         this.userRepository = userRepository;
+        this.plantCareRepository = plantCareRepository;
     }
     // 1000 is one second. right now set to per 30 second
     @Scheduled(fixedRate = 30, initialDelay = 5, timeUnit = TimeUnit.SECONDS)
@@ -41,7 +45,20 @@ public class DeviceService {
         for (Device device:getAllDevices()) {
             WeatherDomain weatherDomain = getWeather(device.getLocation());
             if (weatherDomain == null) continue;
-            SendNotification(device.getExpoPushToken(),"Weather Alert",weatherDomain.toString());
+            for (PlantCare userPlant: plantCareRepository.getByUser(device.getUser())) {
+                double minTemperature = userPlant.getPlant().getMinTemperature();
+                if (weatherDomain.getTemp_f() < minTemperature) {
+                    SendNotification(
+                            device.getExpoPushToken(),
+                            "Weather Alert for "+userPlant.getNickname(),
+                            "Your Plant needs higher temperature!\n"+
+                                    "\tCurrent Temperature: "+weatherDomain.getTemp_f()+"\u00B0F\n"+
+                                    "\tMinimum Required Temperature: "+userPlant.getPlant().getMinTemperature()+"\u00B0F"
+                    );
+                }
+
+            }
+
         }
     }
 
