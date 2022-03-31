@@ -199,6 +199,8 @@ public class TestingUtils {
     }
 
     public static void addNewPlant(String commonName, String scientificName, String plantImageUrl,
+                                   String waterNeeds, String soilType, int sunlightLevel,
+                                   double minTemperature, int reportedSunlight,
                                    int expectedStatusCode) throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
 
@@ -208,6 +210,11 @@ public class TestingUtils {
                 .commonName(commonName)
                 .scientificName(scientificName)
                 .plantImageUrl(plantImageUrl)
+                .waterNeeds(waterNeeds)
+                .soilType(soilType)
+                .sunlightLevel(sunlightLevel)
+                .minTemperature(minTemperature)
+                .reportedSunlight(reportedSunlight)
                 .build();
 
         System.out.println(addNewPlantDomain);
