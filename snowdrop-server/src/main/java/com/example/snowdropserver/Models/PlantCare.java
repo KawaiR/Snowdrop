@@ -27,6 +27,12 @@ public class PlantCare {
     @Column(name="sunlight")
     int sunlight;
 
+    @Column(name="sunlight_second")
+    int sunlightSecond;
+
+    @Column(name="sunlight_third")
+    int sunlightThird;
+
     @Column(name = "water_current")
     LocalDateTime waterCurrent;
 
