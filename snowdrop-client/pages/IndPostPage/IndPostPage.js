@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, ScrollView, Image, Dimensions, Alert } from "react-native";
-import { Appbar, Avatar, Card, FAB, IconButton, ToggleButton } from 'react-native-paper';
+import { Appbar, Chip, Card, FAB, IconButton, ToggleButton } from 'react-native-paper';
 
 import styles from './IndPostPageStyle.js';
 
@@ -14,7 +14,6 @@ const IndPostPage  = ({navigation}) => {
     const [date, setDate] = React.useState("date");
     const [title, setTitle] = React.useState("title");
     const [postContent, setPostContent] = React.useState("content1\ncontent2");
-    const [vote, setVote] = React.useState("null");
     const [upvote, setUpvote] = React.useState(10);
     const [downvote, setDownvote] = React.useState(5);
 
@@ -34,7 +33,7 @@ const IndPostPage  = ({navigation}) => {
                         setUserName(result.username);
                         setDate(result.uploadDate);
                         setTitle(result.postTitle);
-                        // setPostContent(result.username); TODO
+                        setPostContent(result.content);
                         setUpvote(result.upvotes);
                         setDownvote(result.downvotes);
                         
@@ -47,12 +46,40 @@ const IndPostPage  = ({navigation}) => {
 		}
     }
 
-
-    const votePost = (newVote) => {
-        console.log(newVote)
-        setVote(newVote)
+    async function voteRequest(newVote) {
+        console.log(newVote);
+        try {
+			let response = await fetch('http://localhost:8080/posts/' + id + "/vote", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                    upvote: newVote,
+                }),
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log('success');
+						console.log(result);
+                        setUpvote(result.upvotes);
+                        setDownvote(result.downvotes);
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
     }
-
 
 	return (
     <View style={styles.container}>
@@ -73,13 +100,13 @@ const IndPostPage  = ({navigation}) => {
 
         </View>
         <View style={styles.postVotes}>
-            {/* <Text>{upvote + " upvote\t" + downvote + " downvotes"}</Text> */}
+            {/* <Text>{upvote + " upvote\t" + downvote + " downvotes"}</Text>
             <ToggleButton.Row onValueChange={value => votePost(value)} value={vote}>
                 <ToggleButton icon="thumb-up-outline" value="up" size={20} style={styles.toggle}/>
                 <ToggleButton icon="thumb-down-outline" value="down" size={20} style={styles.toggle}/>
-                {/* <Text>{upvote + " upvote\t" + downvote + " downvotes"}</Text> */}
-            </ToggleButton.Row>
-            <Text style={{textAlign:'right', flex: 1, justifyContent: "center"}}>{upvote + " upvote\t" + downvote + " downvotes"}</Text>
+            </ToggleButton.Row> */}
+            <Chip icon="thumb-up" onPress={() => voteRequest(1)} textStyle={{fontSize: 12,}} style={styles.chip}>{upvote}</Chip>
+            <Chip icon="thumb-down" onPress={() => voteRequest(0)} textStyle={{fontSize: 12,}} style={styles.chip}>{downvote}</Chip>
         </View>
         </View>
         

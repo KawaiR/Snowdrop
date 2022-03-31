@@ -9,56 +9,15 @@ const PostListPage  = ({navigation}) => {
     var height = Dimensions.get('window').height;
 
     const [tag, setTag] = React.useState(""); // change to route later
-    const [posts, setPosts] = React.useState([
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        postTitle: 'First Item',
-        content: 'First content',
-        uploadDate: 'First time',
-        upvotes: 10,
-        downvotes: 11,
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        postTitle: 'Second Item',
-        content: 'Second content',
-        uploadDate: 'Second time',
-        upvotes: 20,
-        downvotes: 21,
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        postTitle: 'Third Item',
-        content: 'Third content',
-        uploadDate: 'Third time',
-        upvotes: 30,
-        downvotes: 31,
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f6',
-        postTitle: 'forth Item',
-        content: 'forth content',
-        uploadDate: 'forth time',
-        upvotes: 40,
-        downvotes: 41,
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa976',
-        postTitle: 'fifth Item',
-        content: 'fifth content',
-        uploadDate: 'fifth time',
-        upvotes: 50,
-        downvotes: 51,
-    },
-    ]);
+    const [posts, setPosts] = React.useState([]);
 
     async function getPosts() {
-        let url = "";
-        if (tag == "") {
-            url = "http://localhost:8080/posts/";
-        } else {
-            url = "/" + tag + "/get-posts";
+        // console.log("get post")
+        let url = "https://quiet-reef-93741.herokuapp.com/posts";
+        if (tag != "") {
+            url = url + "/" + tag + "/get-posts";
         }
+        console.log("get post")
         try {
 			let response = await fetch(url, { method: 'GET' })
 			.then((response) => {
@@ -83,6 +42,7 @@ const PostListPage  = ({navigation}) => {
     };
 
     useEffect(() => {
+        console.log("use effect");
         getPosts();
         
     });
@@ -91,7 +51,7 @@ const PostListPage  = ({navigation}) => {
         <TouchableOpacity style={styles.post} onPress={() => console.log("TODO - " + item.id)}>
             <View style={styles.postContent}>
                 <View style={styles.postHeader}>
-                    <Text>{"@TODO"}</Text>
+                    <Text>{item.sender}</Text>
                     <Text style={{textAlign:'right', flex: 1}}>{item.uploadDate}</Text>
                 </View>
                 <View style={styles.lineBreak}></View>

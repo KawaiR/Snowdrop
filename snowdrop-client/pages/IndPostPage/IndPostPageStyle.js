@@ -58,7 +58,7 @@ export default StyleSheet.create({
         marginHorizontal: height * 0.015,
         flex: 1,
         flexDirection: 'row',
-        justifyContent: "center",
+        // justifyContent: "center",
     },
     toggle: {
         borderRadius: 10,

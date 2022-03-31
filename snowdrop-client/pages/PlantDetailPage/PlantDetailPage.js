@@ -11,6 +11,8 @@ const PlantDetailPage  = ({route, navigation}) => {
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
 
+    const [fetched, setFetched] = React.useState(0);
+
     const [waterVisible, setWaterVisible] = React.useState(false);
     const [fertilizerVisible, setFertilizerVisible] = React.useState(false);
     const [healthVisible, setHealthVisible] = React.useState(false);
@@ -23,7 +25,8 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [waterCurrent, setWaterCurrent] = React.useState(plant.waterCurrent);
     const [image, setImage] = React.useState("");
     const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
-    const [value, setValue] = React.useState("0");
+    const [value, setValue] = React.useState("TODO");
+    const [sunlight, setSunlight] = React.useState("TODO");
 
     const hideWater = () => setWaterVisible(false);
     const hideFertilizer = () => setFertilizerVisible(false);
@@ -35,11 +38,9 @@ const PlantDetailPage  = ({route, navigation}) => {
         console.log("waterYes");
         waterPlant();
         setWaterVisible(false);
-        // add
     }
     const waterrNo = () => {
         setWaterVisible(false);
-        // add
     }
     const fertilizerYes = () => {
         setFertilizerVisible(false);
@@ -72,10 +73,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 					response.json().then((result) => {
                         console.log('success');
 						console.log(result);
-                        console.log('success');
-                        //setUpcomingWatered(result.waterNext)
                         navigation.navigate("Page_Plant");
-                        //setPlantsList(result.caredFor);
 					});
 				}
 			});
@@ -85,17 +83,50 @@ const PlantDetailPage  = ({route, navigation}) => {
 		}
     }
     
-    const sunYes = () => {
+    async function sunYes() {
         setSunVisible(false);
+        try {
+			let response = await fetch('http://localhost:8080/plants/' + id + "/sunlight-exposure", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                    sunlightLevel: parseInt(value),
+                }),
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+                        // todo update sunlight ui
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log('success');
+						console.log(result);
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
     }
 
     useEffect(() => {
-        console.log(plant);
-        getPlantName(id);
-        if ((upcomingWatered != null) && (upcomingWatered != "")) {
-            setUpcomingWatered(upcomingWatered.substring(0, 10));
-        } else {
-            setUpcomingWatered("");
+        console.log("use effect");
+        if (fetched == 0) {
+            getPlantName(id);
+            if ((upcomingWatered != null) && (upcomingWatered != "")) {
+                setUpcomingWatered(upcomingWatered.substring(0, 10));
+            } else {
+                setUpcomingWatered("");
+            }
+            setFetched(1);
         }
         
     });
@@ -124,7 +155,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         console.log('success');
 						console.log(result);
                         console.log('success');
-                        setUpcomingWatered(result.waterNext)
+                        setUpcomingWatered(result.waterNext.substring(0, 10))
                         //setPlantsList(result.caredFor);
 					});
 				}
@@ -138,7 +169,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     async function getPlantName(id) {
         try {
-			let response = await fetch('http://localhost:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
+			let response = await fetch('http://localhost:8080/plants/' + "TODO" + '/get-plant-info', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {
@@ -151,6 +182,8 @@ const PlantDetailPage  = ({route, navigation}) => {
 					response.json().then((result) => {
                         console.log(result);
                         setScientificName(result.scientificName);
+                        // setSunlight(result.sunlightLevel);
+                        // setValue(result.sunlightLevel);
                         if (result.plantImage != null) {
                             setImage(result.plantImage);
                         } else {
@@ -284,10 +317,8 @@ const PlantDetailPage  = ({route, navigation}) => {
                     <Text>How much sunlight does your plant get?</Text>
                     <ToggleButton.Row style={styles.toggle} onValueChange={value => setValue(value)} value={value}>
                         <ToggleButton icon="numeric-1" value="1" />
+                        <ToggleButton icon="numeric-2" value="2" />
                         <ToggleButton icon="numeric-3" value="3" />
-                        <ToggleButton icon="numeric-5" value="5" />
-                        <ToggleButton icon="numeric-7" value="7" />
-                        <ToggleButton icon="numeric-9" value="9" />
                         <ToggleButton icon="white-balance-sunny" value="11" />
                     </ToggleButton.Row>
                 </Dialog.Content>
