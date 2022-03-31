@@ -12,9 +12,6 @@ const PlantsPage  = ({navigation}) => {
 
     useEffect(() => {
         getPlants();
-        let fertilizeTimes = new Map();
-        global.fertilizeTimes = fertilizeTimes;
-        global.fertilizeTimes.forEach((id, fertilizeTimes) => console.log(`${id}: ${fertilizeTimes}`));
     });
 
     async function getPlants() {
@@ -93,7 +90,6 @@ const PlantsPage  = ({navigation}) => {
 		<View style={styles.cardList}>
             {plantsList.map((plant) => 
                 <Card.Title
-                    { ...global.fertilizeTimes.set(plant.id, 0) }
                     key={plant.id}
                     style={styles.card}
                     titleStyle={styles.cardText}

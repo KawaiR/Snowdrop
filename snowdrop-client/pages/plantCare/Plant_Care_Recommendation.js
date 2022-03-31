@@ -15,7 +15,7 @@ const defaultH = 896;
 
 const Plant_Care_Recommendation = ({ route, navigation }) => {
     const { plant, id } = route.params; // plant here is actually a plant care object
-    const [fertilizeTimes, onChangeNumber] = React.useState(global.fertilizeTimes.has(id) ? global.fertilizeTimes.get(id) : 0);
+    const [fertilizeTimes, onChangeNumber] = React.useState(global.fertilizeTimes.has(plant.id) ? global.fertilizeTimes.get(plant.id) : 0);
 
     const [commonName, setCommonName] = React.useState(plant.nickname);
     const [scientificName, setScientificName] = React.useState("");
@@ -46,13 +46,12 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
 
     async function getPlantName(id) {
         try {
-            let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + id + '/get-plant-info', { method: 'GET' })
+            let response = await fetch('http://localhost:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
                 .then((response) => {
                     if (response.status == 400) {
                         response.json().then((result) => {
                             console.log('get plant info fail');
                             console.log(result.message);
-                            console.log('get plant info fail');
                         });
                     }
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
@@ -135,7 +134,7 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                             selectionColor={'grey'}
                             underlineColorAndroid='transparent'
                         />
-                        <TouchableOpacity style={styles.setFertilizerButton} onPress={() => {global.fertilizeTimes.set(id, fertilizeTimes); global.fertilizeTimes.forEach((id, fertilizeTimes) => console.log(`${id}: ${fertilizeTimes}`));}} >
+                        <TouchableOpacity style={styles.setFertilizerButton} onPress={() => {global.fertilizeTimes.set(plant.id, fertilizeTimes); global.fertilizeTimes.forEach((fertilizeTimes, id) => console.log(`${id}: ${fertilizeTimes}`));}} >
                             <Text style={styles.setFertilizerText}>Set</Text>
                         </TouchableOpacity>
                         </View>
