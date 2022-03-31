@@ -339,9 +339,9 @@ public class PlantService {
         }
 
         PlantCare plantCare = userPlants.get(plantIndex);
-        plantCare.setSunlightThird(plantCare.getReportedSecond());
-        plantCare.setSunlightSecond(plantCare.getReportedExposure());
-        plantCare.setReportedExposure(sunlightDomain.getReportedSunlight());
+        plantCare.setReportedThird(plantCare.getReportedSecond());
+        plantCare.setReportedExposure(plantCare.getReportedExposure());
+        plantCare.setReportedExposure(sunlightDomain.getReportedSunlight());a
 
         plantCareRepository.save(plantCare);
 
