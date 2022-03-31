@@ -136,9 +136,12 @@ public class PlantService {
                 .plantHealth(addPlantDomain.getPlantHealth())
                 .fertilizer(null)
                 .nickname(nickname)
-                .sunlight(0)
-                .sunlightSecond(0)
-                .sunlightThird(0)
+                .sunlight(-1)
+                .sunlightSecond(-1)
+                .sunlightThird(-1)
+                .reportedExposure(0)
+                .reportedSecond(0)
+                .reportedThird(0)
                 .temperature(0)
                 .waterCurrent(null)
                 .waterLast(null)
@@ -332,9 +335,9 @@ public class PlantService {
         }
 
         PlantCare plantCare = userPlants.get(plantIndex);
-        plantCare.setSunlightThird(plantCare.getSunlightSecond());
-        plantCare.setSunlightSecond(plantCare.getSunlight());
-        plantCare.setSunlight(sunlightDomain.getSunlightLevel());
+        plantCare.setSunlightThird(plantCare.getReportedSecond());
+        plantCare.setSunlightSecond(plantCare.getReportedExposure());
+        plantCare.setReportedExposure(sunlightDomain.getReportedSunlight());
 
         plantCareRepository.save(plantCare);
     }

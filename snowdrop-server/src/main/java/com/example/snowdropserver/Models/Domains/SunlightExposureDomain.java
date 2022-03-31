@@ -9,10 +9,10 @@ import lombok.Value;
 @AllArgsConstructor
 public class SunlightExposureDomain {
     String username;
-    int sunlightLevel;
+    int reportedSunlight;
 
     public SunlightExposureDomain() {
         username = null;
-        sunlightLevel = 0;
+        reportedSunlight = 0;
     }
 }
