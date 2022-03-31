@@ -1,22 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, ScrollView, Image, Dimensions, Alert } from "react-native";
 import { Appbar, Avatar, Card, FAB, IconButton } from 'react-native-paper';
-
+import { useIsFocused } from "@react-navigation/native";
 import styles from './PlantsPageStyle.js';
 
-const PlantsPage  = ({route, navigation}) => {
+const PlantsPage  = ({ navigation }) => {
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
 
     const [plantsList, setPlantsList] = React.useState([]);
-    var { fetched } = route.params;
-
+    const isFocused = useIsFocused()
     useEffect(() => {
-        if (fetched == 0) {
-            fetched = 1;
+        if (isFocused) {
             getPlants();
         }
-    });
+    }, [isFocused]);
 
     async function getPlants() {
         try {

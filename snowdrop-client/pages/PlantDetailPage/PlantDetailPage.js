@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, Text, ScrollView, Image, Dimensions, ImageBackground } from "react-native";
 import { Appbar, Avatar, Card, FAB, IconButton, Provider, Dialog, Portal, Button, ToggleButton } from 'react-native-paper';
 import { DebugInstructions } from "react-native/Libraries/NewAppScreen";
-
+import { useIsFocused } from "@react-navigation/native";
 import styles from './PlantDetailPageStyle.js';
 
 const PlantDetailPage  = ({route, navigation}) => {
@@ -10,8 +10,6 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
-
-    const [fetched, setFetched] = React.useState(0);
 
     const [waterVisible, setWaterVisible] = React.useState(false);
     const [fertilizerVisible, setFertilizerVisible] = React.useState(false);
@@ -27,6 +25,7 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
     const [value, setValue] = React.useState("" + plant.reportedExposure + "");
     const [sunlight, setSunlight] = React.useState("" + plant.reportedExposure + "");
+    const [test, setTest] = React.useState(0);
 
     const hideWater = () => setWaterVisible(false);
     const hideFertilizer = () => setFertilizerVisible(false);
@@ -82,9 +81,13 @@ const PlantDetailPage  = ({route, navigation}) => {
 			console.log(err);
 		}
     }
-    
+
     async function sunYes() {
         setSunVisible(false);
+        console.log("sun yes");
+        if (value == "1") {setTest(1)}
+        if (value == "2") {setTest(2)}
+        if (value == "3") {setTest(3)}
         try {
 			let response = await fetch('http://localhost:8080/plants/' + id + "/sunlight-exposure", {
                 method: 'POST',
@@ -93,7 +96,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 },
                 body: JSON.stringify({
                     username: global.userName,
-                    sunlightLevel: parseInt(value),
+                    reportedSunlight: test,
                 }),
             })
 			.then((response) => {
@@ -101,14 +104,12 @@ const PlantDetailPage  = ({route, navigation}) => {
 					response.json().then((result) => {
                         console.log('fail');
 						console.log(result.message);
-                        setSunlight(value);
+                        console.log('fail');
 					});
 				}
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
-					response.json().then((result) => {
-                        console.log('success');
-						console.log(result);
-					});
+                    console.log('success');
+                    setSunlight(value);
 				}
 			});
 		} catch (err) {
@@ -117,11 +118,13 @@ const PlantDetailPage  = ({route, navigation}) => {
 		}
     }
 
+    const isFocused = useIsFocused()
     useEffect(() => {
         console.log("use effect");
-        if (fetched == 0) {
-            setFetched(1);
+        console.log(plant)
+        if (isFocused) {
             getPlantName(id);
+                
             if ((upcomingWatered != null) && (upcomingWatered != "")) {
                 setUpcomingWatered(upcomingWatered.substring(0, 10));
             } else {
@@ -315,11 +318,10 @@ const PlantDetailPage  = ({route, navigation}) => {
                 <Dialog.Title>Sunlight Exposure</Dialog.Title>
                 <Dialog.Content>
                     <Text>How much sunlight does your plant get?</Text>
-                    <ToggleButton.Row style={styles.toggle} onValueChange={value => setValue(value)} value={value}>
+                    <ToggleButton.Row style={styles.toggle} onValueChange={value => setValue(value)} value={sunlight}>
                         <ToggleButton icon="numeric-1" value="1" />
                         <ToggleButton icon="numeric-2" value="2" />
                         <ToggleButton icon="numeric-3" value="3" />
-                        <ToggleButton icon="white-balance-sunny" value="11" />
                     </ToggleButton.Row>
                 </Dialog.Content>
                 <Dialog.Actions>

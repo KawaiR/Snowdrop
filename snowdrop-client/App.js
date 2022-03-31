@@ -27,8 +27,8 @@ export default function App() {
     //<PlantsPage/>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Page_PostList" component={PostListPage} />
-        <Stack.Screen name="Page_IndPost" component={IndPostPage} />
+        {/* <Stack.Screen name="Page_PostList" component={PostListPage} /> */}
+        {/* <Stack.Screen name="Page_IndPost" component={IndPostPage} /> */}
         {/* <Stack.Screen name="Page_PostList" component={PostListPage} /> */}
         <Stack.Screen name="Page_Sign_In" component={Page_Sign_In} />
         <Stack.Screen name="Page_Create_Account" component={Page_Create_Account} />
@@ -45,8 +45,8 @@ export default function App() {
         <Stack.Screen name="Page_Plant" component={PlantsPage} />
         <Stack.Screen name="Plant_Search" component={Plant_Search} />
         <Stack.Screen name="Save_Plant" component={Save_Plant} />
-        {/* <Stack.Screen name="Page_PostList" component={PostListPage} /> */}
-        {/* <Stack.Screen name="Page_IndPost" component={IndPostPage} /> */}
+        <Stack.Screen name="Page_PostList" component={PostListPage} />
+        <Stack.Screen name="Page_IndPost" component={IndPostPage} />
 
       </Stack.Navigator>
     </NavigationContainer>
