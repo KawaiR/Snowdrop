@@ -92,10 +92,8 @@ public class UserService {
                 .userName(userDomain.getUserName())
                 .authTokenHash(authTokenHash)
                 .googleID(null)
-                .comments(null)
                 .totalPoints(0)
                 .editorPrivilege(0)
-                .posts(null)
                 .build();
 
         userRepository.save(user); // will save into database
@@ -131,9 +129,7 @@ public class UserService {
                 .userName(userDomain.getUserName())
                 .authTokenHash(authTokenHash)
                 .googleID(userDomain.getGoogleID())
-                .comments(null)
                 .totalPoints(0)
-                .posts(null)
                 .build();
 
         userRepository.save(user); // will save into database
