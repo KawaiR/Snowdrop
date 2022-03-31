@@ -36,6 +36,12 @@ public class PlantController {
         return plantService.getPlantInfo(id);
     }
 
+    @PostMapping(value = "/add-new-plant")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void AddNewPlant(@RequestBody AddNewPlantDomain addNewPlantDomain) {
+        plantService.addNewPlant(addNewPlantDomain);
+    }
+
     @PostMapping(value = "/{id}/add-plant")
     @ResponseStatus(HttpStatus.CREATED)
     public int AddUserPlant(@PathVariable int id, @RequestBody AddPlantDomain addPlantDomain) {
@@ -62,5 +68,11 @@ public class PlantController {
     public void deleteUserPlant(@PathVariable int plantCareId,
                                 @RequestBody DeleteUserPlantDomain deleteUserPlantDomain) {
         plantService.deleteUserPlant(plantCareId, deleteUserPlantDomain);
+    }
+
+    @PostMapping(value = "/{plantCareId}/sunlight-exposure")
+    public void logSunlightExposure(@PathVariable int plantCareId,
+                                    @RequestBody SunlightExposureDomain sunlightExposureDomain) {
+        plantService.logSunlightExposure(plantCareId, sunlightExposureDomain);
     }
 }
