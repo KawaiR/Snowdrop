@@ -33,6 +33,7 @@ public class Plant {
     @Column(name="soil_type")
     String soilType;
 
+    // UV
     // 1-2: Low, 3-5: Moderate, 6-7: High, 8-10: Very High, 11+: Extreme
     @Column(name="sunlight_level")
     int sunlightLevel;
@@ -40,6 +41,10 @@ public class Plant {
     // from USDA database
     @Column(name="min_temperature")
     double minTemperature;
+
+    // 1: full shade, 2: partial shade, 3: no shade
+    @Column(name="reported_sunlight")
+    int reportedSunlight;
 
 //    @OneToMany(mappedBy = "plant")
 //    @ToString.Exclude
