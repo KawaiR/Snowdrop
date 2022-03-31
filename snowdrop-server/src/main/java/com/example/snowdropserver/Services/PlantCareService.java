@@ -36,6 +36,7 @@ public class PlantCareService {
                 .plantHealth(plantCare.getPlantHealth())
                 .nickname(plantCare.getNickname())
                 .sunlight(plantCare.getSunlight())
+                .reportedExposure(plantCare.getReportedExposure())
                 .temperature(plantCare.getTemperature())
                 .waterCurrent(plantCare.getWaterCurrent())
                 .waterNext(plantCare.getWaterNext())

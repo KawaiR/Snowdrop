@@ -362,8 +362,8 @@ public class UserService {
         javaMailSender.send(simpleMailMessage);
     }
 
-    // executed every minute
-    @Scheduled(fixedRate = 60000)
+    // executed every 15 minutes
+    @Scheduled(fixedRate = 900000)
     public void removeExpiredTokens() {
         List<ResetToken> expiredTokens = resetTokenRepository.findByExpiryDate(LocalDateTime.now());
 

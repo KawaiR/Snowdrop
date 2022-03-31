@@ -2,6 +2,7 @@ package com.example.snowdropserver.integration;
 
 import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.PlantCare;
+import com.example.snowdropserver.Models.Post;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
 
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -26,7 +28,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 public class TestingUtils {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     private static final String baseUrl = "http://localhost:8080";
     //private static final String baseUrl = "https://quiet-reef-93741.herokuapp.com";
 
@@ -198,7 +201,7 @@ public class TestingUtils {
         return plantInfoDomain;
     }
 
-    public static void addNewPlant(String commonName, String scientificName, String plantImageUrl,
+    public static int addNewPlant(String commonName, String scientificName, String plantImageUrl,
                                    String waterNeeds, String soilType, int sunlightLevel,
                                    double minTemperature, int reportedSunlight,
                                    int expectedStatusCode) throws Exception {
@@ -231,8 +234,15 @@ public class TestingUtils {
         System.out.println("**** MAKING ADD NEW PLANT REQUEST ****");
         CloseableHttpResponse response = client.execute(httpPost);
 
+        int plantId = -1;
+        if (expectedStatusCode == 201) {
+            plantId = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
+        }
+
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();
+
+        return plantId;
     }
 
     public static int addUserPlant(int plantId, String userName, String plantHealth, String nickname,
@@ -518,5 +528,62 @@ public class TestingUtils {
         client.close();
 
         return postInfoDomain;
+    }
+
+    public static List<Post> getPostsByTagAndExpect(int tagId, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(baseUrl + "/posts/" + tagId + "/get-posts");
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING GET POSTS BY TAG REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpGet);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        List<Post> posts = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            posts = objectMapper.readValue(jsonResponse,
+                    new TypeReference<List<Post>>() {
+                    });
+        }
+        client.close();
+
+        return posts;
+    }
+
+    public static PlantCareInfoDomain getPlantCareInfoAndExpect(int plantCareId, int expectedStatusCode)
+        throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(baseUrl + "/plant-care/" + plantCareId + "/get-info");
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING GET PLANT INFO REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpGet);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        PlantCareInfoDomain plantCareInfoDomain = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            plantCareInfoDomain = objectMapper.readValue(jsonResponse,
+                    new TypeReference<PlantCareInfoDomain>() {
+                    });
+        }
+        client.close();
+
+        return plantCareInfoDomain;
     }
 }
