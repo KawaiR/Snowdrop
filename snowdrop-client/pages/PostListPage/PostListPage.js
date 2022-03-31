@@ -10,10 +10,11 @@ const PostListPage  = ({navigation}) => {
 
     const [tag, setTag] = React.useState(""); // change to route later
     const [posts, setPosts] = React.useState([]);
+    const [fetched, setFetched] = React.useState(0);
 
     async function getPosts() {
         // console.log("get post")
-        let url = "https://quiet-reef-93741.herokuapp.com/posts";
+        let url = "http://localhost:8080/posts";
         if (tag != "") {
             url = url + "/" + tag + "/get-posts";
         }
@@ -42,13 +43,20 @@ const PostListPage  = ({navigation}) => {
     };
 
     useEffect(() => {
-        console.log("use effect");
-        getPosts();
+        if (fetched == 0) {
+            setFetched(1);
+            console.log("use effect");
+            getPosts();
+        }
+        // setFetched(0);
         
     });
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.post} onPress={() => console.log("TODO - " + item.id)}>
+        <TouchableOpacity style={styles.post} onPress={() => {
+            setFetched(0);
+            navigation.navigate('Page_IndPost', {id: item.id});
+            }}>
             <View style={styles.postContent}>
                 <View style={styles.postHeader}>
                     <Text>{item.sender}</Text>

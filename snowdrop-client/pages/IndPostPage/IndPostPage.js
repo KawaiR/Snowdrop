@@ -4,18 +4,28 @@ import { Appbar, Chip, Card, FAB, IconButton, ToggleButton } from 'react-native-
 
 import styles from './IndPostPageStyle.js';
 
-const IndPostPage  = ({navigation}) => {
+const IndPostPage  = ({route, navigation}) => {
+    const { id } = route.params;
+
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
 
-    const [id, setID] = React.useState(""); // change to route later
+    // const [id, setID] = React.useState(""); // change to route later
 
-    const [userName, setUserName] = React.useState("User");
-    const [date, setDate] = React.useState("date");
-    const [title, setTitle] = React.useState("title");
+    const [userName, setUserName] = React.useState("");
+    const [date, setDate] = React.useState("");
+    const [title, setTitle] = React.useState("");
     const [postContent, setPostContent] = React.useState("content1\ncontent2");
     const [upvote, setUpvote] = React.useState(10);
     const [downvote, setDownvote] = React.useState(5);
+
+    useEffect(() => {
+        if (userName == "") {
+            console.log("use effect");
+            getPost(id);
+        }
+        
+    });
 
     async function getPost(id) {
         try {

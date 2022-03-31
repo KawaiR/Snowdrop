@@ -120,13 +120,13 @@ const PlantDetailPage  = ({route, navigation}) => {
     useEffect(() => {
         console.log("use effect");
         if (fetched == 0) {
+            setFetched(1);
             getPlantName(id);
             if ((upcomingWatered != null) && (upcomingWatered != "")) {
                 setUpcomingWatered(upcomingWatered.substring(0, 10));
             } else {
                 setUpcomingWatered("");
             }
-            setFetched(1);
         }
         
     });

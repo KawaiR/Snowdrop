@@ -53,6 +53,9 @@ export default StyleSheet.create({
         fontWeight: '400',
         marginBottom: height * 0.01,
     },
+    chip: {
+        marginRight: height * 0.008,
+    },
     postVotes: {
         marginVertical: height * 0.015,
         marginHorizontal: height * 0.015,

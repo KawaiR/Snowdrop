@@ -68,7 +68,7 @@ const Save_Plant = ({ route, navigation }) => {
                         [{
                             text: 'OK',
                             onPress: () => { 
-                                navigation.navigate("Page_Plant");
+                                navigation.navigate("Page_Plant", {fetched: 0});
                                 // Navigate to view plants page
                             },
                         }],

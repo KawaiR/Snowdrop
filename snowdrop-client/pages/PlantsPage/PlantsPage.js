@@ -4,14 +4,18 @@ import { Appbar, Avatar, Card, FAB, IconButton } from 'react-native-paper';
 
 import styles from './PlantsPageStyle.js';
 
-const PlantsPage  = ({navigation}) => {
+const PlantsPage  = ({route, navigation}) => {
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
 
     const [plantsList, setPlantsList] = React.useState([]);
+    var { fetched } = route.params;
 
     useEffect(() => {
-        getPlants();
+        if (fetched == 0) {
+            fetched = 1;
+            getPlants();
+        }
     });
 
     async function getPlants() {
@@ -97,7 +101,9 @@ const PlantsPage  = ({navigation}) => {
                     title={(plant.nickname != null) ? plant.nickname : 'No common name'}
                     subtitle={(plant.waterCurrent != null) ? plant.waterCurrent : 'No water'}
                     left={(props) => <Avatar.Image {...props} size={width * 0.18} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
-                    right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => navigation.navigate('Page_PlantDetail', {plant: plant, id: plant.id})} />}
+                    right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => {
+                        navigation.navigate('Page_PlantDetail', {plant: plant, id: plant.id});
+                    }} />}
                 />
             
             )}
@@ -108,11 +114,13 @@ const PlantsPage  = ({navigation}) => {
         style={styles.fab}
         icon="plus"
         color="white"
-        onPress={() => navigation.navigate("Plant_Search")}
+        onPress={() => {
+            navigation.navigate("Plant_Search");}}
     />
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={width * 0.09} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
-        <Appbar.Action icon="leaf" color="#EDEECB" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
+        <Appbar.Action icon="leaf" color="#EDEECB" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => {
+            navigation.navigate("Page_Plant");}} />
         <Appbar.Action icon="account-supervisor" color="#005500" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />
         <Appbar.Action icon="brightness-5" color="#005500" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
     </Appbar>
