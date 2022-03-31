@@ -16,12 +16,14 @@ public class PlantCareInfoDomain {
     LocalDateTime waterCurrent;
     LocalDateTime waterNext;
     String plantHealth;
+    int reportedExposure;
     String fertilizer;
 
     public PlantCareInfoDomain() {
         nickname = null;
         temperature = 0;
         sunlight = 0;
+        reportedExposure = 0;
         waterCurrent = LocalDateTime.now();
         waterNext = null;
         plantHealth = null;

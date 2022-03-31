@@ -43,7 +43,7 @@ public class TestAddNewPlant {
                 201);
     }
 
-
+    // TODO: change to something other than abietinella moss
     @Test
     public void addDuplicatePlantFailure() throws Exception {
         TestingUtils.addNewPlant("abietinella moss",
@@ -54,7 +54,7 @@ public class TestAddNewPlant {
                 3,
                 0,
                 1,
-                201);
+                400);
         TestingUtils.addNewPlant("abietinella moss",
                 "Abietinella abietina (Hedw.) Fleisch.",
                 "https://upload.wikimedia.org/wikipedia/commons/7/74/Abietinella_abietina_0293.JPG",
