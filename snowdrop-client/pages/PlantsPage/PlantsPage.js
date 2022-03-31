@@ -1,22 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, ScrollView, Image, Dimensions, Alert } from "react-native";
 import { Appbar, Avatar, Card, FAB, IconButton } from 'react-native-paper';
-
+import { useIsFocused } from "@react-navigation/native";
 import styles from './PlantsPageStyle.js';
 
-const PlantsPage  = ({navigation}) => {
+const PlantsPage  = ({route, navigation}) => {
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
 
     const [plantsList, setPlantsList] = React.useState([]);
-
+    const isFocused = useIsFocused()
     useEffect(() => {
-        getPlants();
-    });
+        if (isFocused) {
+            console.log("print test");
+            getPlants();
+        }
+    }, [isFocused]);
 
     async function getPlants() {
         try {
-			let response = await fetch('http://192.168.1.15:8080/plants/' + global.userName + '/get-user-plants', { method: 'GET' })
+			let response = await fetch('http://localhost:8080/plants/' + global.userName + '/get-user-plants', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {
@@ -40,7 +43,7 @@ const PlantsPage  = ({navigation}) => {
 
     async function getPlantName(id) {
         try {
-			let response = await fetch('http://192.168.1.15:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
+			let response = await fetch('http://localhost:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {

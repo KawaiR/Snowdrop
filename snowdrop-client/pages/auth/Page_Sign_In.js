@@ -56,7 +56,7 @@ async function setLocation() {
 		global.expoPushToken = expoPushToken;
 		AsyncStorage.setItem("expoPushToken",expoPushToken);
 		try {
-			fetch('http://192.168.1.15:8080/devices', {
+			fetch('http://localhost:8080/devices', {
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json; charset=utf-8",
@@ -146,7 +146,7 @@ const Page_Sign_In  = ({navigation}) => {
 				AsyncStorage.setItem("isEmail","false");
 				AsyncStorage.setItem("googleID",global.googleID);
 				try {
-					let response = await fetch(`http://192.168.1.15:8080/users/get-google-user`, {
+					let response = await fetch(`http://localhost:8080/users/get-google-user`, {
 						method: "POST",
 						headers: {
 						"Content-Type": "application/json; charset=utf-8",
@@ -185,7 +185,7 @@ const Page_Sign_In  = ({navigation}) => {
 
 	async function signInAsync() {
 		try {
-			let response = await fetch(`http://192.168.1.15:8080/users/login`, {
+			let response = await fetch(`http://localhost:8080/users/login`, {
 				method: "POST",
 				headers: {
 				"Content-Type": "application/json; charset=utf-8",

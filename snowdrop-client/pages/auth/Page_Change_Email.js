@@ -33,7 +33,7 @@ const Page_Change_Email = ({ navigation }) => {
 
     async function sendCode() {
         try {
-            let response = await fetch(`http://192.168.1.15:8080/users/change-email-request`, {
+            let response = await fetch(`http://localhost:8080/users/change-email-request`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
@@ -63,7 +63,7 @@ const Page_Change_Email = ({ navigation }) => {
 
     async function VerifyCode() {
         try {
-            let response = await fetch(`http://192.168.1.15:8080/users/validate-reset-token`, {
+            let response = await fetch(`http://localhost:8080/users/validate-reset-token`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",

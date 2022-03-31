@@ -34,7 +34,7 @@ const Page_Profile_Google_Account = ({ navigation }) => {
 		AsyncStorage.removeItem("userName");
 		if (global.expoPushToken != "null") {
 			AsyncStorage.removeItem("expoPushToken");
-			fetch('http://192.168.1.15:8080/devices/remove', {
+			fetch('http://localhost:8080/devices/remove', {
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json; charset=utf-8",

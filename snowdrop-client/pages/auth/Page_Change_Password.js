@@ -32,7 +32,7 @@ const Page_Change_Password  = ({navigation}) => {
 
 	async function VerifyCode() {
 		try {
-			let response = await fetch(`http://192.168.1.15:8080/users/validate-password`, {
+			let response = await fetch(`http://localhost:8080/users/validate-password`, {
 				method: "POST",
 				headers: {
 				"Content-Type": "application/json; charset=utf-8",

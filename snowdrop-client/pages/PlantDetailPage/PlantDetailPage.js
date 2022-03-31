@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, ScrollView, Image, Dimensions, ImageBackground } from "react-native";
 import { Appbar, Avatar, Card, FAB, IconButton, Provider, Dialog, Portal, Button } from 'react-native-paper';
-
+import { useIsFocused } from "@react-navigation/native";
 import styles from './PlantDetailPageStyle.js';
 
 const PlantDetailPage  = ({route, navigation}) => {
@@ -41,21 +41,22 @@ const PlantDetailPage  = ({route, navigation}) => {
     const fertilizerNo = () => {
         setFertilizerVisible(false);
     }
-
+    const isFocused = useIsFocused()
     useEffect(() => {
-        console.log(plant);
-        getPlantName(id);
-        if ((upcomingWatered != null) && (upcomingWatered != "")) {
-            setUpcomingWatered(upcomingWatered.substring(0, 10));
-        } else {
-            setUpcomingWatered("");
+        if(isFocused) {
+            console.log(plant);
+            getPlantName(id);
+            if ((upcomingWatered != null) && (upcomingWatered != "")) {
+                setUpcomingWatered(upcomingWatered.substring(0, 10));
+            } else {
+                setUpcomingWatered("");
+            }
         }
-        
-    });
+    }, [isFocused]);
 
     async function waterPlant() {
         try {
-			let response = await fetch('http://192.168.1.15:8080/plants/' + id + "/water-plant", {
+			let response = await fetch('http://localhost:8080/plants/' + id + "/water-plant", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
@@ -91,7 +92,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     async function getPlantName(id) {
         try {
-			let response = await fetch('http://192.168.1.15:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
+			let response = await fetch('http://localhost:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {
