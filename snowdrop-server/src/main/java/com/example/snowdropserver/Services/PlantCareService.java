@@ -1,6 +1,5 @@
 package com.example.snowdropserver.Services;
 
-import com.example.snowdropserver.Models.Domains.PlantCareInfoDomain;
 import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Repositories.PlantCareRepository;
@@ -24,23 +23,12 @@ public class PlantCareService {
         return plantCareRepository.findAll();
     }
 
-    public PlantCareInfoDomain getPlantCareInfo(int plantCareId) {
+    public PlantCare getPlantCareInfo(int plantCareId) {
         Optional<PlantCare> maybePlantCare = plantCareRepository.findById(plantCareId);
         if (!maybePlantCare.isPresent()) {
             System.out.println("plant was not found");
         }
-        PlantCare plantCare = maybePlantCare.get();
 
-        PlantCareInfoDomain plantCareInfoDomain = PlantCareInfoDomain.builder()
-                .fertilizer(plantCare.getFertilizer())
-                .plantHealth(plantCare.getPlantHealth())
-                .nickname(plantCare.getNickname())
-                .sunlight(plantCare.getSunlight())
-                .temperature(plantCare.getTemperature())
-                .waterCurrent(plantCare.getWaterCurrent())
-                .waterNext(plantCare.getWaterNext())
-                .build();
-
-        return plantCareInfoDomain;
+        return null;
     }
 }

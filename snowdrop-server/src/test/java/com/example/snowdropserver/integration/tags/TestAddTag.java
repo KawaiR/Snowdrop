@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public class TestAddTag {
     @Test
     public void AddTagSuccess() throws Exception {
-        TestingUtils.addTagAndExpect(94,
+        TestingUtils.addTagAndExpect(74,
                 201);
     }
 
