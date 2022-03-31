@@ -135,12 +135,7 @@ public class PlantService {
                 .plantHealth(addPlantDomain.getPlantHealth())
                 .fertilizer(null)
                 .nickname(nickname)
-                .sunlight(-1)
-                .sunlightSecond(-1)
-                .sunlightThird(-1)
-                .reportedExposure(0)
-                .reportedSecond(0)
-                .reportedThird(0)
+                .sunlight(0)
                 .temperature(0)
                 .waterCurrent(null)
                 .waterLast(null)
@@ -304,42 +299,4 @@ public class PlantService {
 
         System.out.println("The plant was deleted!");
     }
-
-    public void logSunlightExposure(int plantCareId, SunlightExposureDomain sunlightDomain) {
-        String username = sunlightDomain.getUsername();
-        System.out.println(username);
-
-        Optional<User> maybeUser = userRepository.getByUserName(username);
-        if (!maybeUser.isPresent()) {
-            System.out.println("User not found");
-            throw new UserNotFoundException();
-        }
-        User user = maybeUser.get();
-
-        List<PlantCare> userPlants = plantCareRepository.getByUser(user);
-        int plantIndex = -1;
-
-        System.out.println("Send plantCareId: " + plantCareId);
-        for (int i = 0; i < userPlants.size(); i++) {
-            System.out.println("Plant in list: " + userPlants.get(i).getId());
-            if (userPlants.get(i).getId() == plantCareId) {
-                plantIndex = i;
-                break;
-            }
-        }
-
-        if (plantIndex == -1) {
-            System.out.println("User doesn't have this plant");
-            throw new NoPlantUserComboException();
-        }
-
-        PlantCare plantCare = userPlants.get(plantIndex);
-        plantCare.setSunlightThird(plantCare.getReportedSecond());
-        plantCare.setSunlightSecond(plantCare.getReportedExposure());
-        plantCare.setReportedExposure(sunlightDomain.getReportedSunlight());
-
-        plantCareRepository.save(plantCare);
-    }
-
-    
 }
