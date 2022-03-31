@@ -97,6 +97,7 @@ public class PostService {
                 .postTitle(post.getPostTitle())
                 .totalScore(post.getTotalScore())
                 .uploadDate(post.getUploadDate())
+                .content(post.getContent())
                 .username(post.getSender().getUserName())
                 .downvotes(post.getDownvotes())
                 .upvotes(post.getUpvotes())

@@ -1,0 +1,26 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+    <changeSet id="20220331135700" author="razanalkawai">
+        <addColumn tableName="plants">
+            <column name="reported_sunlight" type="int">
+                <constraints nullable="true" />
+            </column>
+        </addColumn>
+
+        <addColumn tableName="user_plant_mappings">
+            <column name="reported_exposure" type="int">
+                <constraints nullable="true" />
+            </column>
+            <column name="reported_second" type="int">
+                <constraints nullable="true" />
+            </column>
+            <column name="reported_third" type="int">
+                <constraints nullable="true" />
+            </column>
+            <column name="house_location" type="int">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

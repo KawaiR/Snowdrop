@@ -47,13 +47,13 @@ public class User {
 //    @ToString.Exclude
 //    private List<PlantCare> plants;
 
-    @OneToMany(mappedBy = "sender")
-    @ToString.Exclude
-    private List<Post> posts;
+//    @OneToMany(mappedBy = "sender")
+//    @ToString.Exclude
+//    private List<Post> posts;
 
-    @OneToMany(mappedBy = "sender")
-    @ToString.Exclude
-    private List<Comment> comments;
+//    @OneToMany(mappedBy = "sender")
+//    @ToString.Exclude
+//    private List<Comment> comments;
 
     /*
     @Override
