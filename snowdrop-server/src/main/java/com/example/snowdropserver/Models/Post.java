@@ -32,7 +32,7 @@ public class Post {
     @ManyToOne(fetch = FetchType.EAGER)
     User sender;
 
-    @JsonIgnore
+    //@JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     Tag tag;
 
