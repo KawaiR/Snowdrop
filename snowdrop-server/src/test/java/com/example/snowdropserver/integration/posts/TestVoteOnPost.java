@@ -30,7 +30,7 @@ public class TestVoteOnPost {
         int postId = TestingUtils.createPostAndExpect("testDownvote3",
                 "testDownvote3",
                 "testDownvote3",
-                74,
+                3,
                 201);
         TestingUtils.voteAndExpect(postId,
                 "testDownvote3",
@@ -40,21 +40,21 @@ public class TestVoteOnPost {
 
     @Test
     public void testUpvoteThenDownvote() throws Exception {
-        TestingUtils.createUserAndExpect("testUpvoteThenDownvote",
-                "testUpvoteThenDownvote@test.com",
-                "testUpvoteThenDownvote",
+        TestingUtils.createUserAndExpect("testUpvoteThenDownvote1",
+                "testUpvoteThenDownvote1@test.com",
+                "testUpvoteThenDownvote1",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testUpvoteThenDownvote",
-                "testUpvoteThenDownvote",
-                "testUpvoteThenDownvote",
-                74,
+        int postId = TestingUtils.createPostAndExpect("testUpvoteThenDownvote1",
+                "testUpvoteThenDownvote1",
+                "testUpvoteThenDownvote1",
+                2,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteThenDownvote",
+                "testUpvoteThenDownvote1",
                 1,
                 200);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteThenDownvote",
+                "testUpvoteThenDownvote1",
                 0,
                 200);
     }
@@ -68,7 +68,7 @@ public class TestVoteOnPost {
         int postId = TestingUtils.createPostAndExpect("testDownvoteThenUpvote",
                 "testDownvoteThenUpvote",
                 "testDownvoteThenUpvote",
-                74,
+                3,
                 201);
         TestingUtils.voteAndExpect(postId,
                 "testDownvoteThenUpvote",
@@ -82,42 +82,42 @@ public class TestVoteOnPost {
 
     @Test
     public void testUpvoteTwice() throws Exception {
-        TestingUtils.createUserAndExpect("testUpvoteTwice2",
-                "testUpvoteTwic2e@test.com",
-                "testUpvoteTwice2",
+        TestingUtils.createUserAndExpect("testUpvoteTwice22",
+                "testUpvoteTwic22@test.com",
+                "testUpvoteTwice22",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testUpvoteTwice2",
-                "testUpvoteTwice2",
-                "testUpvoteTwice2",
+        int postId = TestingUtils.createPostAndExpect("testUpvoteTwice22",
+                "testUpvoteTwice22",
+                "testUpvoteTwice22",
                 3,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteTwice2",
+                "testUpvoteTwice22",
                 1,
                 200);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteTwice2",
+                "testUpvoteTwice22",
                 1,
                 200);
     }
 
     @Test
     public void testDownvoteTwice() throws Exception {
-        TestingUtils.createUserAndExpect("testDownvoteTwice2",
-                "testDownvoteTwice2@test.com",
-                "testDownvoteTwice2",
+        TestingUtils.createUserAndExpect("testDownvoteTwice22",
+                "testDownvoteTwice22@test.com",
+                "testDownvoteTwice22",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testDownvoteTwice2",
-                "testDownvoteTwice2",
-                "testDownvoteTwice2",
+        int postId = TestingUtils.createPostAndExpect("testDownvoteTwice22",
+                "testDownvoteTwice22",
+                "testDownvoteTwice22",
                 3,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testDownvoteTwice2",
+                "testDownvoteTwice22",
                 0,
                 200);
         TestingUtils.voteAndExpect(postId,
-                "testDownvoteTwice2",
+                "testDownvoteTwice22",
                 0,
                 200);
     }

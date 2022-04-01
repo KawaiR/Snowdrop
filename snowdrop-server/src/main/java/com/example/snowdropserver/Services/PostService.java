@@ -118,7 +118,6 @@ public class PostService {
         return postRepository.getByTag(tag);
     }
 
-    // TODO: debug double upvote/downvote case
     public VoteResultDomain voteOnPost(int postId, VoteOnPostDomain voteOnPostDomain) {
         // verify user
         Optional<User> maybeUser = userRepository.getByUserName(voteOnPostDomain.getUsername());
@@ -138,6 +137,7 @@ public class PostService {
 
         // confirm user hasn't interacted with this post yet
         int adjustment = 0;
+        int mappingId = -1;
         Optional<UserPostMappings> votedByUser = userPostRepository.findByPostAndUser(post, user);
         if (votedByUser.isPresent()) {
             UserPostMappings mapping = votedByUser.get();
@@ -154,6 +154,7 @@ public class PostService {
                     .build();
 
             userPostRepository.save(userPostMappings);
+            mappingId = userPostMappings.getId();
         }
 
         System.out.println("adjustment: " + adjustment);
@@ -164,9 +165,14 @@ public class PostService {
             numVotes = post.getUpvotes();
             if (adjustment != 1) {
                 newScore = post.getTotalScore() + 1;
-                numVotes++;
                 if (adjustment == 2) {
+                    Optional<UserPostMappings> mapping = userPostRepository.findById(mappingId);
+                    if (mapping.isPresent()) {
+                        userPostRepository.delete(mapping.get());
+                    }
                     post.setDownvotes(post.getDownvotes() - 1);
+                } else {
+                    numVotes++;
                 }
             } else {
                 newScore = post.getTotalScore() - 1;
@@ -176,9 +182,14 @@ public class PostService {
             numVotes = post.getDownvotes();
             if (adjustment != 2) {
                 newScore = post.getTotalScore() - 1;
-                numVotes++;
                 if (adjustment == 1) {
                     post.setUpvotes(post.getUpvotes() - 1);
+                    Optional<UserPostMappings> mapping = userPostRepository.findById(mappingId);
+                    if (mapping.isPresent()) {
+                        userPostRepository.delete(mapping.get());
+                    }
+                } else {
+                    numVotes++;
                 }
             } else {
                 newScore = post.getTotalScore() + 1;
