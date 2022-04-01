@@ -75,14 +75,16 @@ const IndPostPage  = ({route, navigation}) => {
     }
 
     async function getVoteResult(id) {
+        console.log("getVoteResult");
         try {
-			let response = await fetch('http://localhost:8080/posts/' + id + '/TODO', {
+			let response = await fetch('http://localhost:8080/posts/check-mapping', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
                 },
                 body: JSON.stringify({
                     username: global.userName,
+                    postId: id,
                 }),
             })
 			.then((response) => {
@@ -94,8 +96,8 @@ const IndPostPage  = ({route, navigation}) => {
 				}
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
-                        console.log(result);
-                        setStatus(TODO);
+                        console.log("/n/nfirst status");
+                        setStatus(result);
 					});
 				}
 			});
