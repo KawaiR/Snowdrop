@@ -5,10 +5,7 @@ import com.example.snowdropserver.Exceptions.PostNotFoundException;
 import com.example.snowdropserver.Exceptions.TagNotFoundException;
 import com.example.snowdropserver.Exceptions.UserNotFoundException;
 import com.example.snowdropserver.Models.*;
-import com.example.snowdropserver.Models.Domains.CreatePostDomain;
-import com.example.snowdropserver.Models.Domains.PostInfoDomain;
-import com.example.snowdropserver.Models.Domains.VoteOnPostDomain;
-import com.example.snowdropserver.Models.Domains.VoteResultDomain;
+import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Repositories.*;
 import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,14 +82,29 @@ public class PostService {
         return post.getId();
     }
 
-    public PostInfoDomain getPostInfo(int postId) {
+    public PostInfoDomain getPostInfo(int postId, GetPostInfoDomain getPostInfoDomain) {
         Optional<Post> maybePost = postRepository.findById(postId);
         if (!maybePost.isPresent()) {
             System.out.println("Post not found.");
             throw new PostNotFoundException();
         }
-
         Post post = maybePost.get();
+
+        Optional<User> maybeUser = userRepository.getByUserName(getPostInfoDomain.getUsername());
+        if (!maybeUser.isPresent()) {
+            System.out.println("no user found with this username.");
+            throw new UserNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        Optional<UserPostMappings> maybeMapping = userPostRepository.findByPostAndUser(post, user);
+        int vote = -1;
+        if (maybeMapping.isPresent()) {
+            UserPostMappings mapping = maybeMapping.get();
+            vote = mapping.getUpvote();
+        }
+
+
         PostInfoDomain postInfoDomain = PostInfoDomain.builder()
                 .postTitle(post.getPostTitle())
                 .totalScore(post.getTotalScore())
@@ -101,6 +113,7 @@ public class PostService {
                 .username(post.getSender().getUserName())
                 .downvotes(post.getDownvotes())
                 .upvotes(post.getUpvotes())
+                .voted(vote)
                 .build();
 
         return postInfoDomain;
@@ -200,10 +213,18 @@ public class PostService {
 
         postRepository.save(post);
 
+        int status = -1;
+        Optional<UserPostMappings> maybeStatus = userPostRepository.findById(mappingId);
+        if (maybeStatus.isPresent()) {
+            UserPostMappings m = maybeStatus.get();
+            status = maybeStatus.get().getUpvote();
+        }
+
         VoteResultDomain voteResultDomain = VoteResultDomain.builder()
                 .newScore(newScore)
                 .downvotes(post.getDownvotes())
                 .upvotes(post.getUpvotes())
+                .status(status)
                 .build();
 
         return voteResultDomain;
