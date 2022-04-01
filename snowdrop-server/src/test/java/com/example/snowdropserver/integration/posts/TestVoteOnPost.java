@@ -3,6 +3,7 @@ package com.example.snowdropserver.integration.posts;
 import com.example.snowdropserver.integration.TestingUtils;
 import org.junit.jupiter.api.Test;
 
+// something
 public class TestVoteOnPost {
     @Test
     public void testUpvote() throws Exception {

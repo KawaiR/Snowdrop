@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 public class TestGetPostInfo {
     @Test
     public void postExists() throws Exception {
-        TestingUtils.createUserAndExpect("postExists1",
-                "postExists1@test.com",
+        TestingUtils.createUserAndExpect("postExists11",
+                "postExists11@test.com",
                 "postExists",
                 201);
-        int postId = TestingUtils.createPostAndExpect("postExists1",
-                "postExists",
-                "postExists",
+        int postId = TestingUtils.createPostAndExpect("postExists11",
+                "postExists11",
+                "postExists11",
                 64,
                 201);
         PostInfoDomain postInfoDomain = TestingUtils.getPostInfoAndExpect(postId,
