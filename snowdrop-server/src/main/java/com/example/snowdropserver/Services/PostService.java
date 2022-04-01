@@ -82,28 +82,13 @@ public class PostService {
         return post.getId();
     }
 
-    public PostInfoDomain getPostInfo(int postId, GetPostInfoDomain getPostInfoDomain) {
+    public PostInfoDomain getPostInfo(int postId) {
         Optional<Post> maybePost = postRepository.findById(postId);
         if (!maybePost.isPresent()) {
             System.out.println("Post not found.");
             throw new PostNotFoundException();
         }
         Post post = maybePost.get();
-
-        Optional<User> maybeUser = userRepository.getByUserName(getPostInfoDomain.getUsername());
-        if (!maybeUser.isPresent()) {
-            System.out.println("no user found with this username.");
-            throw new UserNotFoundException();
-        }
-        User user = maybeUser.get();
-
-        Optional<UserPostMappings> maybeMapping = userPostRepository.findByPostAndUser(post, user);
-        int vote = -1;
-        if (maybeMapping.isPresent()) {
-            UserPostMappings mapping = maybeMapping.get();
-            vote = mapping.getUpvote();
-        }
-
 
         PostInfoDomain postInfoDomain = PostInfoDomain.builder()
                 .postTitle(post.getPostTitle())
@@ -113,7 +98,6 @@ public class PostService {
                 .username(post.getSender().getUserName())
                 .downvotes(post.getDownvotes())
                 .upvotes(post.getUpvotes())
-                .voted(vote)
                 .build();
 
         return postInfoDomain;
@@ -228,6 +212,34 @@ public class PostService {
                 .build();
 
         return voteResultDomain;
+    }
+
+    public int user_post_mapping(GetPostInfoDomain mapping) {
+        int status = -1;
+
+        // verify post
+        Optional<Post> maybePost = postRepository.findById(mapping.getPostId());
+        if (!maybePost.isPresent()) {
+            System.out.println("no post was found with this id");
+            throw new PostNotFoundException();
+        }
+        Post post = maybePost.get();
+
+        Optional<User> maybeUser = userRepository.getByUserName(mapping.getUsername());
+        if (!maybeUser.isPresent()) {
+            System.out.println("no user found with this username.");
+            throw new UserNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        Optional<UserPostMappings> maybeMapping = userPostRepository.findByPostAndUser(post, user);
+        int vote = -1;
+        if (maybeMapping.isPresent()) {
+            UserPostMappings mappingVal = maybeMapping.get();
+            vote = mappingVal.getUpvote();
+        }
+
+        return vote;
     }
 
 }
