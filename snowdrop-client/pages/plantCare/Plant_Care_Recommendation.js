@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Text, View, StyleSheet, Dimensions, ScrollView, Image, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, ScrollView, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Appbar, Card, Paragraph } from 'react-native-paper';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
@@ -233,8 +233,8 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                         />
                         <Card.Content>
                             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", }}>
-                                <Paragraph style={styles.cardText}>Required min temp = {minTemperature} F</Paragraph>
-                                <Paragraph style={styles.cardText}>Current temp = {currTemperature} F</Paragraph>
+                                <Paragraph style={styles.cardText}>Required min temp = {minTemperature} °F</Paragraph>
+                                <Paragraph style={styles.cardText}>Current temp = {currTemperature} °F</Paragraph>
                             </View>
                             <Paragraph style={[styles.cardText, { alignSelf: 'center' }]}>Temperature in your area {temperatureString}</Paragraph>
                         </Card.Content>
@@ -255,10 +255,10 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
             {/* Add navigation to bottom appbar */}
             {/* Bottom Nav bar */}
             <Appbar style={styles.bottom}>
-                <Appbar.Action icon="home" color="#005500" size={width * 0.09} />
-                <Appbar.Action icon="leaf" color="#EDEECB" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
-                <Appbar.Action icon="account-supervisor" color="#005500" size={width * 0.09} style={{ marginLeft: '9%' }} />
-                <Appbar.Action icon="brightness-5" color="#005500" size={width * 0.09} style={{ marginLeft: '9%' }} />
+                <Appbar.Action icon="home" color="#005500" size={Math.min(width * 0.09, height * 0.05)} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
+                <Appbar.Action icon="leaf" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
+                <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList")} />
+                <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
             </Appbar>
         </View>
     );
