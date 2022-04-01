@@ -146,7 +146,7 @@ public class PostService {
             } else {
                 adjustment = 2;
             }
-
+        } else {
             UserPostMappings userPostMappings = UserPostMappings.builder()
                     .post(post)
                     .user(user)
@@ -155,6 +155,8 @@ public class PostService {
 
             userPostRepository.save(userPostMappings);
         }
+
+        System.out.println("adjustment: " + adjustment);
 
         int newScore;
         int numVotes;
