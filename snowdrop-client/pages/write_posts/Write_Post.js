@@ -102,10 +102,10 @@ const Write_Post = ({ navigation }) => {
         console.log("title = ", title)
         console.log("content = ", content)
 
-        if (title === "" || content === "") {
+        if (title === "" || content === "" || tag === "") {
             Alert.alert(
                 'Missing Information',
-                'Post title and content are both required to make a post',
+                'Post title, tag and content are all required to make a post',
                 [{ text: 'OK' }],
             );
             return;
