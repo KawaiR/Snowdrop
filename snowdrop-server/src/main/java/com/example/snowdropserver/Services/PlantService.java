@@ -271,7 +271,7 @@ public class PlantService {
         return waterPlantDomain;
     }
 
-    public void deleteUserPlant(int plantCareId, DeleteUserPlantDomain deleteUserPlantDomain) {
+    public int deleteUserPlant(int plantCareId, DeleteUserPlantDomain deleteUserPlantDomain) {
         String username = deleteUserPlantDomain.getUsername();
         System.out.println(username);
 
@@ -306,6 +306,8 @@ public class PlantService {
         plantCareRepository.delete(userPlant);
 
         System.out.println("The plant was deleted!");
+
+        return plantCareId;
     }
 
     // reported exposure not UV

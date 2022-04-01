@@ -12,7 +12,7 @@ public class TestDeletePlant {
                 "testDeleteOnlyPlant",
                 201);
 
-        int plantCareId = TestingUtils.addUserPlant(1,
+        int plantCareId = TestingUtils.addUserPlant(24,
                 "testDeleteOnlyPlant",
                 "good",
                 "testDeleteOnlyPlant",
@@ -30,13 +30,13 @@ public class TestDeletePlant {
                 "testDeleteFromTwo",
                 201);
 
-        int plantCare1 = TestingUtils.addUserPlant(1,
+        int plantCare1 = TestingUtils.addUserPlant(24,
                 "testDeleteFromTwo",
                 "good",
                 "Plant 1",
                 201);
 
-        int plantCare2 = TestingUtils.addUserPlant(5,
+        int plantCare2 = TestingUtils.addUserPlant(34,
                 "testDeleteFromTwo",
                 "good",
                 "Plant 2",
@@ -54,19 +54,19 @@ public class TestDeletePlant {
                 "testDeleteFromThree",
                 201);
 
-        int plantCare1 = TestingUtils.addUserPlant(1,
+        int plantCare1 = TestingUtils.addUserPlant(34,
                 "testDeleteFromThree",
                 "good",
                 "Plant 1",
                 201);
 
-        int plantCare2 = TestingUtils.addUserPlant(5,
+        int plantCare2 = TestingUtils.addUserPlant(44,
                 "testDeleteFromThree",
                 "",
                 "Plant 2",
                 201);
 
-        int plantCare3 = TestingUtils.addUserPlant(10,
+        int plantCare3 = TestingUtils.addUserPlant(54,
                 "testDeleteFromThree",
                 "good",
                 "Plant 3",
@@ -84,7 +84,7 @@ public class TestDeletePlant {
                 "testDeleteFails",
                 201);
 
-        int plantCare1 = TestingUtils.addUserPlant(1,
+        int plantCare1 = TestingUtils.addUserPlant(24,
                 "testDeleteFails",
                 "good",
                 "Plant 1",
