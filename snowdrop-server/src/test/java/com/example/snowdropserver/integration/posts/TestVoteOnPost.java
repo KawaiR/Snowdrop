@@ -82,21 +82,21 @@ public class TestVoteOnPost {
 
     @Test
     public void testUpvoteTwice() throws Exception {
-        TestingUtils.createUserAndExpect("testUpvoteTwice",
-                "testUpvoteTwice@test.com",
-                "testUpvoteTwice",
+        TestingUtils.createUserAndExpect("testUpvoteTwice2",
+                "testUpvoteTwic2e@test.com",
+                "testUpvoteTwice2",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testUpvoteTwice",
-                "testUpvoteTwice",
-                "testUpvoteTwice",
+        int postId = TestingUtils.createPostAndExpect("testUpvoteTwice2",
+                "testUpvoteTwice2",
+                "testUpvoteTwice2",
                 3,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteTwice",
+                "testUpvoteTwice2",
                 1,
                 200);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteTwice",
+                "testUpvoteTwice2",
                 1,
                 200);
     }
