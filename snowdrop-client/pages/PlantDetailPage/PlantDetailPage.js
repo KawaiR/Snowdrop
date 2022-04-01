@@ -25,7 +25,6 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
     const [value, setValue] = React.useState("" + plant.reportedExposure + "");
     const [sunlight, setSunlight] = React.useState("" + plant.reportedExposure + "");
-    const [test, setTest] = React.useState(0);
 
     const [sunlightBool, setSunlightBool] = React.useState(0);
 
@@ -87,9 +86,16 @@ const PlantDetailPage  = ({route, navigation}) => {
     async function sunYes() {
         setSunVisible(false);
         console.log("sun yes");
-        if (value == "1") {setTest(1)}
-        if (value == "2") {setTest(2)}
-        if (value == "3") {setTest(3)}
+        var temp = 0;
+        if (value == "1") {
+            temp = 1;
+        }
+        if (value == "2") {
+            temp = 2;
+        }
+        if (value == "3") {
+            temp = 3;
+        }
         try {
 			let response = await fetch('http://localhost:8080/plants/' + id + "/sunlight-exposure", {
                 method: 'POST',
@@ -98,7 +104,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 },
                 body: JSON.stringify({
                     username: global.userName,
-                    reportedSunlight: test,
+                    reportedSunlight: temp,
                 }),
             })
 			.then((response) => {
