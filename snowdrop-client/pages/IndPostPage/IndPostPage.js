@@ -77,16 +77,7 @@ const IndPostPage  = ({route, navigation}) => {
     async function getVoteResult(id) {
         console.log("getVoteResult");
         try {
-			let response = await fetch('https://quiet-reef-93741.herokuapp.com/posts/check-mapping', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json; charset=utf-8",
-                },
-                body: JSON.stringify({
-                    username: global.userName,
-                    postId: id,
-                }),
-            })
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/posts/'+ id + '/' +global.userName + '/check-mapping', { method: 'GET' })
 			.then((response) => {
                 console.log("getVoteResult then entered");
                 console.log(response.status);
