@@ -508,4 +508,178 @@ public class PopulateDatabase {
                 2,
                 201);
     }
+
+    @Test
+    public void addTags() throws Exception {
+        TestingUtils.addTagAndExpect(4,
+                201);
+
+        TestingUtils.addTagAndExpect(14,
+                201);
+
+        TestingUtils.addTagAndExpect(24,
+                201);
+
+        TestingUtils.addTagAndExpect(34,
+                201);
+
+        TestingUtils.addTagAndExpect(44,
+                201);
+
+        TestingUtils.addTagAndExpect(54,
+                201);
+
+        TestingUtils.addTagAndExpect(64,
+                201);
+
+        TestingUtils.addTagAndExpect(74,
+                201);
+
+        TestingUtils.addTagAndExpect(84,
+                201);
+
+        TestingUtils.addTagAndExpect(94,
+                201);
+
+        TestingUtils.addTagAndExpect(104,
+                201);
+
+        TestingUtils.addTagAndExpect(114,
+                201);
+
+        TestingUtils.addTagAndExpect(124,
+                201);
+
+        TestingUtils.addTagAndExpect(134,
+                201);
+
+        TestingUtils.addTagAndExpect(144,
+                201);
+
+        TestingUtils.addTagAndExpect(154,
+                201);
+
+        TestingUtils.addTagAndExpect(164,
+                201);
+
+        TestingUtils.addTagAndExpect(174,
+                201);
+
+        TestingUtils.addTagAndExpect(184,
+                201);
+
+        TestingUtils.addTagAndExpect(194,
+                201);
+
+        TestingUtils.addTagAndExpect(204,
+                201);
+
+        TestingUtils.addTagAndExpect(214,
+                201);
+
+        TestingUtils.addTagAndExpect(224,
+                201);
+
+        TestingUtils.addTagAndExpect(234,
+                201);
+
+        TestingUtils.addTagAndExpect(244,
+                201);
+
+        TestingUtils.addTagAndExpect(254,
+                201);
+
+        TestingUtils.addTagAndExpect(264,
+                201);
+
+        TestingUtils.addTagAndExpect(274,
+                201);
+
+        TestingUtils.addTagAndExpect(284,
+                201);
+
+        TestingUtils.addTagAndExpect(294,
+                201);
+
+        TestingUtils.addTagAndExpect(304,
+                201);
+
+        TestingUtils.addTagAndExpect(314,
+                201);
+
+        TestingUtils.addTagAndExpect(324,
+                201);
+
+        TestingUtils.addTagAndExpect(334,
+                201);
+
+        TestingUtils.addTagAndExpect(344,
+                201);
+
+        TestingUtils.addTagAndExpect(354,
+                201);
+
+        TestingUtils.addTagAndExpect(364,
+                201);
+
+        TestingUtils.addTagAndExpect(374,
+                201);
+
+        TestingUtils.addTagAndExpect(384,
+                201);
+
+        TestingUtils.addTagAndExpect(394,
+                201);
+
+        TestingUtils.addTagAndExpect(404,
+                201);
+
+        TestingUtils.addTagAndExpect(414,
+                201);
+
+        TestingUtils.addTagAndExpect(424,
+                201);
+
+        TestingUtils.addTagAndExpect(434,
+                201);
+
+        TestingUtils.addTagAndExpect(444,
+                201);
+
+        TestingUtils.addTagAndExpect(454,
+                201);
+
+        TestingUtils.addTagAndExpect(464,
+                201);
+
+        TestingUtils.addTagAndExpect(474,
+                201);
+
+        TestingUtils.addTagAndExpect(484,
+                201);
+
+        TestingUtils.addTagAndExpect(494,
+                201);
+
+        TestingUtils.addTagAndExpect(504,
+                201);
+
+        TestingUtils.addTagAndExpect(514,
+                201);
+
+        TestingUtils.addTagAndExpect(524,
+                201);
+
+        TestingUtils.addTagAndExpect(534,
+                201);
+
+        TestingUtils.addTagAndExpect(544,
+                201);
+
+        TestingUtils.addTagAndExpect(554,
+                201);
+
+        TestingUtils.addTagAndExpect(564,
+                201);
+    }
 }
