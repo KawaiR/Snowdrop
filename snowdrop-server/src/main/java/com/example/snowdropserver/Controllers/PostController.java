@@ -50,9 +50,9 @@ public class PostController {
         return postService.voteOnPost(postId, voteOnPostDomain);
     }
 
-    @GetMapping(value = "/check-mapping")
-    public int user_post_mapping(@RequestBody GetPostInfoDomain getPostInfoDomain) {
-        return postService.user_post_mapping(getPostInfoDomain);
+    @GetMapping(value = "{postId}/{username}/check-mapping")
+    public int user_post_mapping(@PathVariable int postId, @PathVariable String username) {
+        return postService.user_post_mapping(postId, username);
     }
 
 }
