@@ -94,7 +94,8 @@ const IndPostPage  = ({route, navigation}) => {
 	return (
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
-        <Appbar.BackAction color="white"/>
+        <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_PostList")}/>
+        <Appbar.Content title={<Text style={styles.headerTitle}>View Post</Text>} style={styles.headerTitle} />
         {/* <Appbar.Action icon="brightness-5" color="white" style={{marginLeft: 'auto'}}/> */}
     </Appbar.Header>
 	<ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>

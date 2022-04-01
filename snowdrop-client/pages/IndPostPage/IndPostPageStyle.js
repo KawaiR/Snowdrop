@@ -26,6 +26,13 @@ export default StyleSheet.create({
         flexDirection: "row",
         height: height * 0.078125, // 70/defaultH
     },
+    headerTitle: {
+        alignSelf: "center",
+        alignItems: "flex-start",
+        fontSize: 24,
+        fontFamily: "Lato_400Regular",
+        color: "white",
+    },
     post: {
         alignSelf: 'center',
         backgroundColor: 'white',

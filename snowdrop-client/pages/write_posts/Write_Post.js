@@ -61,15 +61,15 @@ const Write_Post = ({ navigation }) => {
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
                             console.log(result);
+                            global.postTitle = "";
+                            global.postContent = "";
                             Alert.alert(
                                 'Success',
                                 'Post created!',
                                 [{
                                     text: 'OK',
                                     onPress: () => {
-                                        navigation.navigate('Page_IndPost', {id: result});
-                                        // Navigate to view current post page
-                                        // On view community post, clear out global.postTitle, global.postContent, global.postTag once used to avoid weird values
+                                        navigation.navigate('Page_IndPost', { id: result });
                                     },
                                 }],
                             );
@@ -90,6 +90,7 @@ const Write_Post = ({ navigation }) => {
                 text: 'Yes',
                 onPress: () => {
                     // Navigate to community home page (posts list)
+                    navigation.navigate("Page_PostList")
                 },
             }, {
                 text: 'No',
@@ -135,7 +136,7 @@ const Write_Post = ({ navigation }) => {
             </Appbar.Header>
 
             <ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
-                <View style={[styles.postDetailsContainer, {marginTop: 20}]}>
+                <View style={[styles.postDetailsContainer, { marginTop: 20 }]}>
                     <Text style={styles.subtitleText}>Post Details</Text>
                     <TextInput
                         autoCapitalized='true'
@@ -187,7 +188,7 @@ const Write_Post = ({ navigation }) => {
                 </View>
 
                 <TouchableOpacity style={styles.submitButton} onPress={() => onPressSubmit()} >
-                    <Text style={styles.submitText}>{(tag==="General" || tag==="Advice") ? "Post" : "Next"}</Text>
+                    <Text style={styles.submitText}>{(tag === "General" || tag === "Advice") ? "Post" : "Next"}</Text>
                 </TouchableOpacity>
             </ScrollView>
 

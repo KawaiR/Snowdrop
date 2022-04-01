@@ -78,7 +78,10 @@ class Plants_Search extends React.Component {
     };
 
     savePostInformation = (id) => {
-        console.log(global.userName)
+        console.log("Global username = ", global.userName);
+        console.log("Global postTitle = ", global.postTitle);
+        console.log("Global content = ", global.postContent);
+        console.log("plant id = ", id);
         try {
             let response = fetch('http://localhost:8080/posts/create-post', {
                 method: 'POST',
@@ -106,15 +109,15 @@ class Plants_Search extends React.Component {
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
                             console.log(result);
-                            global.postId = result;
+                            global.postTitle = "";
+                            global.postContent = "";
                             Alert.alert(
                                 'Success',
                                 'Post created!',
                                 [{
                                     text: 'OK',
                                     onPress: () => {
-                                        // Navigate to view current post page
-                                        // On view community post, clear out global.postTitle, global.postContent, global.postTag once used to avoid weird values
+                                        this.props.navigation.navigate('Page_IndPost', { id: result });
                                     },
                                 }],
                             );

@@ -56,7 +56,7 @@ const PostListPage  = ({navigation}) => {
             }}>
             <View style={styles.postContent}>
                 <View style={styles.postHeader}>
-                    <Text>{item.sender}</Text>
+                    <Text>{item.sender.userName}</Text>
                     <Text style={{textAlign:'right', flex: 1}}>{item.uploadDate}</Text>
                 </View>
                 <View style={styles.lineBreak}></View>
