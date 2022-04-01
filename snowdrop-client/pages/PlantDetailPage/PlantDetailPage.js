@@ -351,7 +351,7 @@ const PlantDetailPage  = ({route, navigation}) => {
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={width*0.09}/>
         <Appbar.Action icon="leaf" color="#005500" size={width*0.09} style={{marginLeft: '9%'}} onPress={() => navigation.navigate("Page_Plant")}/>
-        <Appbar.Action icon="account-supervisor" color="#005500" size={width*0.09} style={{marginLeft: '9%'}}/>
+        <Appbar.Action icon="account-supervisor" color="#005500" size={width*0.09} style={{marginLeft: '9%'}} onPress={() => navigation.navigate("Page_PostList")}/>
         <Appbar.Action icon="brightness-5" color="#005500" size={width*0.09} style={{marginLeft: '9%'}}/>
     </Appbar>
     </View>
