@@ -44,7 +44,15 @@ const IndPostPage  = ({route, navigation}) => {
 
     async function getPost(id) {
         try {
-			let response = await fetch('http://localhost:8080/posts/' + id + '/get-info', { method: 'GET' })
+			let response = await fetch('http://localhost:8080/posts/' + id + '/get-info', {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                }),
+            })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {
@@ -61,7 +69,7 @@ const IndPostPage  = ({route, navigation}) => {
                         setPostContent(result.content);
                         setUpvote(result.upvotes);
                         setDownvote(result.downvotes);
-                        setStatus(0);
+                        setStatus(result.voted);
 					});
 				}
 			});
@@ -97,7 +105,7 @@ const IndPostPage  = ({route, navigation}) => {
 						console.log(result);
                         setUpvote(result.upvotes);
                         setDownvote(result.downvotes);
-                        setStatus(1);
+                        setStatus(result.status);
 					});
 				}
 			});
