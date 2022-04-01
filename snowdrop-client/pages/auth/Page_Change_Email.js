@@ -113,8 +113,8 @@ const Page_Change_Email = ({ navigation }) => {
                         <Text style={noneModeStyles._Optional_Page_Description}>
                             Want to keep the email?
                     </Text>
-                        <Text style={noneModeStyles._Optional_Button_Description} onPress={() => navigation.navigate('Page_Sign_In')}>
-                            Sign In
+                        <Text style={noneModeStyles._Optional_Button_Description} onPress={() => navigation.navigate('Page_Profile_Email_Account')}>
+                            Profile
                     </Text>
                     </View>
                     <View style={noneModeStyles._White_Box} />
