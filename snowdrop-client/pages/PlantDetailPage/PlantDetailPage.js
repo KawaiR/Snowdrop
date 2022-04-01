@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, ScrollView, Image, Dimensions, ImageBackground, Alert } from "react-native";
+import { View, Text, ScrollView, Image, Dimensions, ImageBackground, Alert, TouchableOpacity } from "react-native";
 import { Appbar, Avatar, Card, FAB, IconButton, Provider, Dialog, Portal, Button, ToggleButton } from 'react-native-paper';
 import { DebugInstructions } from "react-native/Libraries/NewAppScreen";
 import { useIsFocused } from "@react-navigation/native";
@@ -268,6 +268,11 @@ const PlantDetailPage  = ({route, navigation}) => {
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setFertilizerVisible(true);}} />}
                     />
                 </Card>
+                <TouchableOpacity style={styles.plantCareButton} onPress={() => navigation.navigate("Plant_Care_Recommendation", { plant: plant, id: plant.plant.id })} >
+                    <Text style={styles.plantCareText}>
+                        View plant care recommendations
+				    </Text>
+                </TouchableOpacity>
             </View>
         </View>
         <View style={styles.upcomingView}>

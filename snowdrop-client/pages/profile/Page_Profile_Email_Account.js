@@ -20,6 +20,8 @@ function pxRD(px, cur_screen, base) {
 
 
 const Page_Profile_Email_Account = ({ navigation }) => {
+    global.fertilizeTimes = new Map();
+
     useEffect(() => {
     }, []);
     const [email, onChangeEmail] = React.useState(global.email);

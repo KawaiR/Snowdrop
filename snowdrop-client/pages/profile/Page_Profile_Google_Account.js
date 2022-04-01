@@ -21,6 +21,8 @@ function pxRD(px, cur_screen, base) {
 
 
 const Page_Profile_Google_Account = ({ navigation }) => {
+	global.fertilizeTimes = new Map();
+
 	useEffect(() => {
 	}, []);
 	const [token, onChangeToken] = React.useState(global.googleID);
