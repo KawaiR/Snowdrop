@@ -44,7 +44,7 @@ const Write_Post = ({ navigation }) => {
                     postTitle: global.postTitle,
                     content: global.postContent,
                     // Change plantId once deployed database populated
-                    plantId: tag === "General" ? 17 : 18,
+                    plantId: tag === "General" ? 554 : 564,
                 }),
             })
                 .then((response) => {
