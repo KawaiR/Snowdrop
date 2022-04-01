@@ -15,7 +15,7 @@ public class TestCreatePost {
         int postId = TestingUtils.createPostAndExpect("createPostSuccess5",
                 "createPostSuccess5",
                 "createPostSuccess5",
-                1,
+                33,
                 201);
 
         System.out.println("postId: " + postId);
