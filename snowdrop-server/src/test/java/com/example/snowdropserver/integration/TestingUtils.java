@@ -501,12 +501,25 @@ public class TestingUtils {
         client.close();
     }
 
-    public static PostInfoDomain getPostInfoAndExpect(int postId, int expectedStatusCode) throws Exception {
+    public static PostInfoDomain getPostInfoAndExpect(int postId, String username,
+                                                      int expectedStatusCode) throws Exception {
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         CloseableHttpClient client = HttpClients.createDefault();
 
         HttpGet httpGet = new HttpGet(baseUrl + "/posts/" + postId + "/get-info");
 
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+        GetPostInfoDomain getPostInfoDomain = GetPostInfoDomain.builder()
+                .username(username)
+                .build();
+
+
+        String json = objectMapper.writeValueAsString(getPostInfoDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-type", "application/json");
 

@@ -17,6 +17,7 @@ public class PostInfoDomain {
     int downvotes;
     int upvotes;
     LocalDateTime uploadDate;
+    int voted;
 
     public PostInfoDomain() {
         postTitle = "";
@@ -26,5 +27,6 @@ public class PostInfoDomain {
         uploadDate = LocalDateTime.now();
         downvotes = 0;
         upvotes = 0;
+        voted = -1;
     }
 }
