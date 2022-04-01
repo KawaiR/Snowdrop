@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class PlantCareInfoDomain {
     String nickname;
     double temperature;
-    int sunlight;
+    double sunlight;
     LocalDateTime waterCurrent;
     LocalDateTime waterNext;
     String plantHealth;
