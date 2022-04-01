@@ -27,6 +27,7 @@ const IndPostPage  = ({route, navigation}) => {
         if (userName == "") {
             console.log("use effect");
             getPost(id);
+            getVoteResult(id);
         }
         console.log("status- " + status);
         if (status == 1) {
@@ -45,13 +46,7 @@ const IndPostPage  = ({route, navigation}) => {
     async function getPost(id) {
         try {
 			let response = await fetch('http://localhost:8080/posts/' + id + '/get-info', {
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json; charset=utf-8",
-                },
-                body: JSON.stringify({
-                    username: global.userName,
-                }),
+                method: 'GET'
             })
 			.then((response) => {
 				if (response.status == 400) {
@@ -69,7 +64,38 @@ const IndPostPage  = ({route, navigation}) => {
                         setPostContent(result.content);
                         setUpvote(result.upvotes);
                         setDownvote(result.downvotes);
-                        setStatus(result.voted);
+                        // setStatus(result.voted);
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
+    async function getVoteResult(id) {
+        try {
+			let response = await fetch('http://localhost:8080/posts/' + id + '/TODO', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                }),
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log(result);
+                        setStatus(TODO);
 					});
 				}
 			});
