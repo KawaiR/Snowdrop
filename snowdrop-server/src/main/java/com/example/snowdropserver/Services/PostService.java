@@ -184,6 +184,7 @@ public class PostService {
                 newScore = post.getTotalScore() - 1;
                 if (adjustment == 1) {
                     post.setUpvotes(post.getUpvotes() - 1);
+
                     Optional<UserPostMappings> mapping = userPostRepository.findById(mappingId);
                     if (mapping.isPresent()) {
                         userPostRepository.delete(mapping.get());
