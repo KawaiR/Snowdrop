@@ -6,12 +6,12 @@ import org.junit.Test;
 public class TestAddPlant {
     @Test
     public void userPlantSuccess() throws Exception {
-        TestingUtils.createUserAndExpect("userPlantSuccess2",
-                "userPlantSuccess2@test.com",
-                "userPlantSuccess2",
+        TestingUtils.createUserAndExpect("userPlantSuccess5",
+                "userPlantSuccess5@test.com",
+                "userPlantSuccess5",
                 201);
 
-        TestingUtils.addUserPlant(84, "userPlantSuccess", "good",
+        TestingUtils.addUserPlant(1, "userPlantSuccess5", "good",
                 "someNickname", 201);
     }
 

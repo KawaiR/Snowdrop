@@ -70,7 +70,7 @@ public class PlantService {
         return plantInfoDomain;
     }
 
-    public void addNewPlant(AddNewPlantDomain addNewPlantDomain) {
+    public int addNewPlant(AddNewPlantDomain addNewPlantDomain) {
         if (check_common_name_exists(addNewPlantDomain.getCommonName()) && check_scientific_name_exists(addNewPlantDomain.getScientificName())) {
             System.out.println("plant found already");
             throw new DuplicatePlantException();
@@ -80,13 +80,16 @@ public class PlantService {
                 .plantName(addNewPlantDomain.getCommonName())
                 .scientificName(addNewPlantDomain.getScientificName())
                 .plantImage(addNewPlantDomain.getPlantImageUrl())
-                .minTemperature(0)
-                .soilType("A")
-                .sunlightLevel(3)
-                .waterNeeds("H")
+                .minTemperature(addNewPlantDomain.getMinTemperature())
+                .soilType(addNewPlantDomain.getSoilType())
+                .sunlightLevel(addNewPlantDomain.getSunlightLevel())
+                .waterNeeds(addNewPlantDomain.getWaterNeeds())
+                .reportedSunlight(addNewPlantDomain.getReportedSunlight())
                 .build();
 
         plantRepository.save(plant);
+
+        return plant.getId();
     }
 
     public boolean check_common_name_exists(String commonName) {
@@ -136,9 +139,12 @@ public class PlantService {
                 .plantHealth(addPlantDomain.getPlantHealth())
                 .fertilizer(null)
                 .nickname(nickname)
-                .sunlight(0)
-                .sunlightSecond(0)
-                .sunlightThird(0)
+                .sunlight(-1)
+                .sunlightSecond(-1)
+                .sunlightThird(-1)
+                .reportedExposure(0)
+                .reportedSecond(0)
+                .reportedThird(0)
                 .temperature(0)
                 .waterCurrent(null)
                 .waterLast(null)
@@ -303,7 +309,8 @@ public class PlantService {
         System.out.println("The plant was deleted!");
     }
 
-    public void logSunlightExposure(int plantCareId, SunlightExposureDomain sunlightDomain) {
+    // reported exposure not UV
+    public boolean logSunlightExposure(int plantCareId, SunlightExposureDomain sunlightDomain) {
         String username = sunlightDomain.getUsername();
         System.out.println(username);
 
@@ -332,12 +339,31 @@ public class PlantService {
         }
 
         PlantCare plantCare = userPlants.get(plantIndex);
-        plantCare.setSunlightThird(plantCare.getSunlightSecond());
-        plantCare.setSunlightSecond(plantCare.getSunlight());
-        plantCare.setSunlight(sunlightDomain.getSunlightLevel());
+        plantCare.setReportedThird(plantCare.getReportedSecond());
+        plantCare.setReportedSecond(plantCare.getReportedExposure());
+        plantCare.setReportedExposure(sunlightDomain.getReportedSunlight());
 
         plantCareRepository.save(plantCare);
+
+        System.out.println(plantCare);
+
+        boolean alert = calculateReportedAverage(plantCare);
+        System.out.println(alert);
+        return alert;
     }
 
-    
+    // Pre-condition: logSunlightExposure() validated input
+    public boolean calculateReportedAverage(PlantCare plantCareObject) {
+        double avg = 0;
+        avg += plantCareObject.getReportedExposure();
+        avg += plantCareObject.getReportedSecond();
+        avg += plantCareObject.getReportedThird();
+        avg /= 3;
+
+        if (Math.abs(plantCareObject.getPlant().getReportedSunlight() - avg) >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

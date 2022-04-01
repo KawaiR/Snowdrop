@@ -13,6 +13,7 @@ import com.example.snowdropserver.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.google.common.hash.Hashing;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@EnableScheduling
 public class UserService {
     private final UserRepository userRepository;
     private final ResetTokenRepository resetTokenRepository;
@@ -90,10 +92,8 @@ public class UserService {
                 .userName(userDomain.getUserName())
                 .authTokenHash(authTokenHash)
                 .googleID(null)
-                .comments(null)
                 .totalPoints(0)
                 .editorPrivilege(0)
-                .posts(null)
                 .build();
 
         userRepository.save(user); // will save into database
@@ -129,9 +129,7 @@ public class UserService {
                 .userName(userDomain.getUserName())
                 .authTokenHash(authTokenHash)
                 .googleID(userDomain.getGoogleID())
-                .comments(null)
                 .totalPoints(0)
-                .posts(null)
                 .build();
 
         userRepository.save(user); // will save into database
@@ -360,8 +358,8 @@ public class UserService {
         javaMailSender.send(simpleMailMessage);
     }
 
-    // executed every minute
-    @Scheduled(fixedRate = 60000)
+    // executed every 15 minutes
+    @Scheduled(fixedRate = 900000)
     public void removeExpiredTokens() {
         List<ResetToken> expiredTokens = resetTokenRepository.findByExpiryDate(LocalDateTime.now());
 
