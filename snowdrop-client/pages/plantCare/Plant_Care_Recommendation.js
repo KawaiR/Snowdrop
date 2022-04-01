@@ -71,7 +71,7 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
 
     async function getPlantCareInfo(plantCareId) {
         try {
-            let response = await fetch('http://localhost:8080/plant-care/' + plantCareId + '/get-plant-info', { method: 'GET' })
+            let response = await fetch('https://quiet-reef-93741.herokuapp.com/plant-care/' + plantCareId + '/get-plant-info', { method: 'GET' })
                 .then((response) => {
                     if (response.status == 400) {
                         response.json().then((result) => {
@@ -93,7 +93,7 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
 
     async function getPlantName(id) {
         try {
-            let response = await fetch('http://localhost:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
+            let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + id + '/get-plant-info', { method: 'GET' })
                 .then((response) => {
                     if (response.status == 400) {
                         response.json().then((result) => {

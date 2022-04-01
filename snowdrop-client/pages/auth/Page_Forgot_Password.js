@@ -32,7 +32,7 @@ const Page_Forgot_Password  = ({navigation}) => {
 	
 	async function sendCode() {
 		try {
-			let response = await fetch(`http://localhost:8080/users/forgot-password`, {
+			let response = await fetch(`https://quiet-reef-93741.herokuapp.com/users/forgot-password`, {
 				method: "POST",
 				headers: {
 				"Content-Type": "application/json; charset=utf-8",
@@ -62,7 +62,7 @@ const Page_Forgot_Password  = ({navigation}) => {
 
 	async function VerifyCode() {
 		try {
-			let response = await fetch(`http://localhost:8080/users/validate-reset-token`, {
+			let response = await fetch(`https://quiet-reef-93741.herokuapp.com/users/validate-reset-token`, {
 				method: "POST",
 				headers: {
 				"Content-Type": "application/json; charset=utf-8",

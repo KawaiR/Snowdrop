@@ -55,7 +55,7 @@ async function setLocation() {
 		global.expoPushToken = expoPushToken;
 		AsyncStorage.setItem("expoPushToken",expoPushToken);
 		try {
-			fetch('http://localhost:8080/devices', {
+			fetch('https://quiet-reef-93741.herokuapp.com/devices', {
 				method: 'POST',
 				headers: {
 					"Content-Type": "application/json; charset=utf-8",
@@ -119,7 +119,7 @@ const Page_Create_Google_Username  = ({navigation}) => {
 			return;
 		}
 		try {
-			let response = await fetch(`http://localhost:8080/users/add-google-user`, {
+			let response = await fetch(`https://quiet-reef-93741.herokuapp.com/users/add-google-user`, {
 				method: "POST",
 				headers: {
 				"Content-Type": "application/json; charset=utf-8",

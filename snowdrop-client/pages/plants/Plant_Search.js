@@ -61,7 +61,7 @@ class Plants_Search extends React.Component {
 
     getPlants = () => {
         console.log("Before fetch call");
-        fetch('http://localhost:8080/plants', { method: 'GET' })
+        fetch('https://quiet-reef-93741.herokuapp.com/plants', { method: 'GET' })
             .then(res => res.json())
             .then(data => {
                 if (data.error) {
@@ -84,7 +84,7 @@ class Plants_Search extends React.Component {
         console.log("Global content = ", global.postContent);
         console.log("plant id = ", id);
         try {
-            let response = fetch('http://localhost:8080/posts/create-post', {
+            let response = fetch('https://quiet-reef-93741.herokuapp.com/posts/create-post', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",

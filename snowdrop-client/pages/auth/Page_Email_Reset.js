@@ -56,7 +56,7 @@ const Page_Email_Reset  = ({navigation}) => {
 		}
 		if (resetToken != undefined) {
 			try {
-				let response = await fetch(`http://localhost:8080/users/update-email`, {
+				let response = await fetch(`https://quiet-reef-93741.herokuapp.com/users/update-email`, {
 					method: "POST",
 					headers: {
 					"Content-Type": "application/json; charset=utf-8",

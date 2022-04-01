@@ -34,7 +34,7 @@ const Write_Post = ({ navigation }) => {
     async function savePostInformation() {
         console.log(global.userName)
         try {
-            let response = await fetch('http://localhost:8080/posts/create-post', {
+            let response = await fetch('https://quiet-reef-93741.herokuapp.com/posts/create-post', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",

@@ -14,7 +14,7 @@ const PostListPage  = ({navigation}) => {
 
     async function getPosts() {
         // console.log("get post")
-        let url = "http://localhost:8080/posts";
+        let url = "https://quiet-reef-93741.herokuapp.com/posts";
         if (tag != "") {
             url = url + "/" + tag + "/get-posts";
         }

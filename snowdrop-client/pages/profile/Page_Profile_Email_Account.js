@@ -38,7 +38,7 @@ const Page_Profile_Email_Account = ({ navigation }) => {
             AsyncStorage.removeItem("userName");
             if (global.expoPushToken != "null") {
                 AsyncStorage.removeItem("expoPushToken");
-                fetch('http://localhost:8080/devices/remove', {
+                fetch('https://quiet-reef-93741.herokuapp.com/devices/remove', {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json; charset=utf-8",

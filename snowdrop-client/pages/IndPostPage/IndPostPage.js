@@ -29,7 +29,7 @@ const IndPostPage  = ({route, navigation}) => {
 
     async function getPost(id) {
         try {
-			let response = await fetch('http://localhost:8080/posts/' + id + '/get-info', { method: 'GET' })
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/posts/' + id + '/get-info', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {
@@ -59,7 +59,7 @@ const IndPostPage  = ({route, navigation}) => {
     async function voteRequest(newVote) {
         console.log(newVote);
         try {
-			let response = await fetch('http://localhost:8080/posts/' + id + "/vote", {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/posts/' + id + "/vote", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",

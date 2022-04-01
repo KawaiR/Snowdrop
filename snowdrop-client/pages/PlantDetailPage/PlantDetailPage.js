@@ -51,7 +51,7 @@ const PlantDetailPage  = ({route, navigation}) => {
     async function deleteYes() {
         setDeleteVisible(false);
         try {
-			let response = await fetch('http://localhost:8080/plants/' + id + "/delete-plant", {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + id + "/delete-plant", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
@@ -99,7 +99,7 @@ const PlantDetailPage  = ({route, navigation}) => {
             temp = 3;
         }
         try {
-			let response = await fetch('http://localhost:8080/plants/' + plant.id + "/sunlight-exposure", {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + plant.id + "/sunlight-exposure", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
@@ -162,7 +162,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     async function waterPlant() {
         try {
-			let response = await fetch('http://localhost:8080/plants/' + id + "/water-plant", {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + id + "/water-plant", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
@@ -198,7 +198,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     async function getPlantName(id) {
         try {
-			let response = await fetch('http://localhost:8080/plants/' + plant.plant.id + '/get-plant-info', { method: 'GET' })
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + plant.plant.id + '/get-plant-info', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {

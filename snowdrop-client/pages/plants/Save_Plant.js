@@ -39,7 +39,7 @@ const Save_Plant = ({ route, navigation }) => {
         const { plantId } = route.params;
         console.log("Before save call plantId = " + plantId);
         console.log("Before save call username = " + global.userName);
-        fetch(`http://localhost:8080/plants/${plantId}/add-plant`, {
+        fetch(`https://quiet-reef-93741.herokuapp.com/plants/${plantId}/add-plant`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json; charset=utf-8",

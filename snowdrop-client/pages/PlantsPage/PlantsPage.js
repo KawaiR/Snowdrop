@@ -18,7 +18,7 @@ const PlantsPage  = ({ navigation }) => {
 
     async function getPlants() {
         try {
-			let response = await fetch('http://localhost:8080/plants/' + global.userName + '/get-user-plants', { method: 'GET' })
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + global.userName + '/get-user-plants', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {
@@ -42,7 +42,7 @@ const PlantsPage  = ({ navigation }) => {
 
     async function getPlantName(id) {
         try {
-			let response = await fetch('http://localhost:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + id + '/get-plant-info', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {
