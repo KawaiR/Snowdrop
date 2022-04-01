@@ -5,6 +5,7 @@ import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import { useIsFocused } from "@react-navigation/native";
+import * as Location from 'expo-location';
 
 const {
     width,
@@ -33,7 +34,7 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
 
     const [currTemperature, setCurrTemperature] = React.useState(0.0);
     const [currSunlight, setCurrSunlight] = React.useState(0);
-
+    const [locationAllowed, setLocationAllowed] = React.useState(false);
     const isFocused = useIsFocused()
     useEffect(() => {
         if (isFocused) {
@@ -49,7 +50,13 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
     }, [isFocused]);
 
     async function getWeatherApiData() {
-        await fetch('http://api.weatherapi.com/v1/current.json?key=0a5a11da31f34220b9d172820222701&q=40.454769,-86.915703&aqi=no', {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted')  {
+            return;
+        }
+        setLocationAllowed(true);
+        let location = await Location.getCurrentPositionAsync({});
+        await fetch('http://api.weatherapi.com/v1/current.json?key=0a5a11da31f34220b9d172820222701&q='+location.coords.latitude.toString()+","+location.coords.longitude.toString()+'&aqi=no', {
             method: 'POST',
         })
         .then((response) => {
@@ -220,9 +227,9 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                         <Card.Content>
                             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", }}>
                                 <Paragraph style={styles.cardText}>Required UV = {sunlightNum}</Paragraph>
-                                <Paragraph style={styles.cardText}>Current UV = {currSunlight}</Paragraph>
+                                { locationAllowed && <Paragraph style={styles.cardText}>Current UV = {currSunlight}</Paragraph>}
                             </View>
-                            <Paragraph style={[styles.cardText, { alignSelf: 'center' }]}>Sunlight in your area {sunlightString}</Paragraph>
+                            { locationAllowed && <Paragraph style={[styles.cardText, { alignSelf: 'center' }]}>Sunlight in your area {sunlightString}</Paragraph>}
                         </Card.Content>
                     </Card>
                     <Card mode="outlined" style={styles.card}>
@@ -234,9 +241,9 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                         <Card.Content>
                             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", }}>
                                 <Paragraph style={styles.cardText}>Required min temp = {minTemperature} °F</Paragraph>
-                                <Paragraph style={styles.cardText}>Current temp = {currTemperature} °F</Paragraph>
+                                { locationAllowed && <Paragraph style={styles.cardText}>Current temp = {currTemperature} °F</Paragraph>}
                             </View>
-                            <Paragraph style={[styles.cardText, { alignSelf: 'center' }]}>Temperature in your area {temperatureString}</Paragraph>
+                            { locationAllowed && <Paragraph style={[styles.cardText, { alignSelf: 'center' }]}>Temperature in your area {temperatureString}</Paragraph>}
                         </Card.Content>
                     </Card>
                     <Card mode="outlined" style={styles.card}>

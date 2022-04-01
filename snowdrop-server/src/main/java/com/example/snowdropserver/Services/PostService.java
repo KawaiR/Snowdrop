@@ -214,18 +214,18 @@ public class PostService {
         return voteResultDomain;
     }
 
-    public int user_post_mapping(GetPostInfoDomain mapping) {
+    public int user_post_mapping(int postId, String username) {
         int status = -1;
 
         // verify post
-        Optional<Post> maybePost = postRepository.findById(mapping.getPostId());
+        Optional<Post> maybePost = postRepository.findById(postId);
         if (!maybePost.isPresent()) {
             System.out.println("no post was found with this id");
             throw new PostNotFoundException();
         }
         Post post = maybePost.get();
 
-        Optional<User> maybeUser = userRepository.getByUserName(mapping.getUsername());
+        Optional<User> maybeUser = userRepository.getByUserName(username);
         if (!maybeUser.isPresent()) {
             System.out.println("no user found with this username.");
             throw new UserNotFoundException();
