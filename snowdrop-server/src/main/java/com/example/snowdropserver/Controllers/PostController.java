@@ -41,13 +41,18 @@ public class PostController {
     }
 
     @GetMapping(value = "/{postId}/get-info")
-    public PostInfoDomain getPostInfo(@PathVariable int postId, @RequestBody GetPostInfoDomain getPostInfoDomain) {
-        return postService.getPostInfo(postId, getPostInfoDomain);
+    public PostInfoDomain getPostInfo(@PathVariable int postId) {
+        return postService.getPostInfo(postId);
     }
 
     @PostMapping(value="{postId}/vote")
     public VoteResultDomain voteOnPost(@PathVariable int postId, @RequestBody VoteOnPostDomain voteOnPostDomain) {
         return postService.voteOnPost(postId, voteOnPostDomain);
+    }
+
+    @GetMapping(value = "/check-mapping")
+    public int user_post_mapping(@RequestBody GetPostInfoDomain getPostInfoDomain) {
+        return postService.user_post_mapping(getPostInfoDomain);
     }
 
 }

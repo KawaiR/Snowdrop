@@ -9,8 +9,10 @@ import lombok.Value;
 @AllArgsConstructor
 public class GetPostInfoDomain {
     String username;
+    int postId;
 
     public GetPostInfoDomain() {
         username = null;
+        postId = 0;
     }
 }
