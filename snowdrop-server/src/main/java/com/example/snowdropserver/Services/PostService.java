@@ -8,6 +8,7 @@ import com.example.snowdropserver.Models.*;
 import com.example.snowdropserver.Models.Domains.CreatePostDomain;
 import com.example.snowdropserver.Models.Domains.PostInfoDomain;
 import com.example.snowdropserver.Models.Domains.VoteOnPostDomain;
+import com.example.snowdropserver.Models.Domains.VoteResultDomain;
 import com.example.snowdropserver.Repositories.*;
 import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,7 +184,6 @@ public class PostService {
                 newScore = post.getTotalScore() - 1;
                 if (adjustment == 1) {
                     post.setUpvotes(post.getUpvotes() - 1);
-
                     Optional<UserPostMappings> mapping = userPostRepository.findById(mappingId);
                     if (mapping.isPresent()) {
                         userPostRepository.delete(mapping.get());
@@ -200,7 +200,13 @@ public class PostService {
 
         postRepository.save(post);
 
-        return newScore;
+        VoteResultDomain voteResultDomain = VoteResultDomain.builder()
+                .newScore(newScore)
+                .downvotes(post.getDownvotes())
+                .upvotes(post.getUpvotes())
+                .build();
+
+        return voteResultDomain;
     }
 
 }

@@ -3,6 +3,7 @@ package com.example.snowdropserver.Controllers;
 import com.example.snowdropserver.Models.Domains.CreatePostDomain;
 import com.example.snowdropserver.Models.Domains.PostInfoDomain;
 import com.example.snowdropserver.Models.Domains.VoteOnPostDomain;
+import com.example.snowdropserver.Models.Domains.VoteResultDomain;
 import com.example.snowdropserver.Models.Post;
 import com.example.snowdropserver.Services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class PostController {
     }
 
     @PostMapping(value="{postId}/vote")
-    public int voteOnPost(@PathVariable int postId, @RequestBody VoteOnPostDomain voteOnPostDomain) {
+    public VoteResultDomain voteOnPost(@PathVariable int postId, @RequestBody VoteOnPostDomain voteOnPostDomain) {
         return postService.voteOnPost(postId, voteOnPostDomain);
     }
 
