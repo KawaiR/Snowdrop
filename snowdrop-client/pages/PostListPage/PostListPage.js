@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, SafeAreaView, FlatList, Dimensions, Alert, TouchableOpacity } from "react-native";
-import { Appbar, Chip, Card, Title, Paragraph } from 'react-native-paper';
+import { Appbar, Chip, Card, Title, Paragraph, FAB } from 'react-native-paper';
 import { useIsFocused } from "@react-navigation/native";
 
 import styles from './PostListPageStyle.js';
@@ -71,15 +71,15 @@ const PostListPage  = ({navigation}) => {
     );
 
     const renderEmpty = () => (
-        <View>
-            <Text>No post at the moment</Text>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: '#EDEECB',}}>
+            <Text style={styles.noPostText}>No posts at the moment</Text>
         </View>
     )
 
 	return (
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
-        <Appbar.BackAction color="white"/>
+    <Appbar.Content title={<Text style={styles.headerTitle}>Community</Text>} style={styles.headerTitle} />
     </Appbar.Header>
 	<SafeAreaView style={styles.scroll}>
         <FlatList
@@ -88,6 +88,14 @@ const PostListPage  = ({navigation}) => {
             ListEmptyComponent={renderEmpty}
         />
 	</SafeAreaView>
+    <FAB
+        {...console.log(isFocused)}
+        style={styles.fab}
+        icon="plus"
+        color="white"
+        onPress={() => {
+            navigation.navigate("Write_Post");}}
+    />
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={width * 0.09} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
         <Appbar.Action icon="leaf" color="#005500" size={width * 0.09} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />

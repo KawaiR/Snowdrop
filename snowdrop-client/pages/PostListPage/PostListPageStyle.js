@@ -27,6 +27,19 @@ export default StyleSheet.create({
         flexDirection: "row",
         height: height * 0.078125, // 70/defaultH
     },
+    headerTitle: {
+        alignSelf: "center",
+        alignItems: "flex-start",
+        fontSize: 24,
+        fontFamily: "Lato_400Regular",
+        color: "white",
+    },
+    noPostText: {
+        fontSize: 18,
+        justifyContent: 'center',
+		textAlign: 'center',
+		marginBottom: 20,
+	},
     post: {
         alignSelf: 'center',
         backgroundColor: 'white',
@@ -60,6 +73,16 @@ export default StyleSheet.create({
     },
     chip: {
         marginRight: height * 0.015,
+    },
+    fab: {
+        position: 'absolute',
+        //width: width * 0.1449,
+        //height: width * 0.1449,
+        marginBottom: height * 0.1,
+        marginRight: height * 0.02,
+        right: 0,
+        bottom: 0,
+        backgroundColor: green,
     },
     bottom: {
         justifyContent: 'center',
