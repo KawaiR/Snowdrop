@@ -18,11 +18,26 @@ const IndPostPage  = ({route, navigation}) => {
     const [postContent, setPostContent] = React.useState("content1\ncontent2");
     const [upvote, setUpvote] = React.useState(10);
     const [downvote, setDownvote] = React.useState(5);
+    const [status, setStatus] = React.useState(0);
+    const [upvoteSelected, setUpvoteSelected] = React.useState(0);
+    const [downvoteSelected, setDownvoteSelected] = React.useState(0);
+
 
     useEffect(() => {
         if (userName == "") {
             console.log("use effect");
             getPost(id);
+        }
+        console.log("status- " + status);
+        if (status == 1) {
+            setUpvoteSelected(true);
+            setDownvoteSelected(false);
+        } else if (status == 0) {
+            setDownvoteSelected(true);
+            setUpvoteSelected(false);
+        } else {
+            setDownvoteSelected(false);
+            setUpvoteSelected(false);
         }
         
     });
@@ -46,7 +61,7 @@ const IndPostPage  = ({route, navigation}) => {
                         setPostContent(result.content);
                         setUpvote(result.upvotes);
                         setDownvote(result.downvotes);
-                        
+                        setStatus(0);
 					});
 				}
 			});
@@ -82,6 +97,7 @@ const IndPostPage  = ({route, navigation}) => {
 						console.log(result);
                         setUpvote(result.upvotes);
                         setDownvote(result.downvotes);
+                        setStatus(1);
 					});
 				}
 			});
@@ -116,8 +132,8 @@ const IndPostPage  = ({route, navigation}) => {
                 <ToggleButton icon="thumb-up-outline" value="up" size={20} style={styles.toggle}/>
                 <ToggleButton icon="thumb-down-outline" value="down" size={20} style={styles.toggle}/>
             </ToggleButton.Row> */}
-            <Chip icon="thumb-up" onPress={() => voteRequest(1)} textStyle={{fontSize: 12,}} style={styles.chip}>{upvote}</Chip>
-            <Chip icon="thumb-down" onPress={() => voteRequest(0)} textStyle={{fontSize: 12,}} style={styles.chip}>{downvote}</Chip>
+            <Chip icon="thumb-up" onPress={() => voteRequest(1)} selected={upvoteSelected} textStyle={{fontSize: 12,}} style={styles.chip}>{upvote}</Chip>
+            <Chip icon="thumb-down" onPress={() => voteRequest(0)} textStyle={{fontSize: 12,}} selected={downvoteSelected} style={styles.chip}>{downvote}</Chip>
         </View>
         </View>
         
