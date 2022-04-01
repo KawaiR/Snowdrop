@@ -78,6 +78,59 @@ class Plants_Search extends React.Component {
             });
     };
 
+    savePostInformation = (id) => {
+        console.log("Global username = ", global.userName);
+        console.log("Global postTitle = ", global.postTitle);
+        console.log("Global content = ", global.postContent);
+        console.log("plant id = ", id);
+        try {
+            let response = fetch('http://localhost:8080/posts/create-post', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                    postTitle: global.postTitle,
+                    content: global.postContent,
+                    plantId: id,
+                }),
+            })
+                .then((response) => {
+                    if (response.status == 400) {
+                        response.json().then((result) => {
+                            console.log(result.message);
+                        });
+                        Alert.alert(
+                            'Error',
+                            'Unable to save post at this time, please try again later.',
+                            [{ text: 'OK' }],
+                        );
+                    }
+                    if (response.status == 200 || response.status == 201 || response.status == 202) {
+                        response.json().then((result) => {
+                            console.log(result);
+                            global.postTitle = "";
+                            global.postContent = "";
+                            Alert.alert(
+                                'Success',
+                                'Post created!',
+                                [{
+                                    text: 'OK',
+                                    onPress: () => {
+                                        this.props.navigation.navigate('Page_IndPost', { id: result });
+                                    },
+                                }],
+                            );
+                        });
+                    }
+                });
+        } catch (err) {
+            console.log("Fetch didnt work.");
+            console.log(err);
+        }
+    }
+
     checkImage = (url) => {
         //define some image formats 
         var types = ['jpg', 'jpeg', 'tiff', 'png', 'gif', 'bmp'];
@@ -118,9 +171,14 @@ class Plants_Search extends React.Component {
     onItemPressed = (id) => {
         // Function for click on an item
         console.log("Item.id = " + id);
-        this.props.navigation.navigate('Save_Plant', {
-            plantId: id,
-        });
+        if (global.plantSearchFromWritePost) {
+            // Make fetch call POST request with username, postTitle, content, plantId
+            this.savePostInformation(id)
+        } else {
+            this.props.navigation.navigate('Save_Plant', {
+                plantId: id,
+            });
+        }
     };
 
     renderItem = ({ item }) => (
@@ -167,7 +225,7 @@ class Plants_Search extends React.Component {
             <View style={styles.container}>
                 {/* Header Bar */}
                 <Appbar.Header style={styles.appbar}>
-                    <Appbar.BackAction color="white" onPress={()=>this.props.navigation.navigate("Page_Plant")}/>
+                    <Appbar.BackAction color="white" onPress={() => this.props.navigation.navigate("Page_Plant")} />
                 </Appbar.Header>
 
                 <SafeAreaView style={styles.safeAreaContainer}>
@@ -186,7 +244,7 @@ class Plants_Search extends React.Component {
                 <Appbar style={styles.bottom}>
                     <Appbar.Action icon="home" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
                     <Appbar.Action icon="leaf" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => this.props.navigation.navigate("Page_Plant")} />
-                    <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />
+                    <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => this.props.navigation.navigate("Page_PostList")} />
                     <Appbar.Action icon="brightness-5" color="#EDEECB" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { this.props.navigation.navigate("Page_Profile_Email_Account"); } else { this.props.navigation.navigate("Page_Profile_Google_Account"); }}} />
                 </Appbar>
             </View>

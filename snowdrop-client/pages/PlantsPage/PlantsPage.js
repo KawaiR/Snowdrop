@@ -4,7 +4,7 @@ import { Appbar, Avatar, Card, FAB, IconButton } from 'react-native-paper';
 import { useIsFocused } from "@react-navigation/native";
 import styles from './PlantsPageStyle.js';
 
-const PlantsPage  = ({route, navigation}) => {
+const PlantsPage  = ({ navigation }) => {
     var width = Dimensions.get('window').width; 
     var height = Dimensions.get('window').height;
 
@@ -12,7 +12,6 @@ const PlantsPage  = ({route, navigation}) => {
     const isFocused = useIsFocused()
     useEffect(() => {
         if (isFocused) {
-            console.log("print test");
             getPlants();
         }
     }, [isFocused]);
@@ -107,17 +106,19 @@ const PlantsPage  = ({route, navigation}) => {
 
         </View>
 	</ScrollView>
+    {global.plantSearchFromWritePost = false}
     <FAB
         style={styles.fab}
         icon="plus"
         color="white"
-        onPress={() => navigation.navigate("Plant_Search")}
+        onPress={() => {
+            navigation.navigate("Plant_Search");}}
     />
     {/* Bottom Nav Bar */}
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={Math.min(width * 0.09, height * 0.05)} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
         <Appbar.Action icon="leaf" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
-        <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />
+        <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList")} />
         <Appbar.Action icon="brightness-5" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
     </Appbar>
     </View>

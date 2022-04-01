@@ -38,8 +38,8 @@ public class PlantController {
 
     @PostMapping(value = "/add-new-plant")
     @ResponseStatus(HttpStatus.CREATED)
-    public void AddNewPlant(@RequestBody AddNewPlantDomain addNewPlantDomain) {
-        plantService.addNewPlant(addNewPlantDomain);
+    public int AddNewPlant(@RequestBody AddNewPlantDomain addNewPlantDomain) {
+        return plantService.addNewPlant(addNewPlantDomain);
     }
 
     @PostMapping(value = "/{id}/add-plant")
@@ -68,5 +68,11 @@ public class PlantController {
     public void deleteUserPlant(@PathVariable int plantCareId,
                                 @RequestBody DeleteUserPlantDomain deleteUserPlantDomain) {
         plantService.deleteUserPlant(plantCareId, deleteUserPlantDomain);
+    }
+
+    @PostMapping(value = "/{plantCareId}/sunlight-exposure")
+    public boolean logSunlightExposure(@PathVariable int plantCareId,
+                                    @RequestBody SunlightExposureDomain sunlightExposureDomain) {
+        return plantService.logSunlightExposure(plantCareId, sunlightExposureDomain);
     }
 }

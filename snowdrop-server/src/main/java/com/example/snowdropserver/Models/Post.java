@@ -29,12 +29,10 @@ public class Post {
     int upvotes;
     int downvotes;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @ToString.Exclude
     User sender;
 
-    @JsonIgnore
+    //@JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     Tag tag;
 

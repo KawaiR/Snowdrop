@@ -7,15 +7,15 @@ public class TestCreatePost {
 
     @Test
     public void createPostSuccess() throws Exception {
-        TestingUtils.createUserAndExpect("createPostSuccess",
-                "createPostSuccess@test.com",
-                "createPostSuccess",
+        TestingUtils.createUserAndExpect("createPostSuccess5",
+                "createPostSuccess5@test.com",
+                "createPostSuccess5",
                 201);
 
-        int postId = TestingUtils.createPostAndExpect("createPostSuccess",
-                "createPostSuccess",
-                "createPostSuccess",
-                1,
+        int postId = TestingUtils.createPostAndExpect("createPostSuccess5",
+                "createPostSuccess5",
+                "createPostSuccess5",
+                33,
                 201);
 
         System.out.println("postId: " + postId);

@@ -29,6 +29,17 @@ public class PlantCareService {
             System.out.println("plant was not found");
         }
 
-        return null;
+        PlantCareInfoDomain plantCareInfoDomain = PlantCareInfoDomain.builder()
+                .fertilizer(plantCare.getFertilizer())
+                .plantHealth(plantCare.getPlantHealth())
+                .nickname(plantCare.getNickname())
+                .sunlight(plantCare.getSunlight())
+                .reportedExposure(plantCare.getReportedExposure())
+                .temperature(plantCare.getTemperature())
+                .waterCurrent(plantCare.getWaterCurrent())
+                .waterNext(plantCare.getWaterNext())
+                .build();
+
+        return plantCareInfoDomain;
     }
 }

@@ -88,6 +88,7 @@ const Save_Plant = ({ route, navigation }) => {
 
                 {/* Header Bar */}
                 <Appbar.Header style={styles.appbar}>
+                    {global.plantSearchFromWritePost = false}
                     <Appbar.BackAction color="white" onPress={()=>navigation.navigate("Plant_Search")}/>
                 </Appbar.Header>
 
@@ -144,7 +145,7 @@ const Save_Plant = ({ route, navigation }) => {
                 <Appbar style={styles.bottom}>
                     <Appbar.Action icon="home" color="#005500" size={Math.min(width * 0.09, height * 0.05)} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
                     <Appbar.Action icon="leaf" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
-                    <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => Alert.alert("Community", "Community page not yet implemented", [{ text: 'OK' }],)} />
+                    <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList")} />
                     <Appbar.Action icon="brightness-5" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
                 </Appbar>
             </View>

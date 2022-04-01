@@ -96,6 +96,7 @@ public class PostService {
                 .postTitle(post.getPostTitle())
                 .totalScore(post.getTotalScore())
                 .uploadDate(post.getUploadDate())
+                .content(post.getContent())
                 .username(post.getSender().getUserName())
                 .downvotes(post.getDownvotes())
                 .upvotes(post.getUpvotes())
@@ -144,7 +145,7 @@ public class PostService {
             } else {
                 adjustment = 2;
             }
-
+        } else {
             UserPostMappings userPostMappings = UserPostMappings.builder()
                     .post(post)
                     .user(user)
@@ -153,6 +154,8 @@ public class PostService {
 
             userPostRepository.save(userPostMappings);
         }
+
+        System.out.println("adjustment: " + adjustment);
 
         int newScore;
         int numVotes;
