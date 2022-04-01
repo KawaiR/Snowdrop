@@ -675,11 +675,5 @@ public class PopulateDatabase {
 
         TestingUtils.addTagAndExpect(544,
                 201);
-
-        TestingUtils.addTagAndExpect(554,
-                201);
-
-        TestingUtils.addTagAndExpect(564,
-                201);
     }
 }
