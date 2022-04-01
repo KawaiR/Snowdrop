@@ -4,6 +4,7 @@ import { Appbar, Card, Paragraph } from 'react-native-paper';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
+import { useIsFocused } from "@react-navigation/native";
 
 const {
     width,
@@ -33,16 +34,31 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
     const [currTemperature, setCurrTemperature] = React.useState(0.0);
     const [currSunlight, setCurrSunlight] = React.useState(0);
 
+    const isFocused = useIsFocused()
     useEffect(() => {
-        // get weather data to setCurrTemperature and setCurrSunlight
-        getPlantCareInfo(plant.id);
-        getPlantName(id);
-        if ((upcomingWatered != null) && (upcomingWatered != "")) {
-            setUpcomingWatered(upcomingWatered.substring(0, 10));
-        } else {
-            setUpcomingWatered("");
+        if (isFocused) {
+            getWeatherApiData();
+            getPlantCareInfo(plant.id);
+            getPlantName(id);
+            if ((upcomingWatered != null) && (upcomingWatered != "")) {
+                setUpcomingWatered(upcomingWatered.substring(0, 10));
+            } else {
+                setUpcomingWatered("");
+            }
         }
-    });
+    }, [isFocused]);
+
+    async function getWeatherApiData() {
+        await fetch('http://api.weatherapi.com/v1/current.json?key=0a5a11da31f34220b9d172820222701&q=40.454769,-86.915703&aqi=no', {
+            method: 'POST',
+        })
+        .then((response) => {
+            response.json().then((result) => {
+            setCurrTemperature(result.current.temp_f);
+            setCurrSunlight(result.current.uv)
+            })
+        });
+    }
 
     let [fontsLoaded] = useFonts({
         Alata_400Regular,
