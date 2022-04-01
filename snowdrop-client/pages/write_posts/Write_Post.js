@@ -43,6 +43,8 @@ const Write_Post = ({ navigation }) => {
                     username: global.userName,
                     postTitle: global.postTitle,
                     content: global.postContent,
+                    // Change plantId once deployed database populated
+                    plantId: tag === "General" ? 17 : 18,
                 }),
             })
                 .then((response) => {
@@ -59,13 +61,13 @@ const Write_Post = ({ navigation }) => {
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
                             console.log(result);
-                            global.postId = result;
                             Alert.alert(
                                 'Success',
                                 'Post created!',
                                 [{
                                     text: 'OK',
                                     onPress: () => {
+                                        navigation.navigate('Page_IndPost', {id: result});
                                         // Navigate to view current post page
                                         // On view community post, clear out global.postTitle, global.postContent, global.postTag once used to avoid weird values
                                     },
@@ -178,14 +180,14 @@ const Write_Post = ({ navigation }) => {
                         <TouchableOpacity style={[styles.tagButton, { backgroundColor: tag === "Plant" ? '#005500' : '#82B47D', }]} onPress={() => setTag("Plant")} >
                             <Text style={styles.tagText}>Choose specific plant</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.tagButton, { backgroundColor: tag === "" ? '#005500' : '#82B47D', }]} onPress={() => setTag("")} >
-                            <Text style={styles.tagText}>None</Text>
+                        <TouchableOpacity style={[styles.tagButton, { backgroundColor: tag === "Advice" ? '#005500' : '#82B47D', }]} onPress={() => setTag("Advice")} >
+                            <Text style={styles.tagText}>Advice</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
                 <TouchableOpacity style={styles.submitButton} onPress={() => onPressSubmit()} >
-                    <Text style={styles.submitText}>{(tag==="General" || tag==="") ? "Post" : "Next"}</Text>
+                    <Text style={styles.submitText}>{(tag==="General" || tag==="Advice") ? "Post" : "Next"}</Text>
                 </TouchableOpacity>
             </ScrollView>
 
