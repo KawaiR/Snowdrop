@@ -2,6 +2,7 @@ package com.example.snowdropserver.integration.plants;
 
 import com.example.snowdropserver.integration.TestingUtils;
 import liquibase.command.core.UpdateTestingRollbackCommandStep;
+import liquibase.pro.packaged.T;
 import org.junit.jupiter.api.Test;
 
 public class PopulateDatabase {
@@ -442,6 +443,69 @@ public class PopulateDatabase {
                 4,
                 50,
                 1,
+                201);
+        TestingUtils.addNewPlant("purpleflower honeysuckle",
+                "Lonicera conjugialis Kellogg",
+                "https://upload.wikimedia.org/wikipedia/commons/2/29/Lonicera_conjugialis_%28purpleflower_honeysuckle%29_%285991510753%29.jpg",
+                "M",
+                "A",
+                5,
+                35,
+                2,
+                201);
+        TestingUtils.addNewPlant("island broom",
+                "Lotus dendroideus (Greene) Greene",
+                "https://upload.wikimedia.org/wikipedia/commons/b/bb/Lotusdendroideusdend.jpg",
+                "L",
+                "B",
+                6,
+                65,
+                3,
+                201);
+        TestingUtils.addNewPlant("fernleaf biscuitroot",
+                "Lomatium dissectum (Nutt.) Mathias & Constance",
+                "https://upload.wikimedia.org/wikipedia/commons/b/b1/Lomatium_dissectum_4248.JPG",
+                "L",
+                "B",
+                8,
+                65,
+                2,
+                201);
+        TestingUtils.addNewPlant("fernleaf biscuitroot",
+                "Lomatium dissectum (Nutt.) Mathias & Constance var. dissectum",
+                "https://upload.wikimedia.org/wikipedia/commons/a/a7/Lomatium_utriculatum_6416.JPG",
+                "M",
+                "N",
+                6,
+                45,
+                2,
+                201);
+        TestingUtils.addNewPlant("Waihanau lobelia",
+                "Lobelia dunbarii Rock ssp. dunbarii",
+                "https://upload.wikimedia.org/wikipedia/commons/7/7e/Lobelia_niihauensis_%285762180787%29.jpg",
+                "H",
+                "A",
+                4,
+                30,
+                2,
+                201);
+        TestingUtils.addNewPlant("northern biscuitroot",
+                "Lomatium farinosum (Hook.) J.M. Coult. & Rose var. farinosum",
+                "https://upload.wikimedia.org/wikipedia/commons/9/95/Lomatium_farinosum_var._hambleniae_2.jpg",
+                "L",
+                "A",
+                3,
+                45,
+                2,
+                201);
+        TestingUtils.addNewPlant("Baja birdbush",
+                "Ornithostaphylos oppositifolia (Parry) Small",
+                "https://upload.wikimedia.org/wikipedia/commons/4/45/Ornithostaphylos_oppositifolia_32527264.jpg",
+                "M",
+                "N",
+                4,
+                33,
+                2,
                 201);
     }
 }
