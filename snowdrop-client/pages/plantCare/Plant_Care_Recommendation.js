@@ -19,20 +19,29 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
 
     const [commonName, setCommonName] = React.useState(plant.nickname);
     const [scientificName, setScientificName] = React.useState("");
-    const [health, setHealth] = React.useState(plant.plantHealth);
-    const [waterCurrent, setWaterCurrent] = React.useState(plant.waterCurrent);
     const [image, setImage] = React.useState("");
     const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
 
+    const [waterNeeds, setWaterNeeds] = React.useState("");
+    const [soilType, setSoilType] = React.useState("");
+    const [sunlightNum, setSunlightNum] = React.useState(0);
+    const [sunlightString, setSunlightString] = React.useState("");
+    const [minTemperature, setMinTemperature] = React.useState(0.0);
+    const [temperatureString, setTemperatureString] = React.useState("");
+    const [fertilizer, setFertilizer] = React.useState("");
+
+    const [currTemperature, setCurrTemperature] = React.useState(0.0);
+    const [currSunlight, setCurrSunlight] = React.useState(0);
+
     useEffect(() => {
-        console.log(plant);
+        // get weather data to setCurrTemperature and setCurrSunlight
+        getPlantCareInfo(plant.id);
         getPlantName(id);
         if ((upcomingWatered != null) && (upcomingWatered != "")) {
             setUpcomingWatered(upcomingWatered.substring(0, 10));
         } else {
             setUpcomingWatered("");
         }
-
     });
 
     let [fontsLoaded] = useFonts({
@@ -42,6 +51,28 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
     });
     if (!fontsLoaded) {
         return <AppLoading />
+    }
+
+    async function getPlantCareInfo(plantCareId) {
+        try {
+            let response = await fetch('http://localhost:8080/plant-care/' + plantCareId + '/get-plant-info', { method: 'GET' })
+                .then((response) => {
+                    if (response.status == 400) {
+                        response.json().then((result) => {
+                            console.log('get plant care info fail');
+                            console.log(result.message);
+                        });
+                    }
+                    if (response.status == 200 || response.status == 201 || response.status == 202) {
+                        response.json().then((result) => {
+                            setFertilizer(result.fertilizer);
+                        });
+                    }
+                });
+        } catch (err) {
+            console.log("Fetch didnt work.");
+            console.log(err);
+        }
     }
 
     async function getPlantName(id) {
@@ -56,19 +87,47 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                     }
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
-                            console.log(result);
-                            /*
-                            if (result.plantName != null) {
-                                setCommonName(result.plantName);
-                            } else {
-                                setCommonName(result.scientificName);
-                            }
-                            */
                             setScientificName(result.scientificName);
                             if (result.plantImage != null) {
                                 setImage(result.plantImage);
                             } else {
                                 setImage(require('snowdrop-client/assets/plant-image.jpeg'));
+                            }
+
+                            if (result.waterNeeds === "VL") {
+                                setWaterNeeds("very low");
+                            } else if (result.waterNeeds === "L") {
+                                setWaterNeeds("low");
+                            } else if (result.waterNeeds === "M") {
+                                setWaterNeeds("moderate");
+                            } else if (result.waterNeeds === "H") {
+                                setWaterNeeds("high");
+                            }
+
+                            if (result.soilType === "A") {
+                                setSoilType("acidic");
+                            } else if (result.soilType === "N") {
+                                setSoilType("neutral");
+                            } else if (result.soilType === "B") {
+                                setSoilType("basic");
+                            }
+
+                            setSunlightNum(result.sunlightLevel)
+
+                            if (currSunlight > sunlightNum) {
+                                setSunlightString("is greater than required")
+                            } else if (currSunlight < sunlightNum) {
+                                setSunlightString("is less than required")
+                            } else if (currSunlight == sunlightNum) {
+                                setSunlightString("meets requirement")
+                            }
+
+                            setMinTemperature(result.minTemperature);
+
+                            if (currTemperature >= minTemperature) {
+                                setTemperatureString("meets requirement")
+                            } else if (currTemperature < minTemperature) {
+                                setTemperatureString("is less than required")
                             }
                         });
                     }
@@ -93,11 +152,8 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                     <View style={styles.plantNameView}>
                         <View style={styles.plantNameContent}>
                             <Text style={styles.plantNameText}>{commonName}</Text>
-                            {/* <Text style={styles.plantNameText}>Common Name</Text> */}
                             <Text style={styles.plantNameText}>{scientificName}</Text>
-                            {/* <Text style={styles.plantNameText}>Scientific Name</Text> */}
                             <Text style={styles.plantNameText}>{upcomingWatered}</Text>
-                            {/* <Text style={styles.plantNameText}>Upcoming watered</Text> */}
                         </View>
                     </View>
                 </View>
@@ -110,7 +166,7 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                             title="Water"
                         />
                         <Card.Content>
-                            <Paragraph style={styles.cardText}>Requires moderate watering</Paragraph>
+                            <Paragraph style={styles.cardText}>Requires {waterNeeds} watering</Paragraph>
                             <Paragraph style={styles.cardText}>Touch top layer of soil, if dry only then water.</Paragraph>
                         </Card.Content>
                     </Card>
@@ -125,40 +181,46 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                             <Paragraph style={styles.cardText}>Fertilize every {fertilizeTimes} weeks</Paragraph>
                         </Card.Content>
                         <View style={styles.rowContainer}>
-                        <TextInput
-                            style={styles.fertilizerInput}
-                            onChangeText={onChangeNumber}
-                            value={fertilizeTimes}
-                            keyboardType="numeric"
-                            borderRadius={25}
-                            selectionColor={'grey'}
-                            underlineColorAndroid='transparent'
-                        />
-                        <TouchableOpacity style={styles.setFertilizerButton} onPress={() => {global.fertilizeTimes.set(plant.id, fertilizeTimes); global.fertilizeTimes.forEach((fertilizeTimes, id) => console.log(`${id}: ${fertilizeTimes}`));}} >
-                            <Text style={styles.setFertilizerText}>Set</Text>
-                        </TouchableOpacity>
+                            <TextInput
+                                style={styles.fertilizerInput}
+                                onChangeText={onChangeNumber}
+                                value={fertilizeTimes}
+                                keyboardType="numeric"
+                                borderRadius={25}
+                                selectionColor={'grey'}
+                                underlineColorAndroid='transparent'
+                            />
+                            <TouchableOpacity style={styles.setFertilizerButton} onPress={() => { global.fertilizeTimes.set(plant.id, fertilizeTimes); global.fertilizeTimes.forEach((fertilizeTimes, id) => console.log(`${id}: ${fertilizeTimes}`)); }} >
+                                <Text style={styles.setFertilizerText}>Set</Text>
+                            </TouchableOpacity>
                         </View>
                     </Card>
                     <Card mode="outlined" style={styles.card}>
                         <Card.Title
                             style={styles.cardTitle}
                             titleStyle={styles.cardTitle}
-                            title="Sunlight"
+                            title="Sunlight (UV Level)"
                         />
                         <Card.Content>
-                            <Paragraph style={styles.cardText}>Requires moderate sunlight</Paragraph>
-                            <Paragraph style={[styles.cardText, { alignSelf: 'center', color: "green" }]}>Sunlight in your area meets requirement</Paragraph>
+                            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", }}>
+                                <Paragraph style={styles.cardText}>Required UV = {sunlightNum}</Paragraph>
+                                <Paragraph style={styles.cardText}>Current UV = {currSunlight}</Paragraph>
+                            </View>
+                            <Paragraph style={[styles.cardText, { alignSelf: 'center' }]}>Sunlight in your area {sunlightString}</Paragraph>
                         </Card.Content>
                     </Card>
                     <Card mode="outlined" style={styles.card}>
                         <Card.Title
                             style={styles.cardTitle}
                             titleStyle={styles.cardTitle}
-                            title="Temperature"
+                            title="Minimum Temperature"
                         />
                         <Card.Content>
-                            <Paragraph style={styles.cardText}>Requires temperatures between 65 and 75 F</Paragraph>
-                            <Paragraph style={[styles.cardText, { alignSelf: 'center', color: "red" }]}>Temperature in your area higher than required</Paragraph>
+                            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", }}>
+                                <Paragraph style={styles.cardText}>Required min temp = {minTemperature} F</Paragraph>
+                                <Paragraph style={styles.cardText}>Current temp = {currTemperature} F</Paragraph>
+                            </View>
+                            <Paragraph style={[styles.cardText, { alignSelf: 'center' }]}>Temperature in your area {temperatureString}</Paragraph>
                         </Card.Content>
                     </Card>
                     <Card mode="outlined" style={styles.card}>
@@ -168,7 +230,7 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                             title="Soil Type"
                         />
                         <Card.Content>
-                            <Paragraph style={styles.cardText}>Requires acidic soil type</Paragraph>
+                            <Paragraph style={styles.cardText}>Requires {soilType} soil type</Paragraph>
                         </Card.Content>
                     </Card>
                 </View>
