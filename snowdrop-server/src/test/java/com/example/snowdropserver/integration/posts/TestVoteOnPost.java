@@ -82,42 +82,42 @@ public class TestVoteOnPost {
 
     @Test
     public void testUpvoteTwice() throws Exception {
-        TestingUtils.createUserAndExpect("testUpvoteTwice1",
-                "testUpvoteTwice1@test.com",
-                "testUpvoteTwice1",
+        TestingUtils.createUserAndExpect("testUpvoteTwice",
+                "testUpvoteTwice@test.com",
+                "testUpvoteTwice",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testUpvoteTwice1",
-                "testUpvoteTwice1",
-                "testUpvoteTwice1",
-                74,
+        int postId = TestingUtils.createPostAndExpect("testUpvoteTwice",
+                "testUpvoteTwice",
+                "testUpvoteTwice",
+                3,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteTwice1",
+                "testUpvoteTwice",
                 1,
                 200);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteTwice1",
+                "testUpvoteTwice",
                 1,
                 200);
     }
 
     @Test
     public void testDownvoteTwice() throws Exception {
-        TestingUtils.createUserAndExpect("testDownvoteTwice1",
-                "testDownvoteTwice1@test.com",
-                "testDownvoteTwice1",
+        TestingUtils.createUserAndExpect("testDownvoteTwice2",
+                "testDownvoteTwice2@test.com",
+                "testDownvoteTwice2",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testDownvoteTwice1",
-                "testDownvoteTwice1",
-                "testDownvoteTwice1",
-                74,
+        int postId = TestingUtils.createPostAndExpect("testDownvoteTwice2",
+                "testDownvoteTwice2",
+                "testDownvoteTwice2",
+                3,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testDownvoteTwice1",
+                "testDownvoteTwice2",
                 0,
                 200);
         TestingUtils.voteAndExpect(postId,
-                "testDownvoteTwice1",
+                "testDownvoteTwice2",
                 0,
                 200);
     }
