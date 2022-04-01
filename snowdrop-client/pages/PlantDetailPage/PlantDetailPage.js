@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, ScrollView, Image, Dimensions, ImageBackground } from "react-native";
-import { Appbar, Avatar, Card, FAB, IconButton, Provider, Dialog, Portal, Button } from 'react-native-paper';
-
+import { Appbar, Avatar, Card, FAB, IconButton, Provider, Dialog, Portal, Button, ToggleButton } from 'react-native-paper';
+import { DebugInstructions } from "react-native/Libraries/NewAppScreen";
+import { useIsFocused } from "@react-navigation/native";
 import styles from './PlantDetailPageStyle.js';
 
 const PlantDetailPage  = ({route, navigation}) => {
@@ -13,6 +14,8 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [waterVisible, setWaterVisible] = React.useState(false);
     const [fertilizerVisible, setFertilizerVisible] = React.useState(false);
     const [healthVisible, setHealthVisible] = React.useState(false);
+    const [deleteVisible, setDeleteVisible] = React.useState(false);
+    const [sunVisible, setSunVisible] = React.useState(false);
 
     const [commonName, setCommonName] = React.useState(plant.nickname);
     const [scientificName, setScientificName] = React.useState("");
@@ -20,20 +23,24 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [waterCurrent, setWaterCurrent] = React.useState(plant.waterCurrent);
     const [image, setImage] = React.useState("");
     const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
+    const [value, setValue] = React.useState("" + plant.reportedExposure + "");
+    const [sunlight, setSunlight] = React.useState("" + plant.reportedExposure + "");
+
+    const [sunlightBool, setSunlightBool] = React.useState(0);
 
     const hideWater = () => setWaterVisible(false);
     const hideFertilizer = () => setFertilizerVisible(false);
     const hideHealth = () => setHealthVisible(false);
+    const hideDelete = () => setDeleteVisible(false);
+    const hideSun = () => setSunVisible(false);
 
     const waterYes = () => {
         console.log("waterYes");
         waterPlant();
         setWaterVisible(false);
-        // add
     }
     const waterrNo = () => {
         setWaterVisible(false);
-        // add
     }
     const fertilizerYes = () => {
         setFertilizerVisible(false);
@@ -41,17 +48,102 @@ const PlantDetailPage  = ({route, navigation}) => {
     const fertilizerNo = () => {
         setFertilizerVisible(false);
     }
+    async function deleteYes() {
+        setDeleteVisible(false);
+        try {
+			let response = await fetch('http://localhost:8080/plants/' + id + "/delete-plant", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                }),
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+                        console.log('fail');
+                        setDeleteVisible(false);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log('success');
+						console.log(result);
+                        navigation.navigate("Page_Plant");
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
 
-    useEffect(() => {
-        console.log(plant);
-        getPlantName(id);
-        if ((upcomingWatered != null) && (upcomingWatered != "")) {
-            setUpcomingWatered(upcomingWatered.substring(0, 10));
-        } else {
-            setUpcomingWatered("");
+    async function sunYes() {
+        setSunVisible(false);
+        console.log("sun yes");
+        var temp = 0;
+        if (value == "1") {
+            temp = 1;
         }
-        
-    });
+        if (value == "2") {
+            temp = 2;
+        }
+        if (value == "3") {
+            temp = 3;
+        }
+        try {
+			let response = await fetch('http://localhost:8080/plants/' + id + "/sunlight-exposure", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                    reportedSunlight: temp,
+                }),
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+                        console.log('fail');
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+                    console.log('success');
+                    setSunlight(value);
+                    response.json().then((result) => {
+                        console.log('success');
+						setSunlightBool(result);
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
+    const isFocused = useIsFocused()
+    useEffect(() => {
+        console.log("use effect");
+        console.log(plant)
+        if (isFocused) {
+            getPlantName(id);
+                
+            if ((upcomingWatered != null) && (upcomingWatered != "")) {
+                setUpcomingWatered(upcomingWatered.substring(0, 10));
+            } else {
+                setUpcomingWatered("");
+            }
+        }
+    }, [isFocused]);
 
     async function waterPlant() {
         try {
@@ -77,7 +169,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         console.log('success');
 						console.log(result);
                         console.log('success');
-                        setUpcomingWatered(result.waterNext)
+                        setUpcomingWatered(result.waterNext.substring(0, 10))
                         //setPlantsList(result.caredFor);
 					});
 				}
@@ -91,7 +183,7 @@ const PlantDetailPage  = ({route, navigation}) => {
 
     async function getPlantName(id) {
         try {
-			let response = await fetch('http://localhost:8080/plants/' + id + '/get-plant-info', { method: 'GET' })
+			let response = await fetch('http://localhost:8080/plants/' + plant.plant.id + '/get-plant-info', { method: 'GET' })
 			.then((response) => {
 				if (response.status == 400) {
 					response.json().then((result) => {
@@ -103,14 +195,9 @@ const PlantDetailPage  = ({route, navigation}) => {
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
                         console.log(result);
-                        /*
-                        if (result.plantName != null) {
-                            setCommonName(result.plantName);
-                        } else {
-                            setCommonName(result.scientificName);
-                        }
-                        */
                         setScientificName(result.scientificName);
+                        // setSunlight(result.sunlightLevel);
+                        // setValue(result.sunlightLevel);
                         if (result.plantImage != null) {
                             setImage(result.plantImage);
                         } else {
@@ -131,7 +218,7 @@ const PlantDetailPage  = ({route, navigation}) => {
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_Plant")}/>
-        <Appbar.Action icon="brightness-5" color="white" style={{marginLeft: 'auto'}}/>
+        <Appbar.Action icon="delete" color="white" style={{marginLeft: 'auto'}} onPress={() => {setDeleteVisible(true);}}/>
     </Appbar.Header>
 	<ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
         <ImageBackground style={styles.plantsImage} source={require('snowdrop-client/assets/plant-image.jpeg')}>
@@ -185,6 +272,17 @@ const PlantDetailPage  = ({route, navigation}) => {
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setHealthVisible(true);}} />}
                     />
                 </Card>
+                <Card mode="outlined" style={styles.card}>
+                    <Card.Title
+                        style={styles.cardTitle}
+                        titleStyle={styles.cardText}
+                        subtitleStyle={styles.cardText}
+                        title="Sunlight Exposure"
+                        subtitle={sunlight}
+                        left={(props) =>  <IconButton {...props} icon="weather-sunny" size={50} color={'#4E4E4E'}/>}
+                        right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setSunVisible(true);}} />}
+                    />
+                </Card>
             </View>
         </View>
         <Portal>
@@ -213,6 +311,33 @@ const PlantDetailPage  = ({route, navigation}) => {
                 <Dialog.Actions>
                 <Button onPress={hideHealth}>Yes</Button>
                 <Button onPress={hideHealth}>No</Button>
+                </Dialog.Actions>
+            </Dialog>
+        </Portal>
+        <Portal>
+            <Dialog visible={deleteVisible} onDismiss={hideDelete}>
+                <Dialog.Title>Deleting Plant</Dialog.Title>
+                <Dialog.Content>
+                    <Text>Are you sure that you want to delete this plant?</Text>
+                </Dialog.Content>
+                <Dialog.Actions>
+                <Button onPress={deleteYes}>Yes</Button>
+                <Button onPress={hideDelete}>No</Button>
+                </Dialog.Actions>
+            </Dialog>
+            <Dialog visible={sunVisible} onDismiss={hideSun}>
+                <Dialog.Title>Sunlight Exposure</Dialog.Title>
+                <Dialog.Content>
+                    <Text>How much sunlight does your plant get?</Text>
+                    <ToggleButton.Row style={styles.toggle} onValueChange={value => setValue(value)} value={value}>
+                        <ToggleButton icon="numeric-1" value="1" />
+                        <ToggleButton icon="numeric-2" value="2" />
+                        <ToggleButton icon="numeric-3" value="3" />
+                    </ToggleButton.Row>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    <Button onPress={sunYes}>Confirm</Button>
+                    <Button onPress={hideSun}>Cancel</Button>
                 </Dialog.Actions>
             </Dialog>
         </Portal>
