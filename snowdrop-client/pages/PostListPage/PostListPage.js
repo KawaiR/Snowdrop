@@ -62,6 +62,9 @@ const PostListPage  = ({navigation}) => {
                 <View style={styles.lineBreak}></View>
                 <Text style={styles.title}>{item.postTitle}</Text>
                 <Text>{item.content}</Text>
+                <TouchableOpacity style={styles.tagButton} onPress = {() => {}}>
+                    <Text style={styles.tagText}>{item.tag.plant.plantImage === "general-tag" ? "General" : (item.tag.plant.plantImage === "advice-tag" ? "Advice" : item.tag.plant.plantName)}</Text>
+                </TouchableOpacity>
                 <View style={styles.voteRowStyle}>
                     <Chip icon="thumb-up" textStyle={{fontSize: 12,}} style={styles.chip}>{item.upvotes}</Chip>
                     <Chip icon="thumb-down" textStyle={{fontSize: 12,}}>{item.downvotes}</Chip>

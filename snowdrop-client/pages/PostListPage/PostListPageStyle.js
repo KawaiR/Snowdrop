@@ -67,6 +67,28 @@ export default StyleSheet.create({
         fontWeight: '400',
         marginBottom: height * 0.007,
     },
+    tagButton: {
+        backgroundColor: '#82B47D',
+        borderRadius: 25,
+        alignItems: "center",
+        alignSelf: 'flex-start',
+        padding: 5,
+        paddingHorizontal: 15,
+        margin: 10,
+        marginLeft: 0,
+        shadowColor: '#EDEECB',
+        shadowOpacity: 0.8,
+        shadowOffset: {
+            width: 0,
+            height: 3
+        },
+    },
+    tagText: {
+        justifyContent: 'center',
+        color: 'white',
+        fontFamily: "Lato_400Regular",
+        fontSize: 16,
+    },
     voteRowStyle: {
         flexDirection: 'row',
         marginTop: height * 0.01,
