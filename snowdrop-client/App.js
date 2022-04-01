@@ -22,6 +22,9 @@ import Write_Post from './pages/write_posts/Write_Post.js';
 import IndPostPage from './pages/IndPostPage/IndPostPage.js';
 import PostListPage from './pages/PostListPage/PostListPage.js';
 import Plant_Care_Recommendation from './pages/plantCare/Plant_Care_Recommendation.js';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']);
+
 const Stack = createNativeStackNavigator();
 
 Notifications.setNotificationHandler({
