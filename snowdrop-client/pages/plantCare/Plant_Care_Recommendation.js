@@ -47,7 +47,7 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                 setUpcomingWatered("");
             }
         }
-    }, [isFocused]);
+    }, [isFocused, waterNeeds, currTemperature, currSunlight, sunlightNum, minTemperature, soilType]);
 
     async function getWeatherApiData() {
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -137,6 +137,9 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
 
                             setSunlightNum(result.sunlightLevel)
 
+                            console.log(result.sunlightLevel)
+                            console.log(sunlightNum)
+                            console.log(currSunlight)
                             if (currSunlight > sunlightNum) {
                                 setSunlightString("is greater than required")
                             } else if (currSunlight < sunlightNum) {
