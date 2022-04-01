@@ -86,6 +86,8 @@ const PlantDetailPage  = ({route, navigation}) => {
     async function sunYes() {
         setSunVisible(false);
         console.log("sun yes");
+        console.log(global.userName)
+        console.log(plant.plant.id)
         var temp = 0;
         if (value == "1") {
             temp = 1;
@@ -97,7 +99,7 @@ const PlantDetailPage  = ({route, navigation}) => {
             temp = 3;
         }
         try {
-			let response = await fetch('http://localhost:8080/plants/' + id + "/sunlight-exposure", {
+			let response = await fetch('http://localhost:8080/plants/' + plant.id + "/sunlight-exposure", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",

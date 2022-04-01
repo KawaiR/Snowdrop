@@ -184,7 +184,7 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                             <TextInput
                                 style={styles.fertilizerInput}
                                 onChangeText={onChangeNumber}
-                                value={fertilizeTimes}
+                                value={fertilizeTimes.toString()}
                                 keyboardType="numeric"
                                 borderRadius={25}
                                 selectionColor={'grey'}
