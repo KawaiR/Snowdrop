@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, ScrollView, Image, Dimensions, ImageBackground } from "react-native";
+import { View, Text, ScrollView, Image, Dimensions, ImageBackground, Alert } from "react-native";
 import { Appbar, Avatar, Card, FAB, IconButton, Provider, Dialog, Portal, Button, ToggleButton } from 'react-native-paper';
 import { DebugInstructions } from "react-native/Libraries/NewAppScreen";
 import { useIsFocused } from "@react-navigation/native";
@@ -120,7 +120,20 @@ const PlantDetailPage  = ({route, navigation}) => {
                     setSunlight(value);
                     response.json().then((result) => {
                         console.log('success');
-						setSunlightBool(result);
+                        setSunlightBool(result);
+                        if (result) {
+                            Alert.alert(
+                                'Change plant location',
+                                'Your plant is getting an incorrect amount of sunlight exposure, change the location of the plant in your house (move it towards/away from a window)',
+                                [{ text: 'OK' }, { text: 'Ignore' }],
+                            );
+                        } else {
+                            Alert.alert(
+                                'Good job!',
+                                'Your plant is getting an optimal amount of sunlight exposure in this location',
+                                [{ text: 'OK' }],
+                            );
+                        }
 					});
 				}
 			});
