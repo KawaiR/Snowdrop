@@ -51,7 +51,7 @@ const PlantDetailPage  = ({route, navigation}) => {
     async function deleteYes() {
         setDeleteVisible(false);
         try {
-			let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + id + "/delete-plant", {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + plant.id + "/delete-plant", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
@@ -70,11 +70,8 @@ const PlantDetailPage  = ({route, navigation}) => {
 					});
 				}
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
-					response.json().then((result) => {
-                        console.log('success');
-						console.log(result);
-                        navigation.navigate("Page_Plant");
-					});
+                    console.log('success');
+                    navigation.navigate("Page_Plant");
 				}
 			});
 		} catch (err) {
