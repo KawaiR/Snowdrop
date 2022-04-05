@@ -11,12 +11,10 @@ public class VoteResultDomain {
     int newScore;
     int upvotes;
     int downvotes;
-    int status;
 
     public VoteResultDomain() {
         newScore = 0;
         upvotes = 0;
         downvotes = 0;
-        status = -1;
     }
 }

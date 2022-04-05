@@ -6,55 +6,55 @@ import org.junit.jupiter.api.Test;
 public class TestVoteOnPost {
     @Test
     public void testUpvote() throws Exception {
-        TestingUtils.createUserAndExpect("testUpvote3",
-                "testUpvote3@test.com",
-                "testUpvote3",
+        TestingUtils.createUserAndExpect("testUpvote",
+                "testUpvote@test.com",
+                "testUpvote",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testUpvote3",
-                "testUpvote3",
-                "testUpvote3",
+        int postId = TestingUtils.createPostAndExpect("testUpvote",
+                "testUpvote",
+                "testUpvote",
                 74,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testUpvote3",
+                "testUpvote",
                 1,
                 200);
     }
 
     @Test
     public void testDownvote() throws Exception {
-        TestingUtils.createUserAndExpect("testDownvote3",
-                "testDownvote3@test.com",
-                "testDownvote3",
+        TestingUtils.createUserAndExpect("testDownvote1",
+                "testDownvote1@test.com",
+                "testDownvote1",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testDownvote3",
-                "testDownvote3",
-                "testDownvote3",
-                3,
+        int postId = TestingUtils.createPostAndExpect("testDownvote1",
+                "testDownvote1",
+                "testDownvote1",
+                64,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testDownvote3",
+                "testDownvote1",
                 0,
                 200);
     }
 
     @Test
     public void testUpvoteThenDownvote() throws Exception {
-        TestingUtils.createUserAndExpect("testUpvoteThenDownvote1",
-                "testUpvoteThenDownvote1@test.com",
-                "testUpvoteThenDownvote1",
+        TestingUtils.createUserAndExpect("testUpvoteThenDownvote4",
+                "testUpvoteThenDownvote4@test.com",
+                "testUpvoteThenDownvote4",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testUpvoteThenDownvote1",
-                "testUpvoteThenDownvote1",
-                "testUpvoteThenDownvote1",
-                2,
+        int postId = TestingUtils.createPostAndExpect("testUpvoteThenDownvote4",
+                "testUpvoteThenDownvote4",
+                "testUpvoteThenDownvote4",
+                84,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteThenDownvote1",
+                "testUpvoteThenDownvote4",
                 1,
                 200);
         TestingUtils.voteAndExpect(postId,
-                "testUpvoteThenDownvote1",
+                "testUpvoteThenDownvote4",
                 0,
                 200);
     }
@@ -68,7 +68,7 @@ public class TestVoteOnPost {
         int postId = TestingUtils.createPostAndExpect("testDownvoteThenUpvote",
                 "testDownvoteThenUpvote",
                 "testDownvoteThenUpvote",
-                3,
+                94,
                 201);
         TestingUtils.voteAndExpect(postId,
                 "testDownvoteThenUpvote",
@@ -89,7 +89,7 @@ public class TestVoteOnPost {
         int postId = TestingUtils.createPostAndExpect("testUpvoteTwice22",
                 "testUpvoteTwice22",
                 "testUpvoteTwice22",
-                3,
+                54,
                 201);
         TestingUtils.voteAndExpect(postId,
                 "testUpvoteTwice22",
@@ -110,7 +110,7 @@ public class TestVoteOnPost {
         int postId = TestingUtils.createPostAndExpect("testDownvoteTwice22",
                 "testDownvoteTwice22",
                 "testDownvoteTwice22",
-                3,
+                44,
                 201);
         TestingUtils.voteAndExpect(postId,
                 "testDownvoteTwice22",

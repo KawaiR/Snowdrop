@@ -132,83 +132,59 @@ public class PostService {
         }
         Post post = maybePost.get();
 
-        // confirm user hasn't interacted with this post yet
-        int adjustment = 0;
-        int mappingId = -1;
-        Optional<UserPostMappings> votedByUser = userPostRepository.findByPostAndUser(post, user);
-        if (votedByUser.isPresent()) {
-            UserPostMappings mapping = votedByUser.get();
-            if (mapping.getUpvote() == 1) {
-                adjustment = 1;
-            } else {
-                adjustment = 2;
-            }
-        } else {
-            UserPostMappings userPostMappings = UserPostMappings.builder()
-                    .post(post)
-                    .user(user)
-                    .upvote(voteOnPostDomain.getUpvote())
-                    .build();
+        int userVote = user_post_mapping(post.getId(), user.getUserName());
 
-            userPostRepository.save(userPostMappings);
-            mappingId = userPostMappings.getId();
-        }
+       int newScore;
+       int numUpvotes;
+       int numDownvotes;
 
-        System.out.println("adjustment: " + adjustment);
+       if (voteOnPostDomain.getUpvote() == 1) {
+           if (userVote == 1) { //upvoted previously
+               numUpvotes = post.getUpvotes() - 1;
+               numDownvotes = post.getDownvotes();
+               userPostRepository.delete(userPostRepository.findByPostAndUser(post, user).get()); // remove mapping
+           } else if (userVote == 0) { // downvoted previously
+               numUpvotes = post.getUpvotes() + 1;
+               numDownvotes = post.getDownvotes() - 1;
+           } else {
+               numUpvotes = post.getUpvotes() + 1;
+               numDownvotes = post.getDownvotes();
+           }
+       } else {
+           if (userVote == 1) { //upvoted previously
+               numUpvotes = post.getUpvotes() - 1;
+               numDownvotes = post.getDownvotes() + 1;
+           } else if (userVote == 0) { // downvoted previously
+               numUpvotes = post.getUpvotes();
+               numDownvotes = post.getDownvotes() - 1;
+               userPostRepository.delete(userPostRepository.findByPostAndUser(post, user).get()); // remove mapping
+           } else {
+               numUpvotes = post.getUpvotes();
+               numDownvotes = post.getDownvotes() + 1;
+           }
+       }
 
-        int newScore;
-        int numVotes;
-        if (voteOnPostDomain.getUpvote() == 1) {
-            numVotes = post.getUpvotes();
-            if (adjustment != 1) {
-                newScore = post.getTotalScore() + 1;
-                if (adjustment == 2) {
-                    Optional<UserPostMappings> mapping = userPostRepository.findById(mappingId);
-                    if (mapping.isPresent()) {
-                        userPostRepository.delete(mapping.get());
-                    }
-                    post.setDownvotes(post.getDownvotes() - 1);
-                } else {
-                    numVotes++;
-                }
-            } else {
-                newScore = post.getTotalScore() - 1;
-            }
-            post.setUpvotes(numVotes);
-        } else {
-            numVotes = post.getDownvotes();
-            if (adjustment != 2) {
-                newScore = post.getTotalScore() - 1;
-                if (adjustment == 1) {
-                    post.setUpvotes(post.getUpvotes() - 1);
-                    Optional<UserPostMappings> mapping = userPostRepository.findById(mappingId);
-                    if (mapping.isPresent()) {
-                        userPostRepository.delete(mapping.get());
-                    }
-                } else {
-                    numVotes++;
-                }
-            } else {
-                newScore = post.getTotalScore() + 1;
-            }
-            post.setDownvotes(numVotes);
-        }
-        post.setTotalScore(newScore);
+       newScore = numUpvotes - numDownvotes;
+       post.setDownvotes(numDownvotes);
+       post.setUpvotes(numUpvotes);
+       post.setTotalScore(newScore);
+
+       if (userVote == -1) { // user is voting for the first time
+           UserPostMappings userPostMappings = UserPostMappings.builder()
+                   .post(post)
+                   .user(user)
+                   .upvote(voteOnPostDomain.getUpvote())
+                   .build();
+
+           userPostRepository.save(userPostMappings);
+       }
 
         postRepository.save(post);
-
-        int status = -1;
-        Optional<UserPostMappings> maybeStatus = userPostRepository.findById(mappingId);
-        if (maybeStatus.isPresent()) {
-            UserPostMappings m = maybeStatus.get();
-            status = maybeStatus.get().getUpvote();
-        }
 
         VoteResultDomain voteResultDomain = VoteResultDomain.builder()
                 .newScore(newScore)
                 .downvotes(post.getDownvotes())
                 .upvotes(post.getUpvotes())
-                .status(status)
                 .build();
 
         return voteResultDomain;
