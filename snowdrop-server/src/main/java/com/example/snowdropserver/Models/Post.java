@@ -36,7 +36,7 @@ public class Post {
     @ManyToOne(fetch = FetchType.EAGER)
     Tag tag;
 
-    @OneToMany(mappedBy = "parent")
-    List<Comment> children;
+//    @OneToMany(mappedBy = "parent")
+//    List<Comment> children;
 
 }

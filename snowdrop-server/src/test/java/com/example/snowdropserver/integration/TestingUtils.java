@@ -626,4 +626,45 @@ public class TestingUtils {
 
         return alert;
     }
+
+    public static int createCommentAndExpect(int postId, String username, String content, int expectedStatusCode)
+            throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/comments/" + postId + "/create-comment");
+
+        System.out.println(username);
+        System.out.println("in util function");
+
+        CreateCommentDomain createCommentDomain = CreateCommentDomain.builder()
+                .username(username)
+                .content(content)
+                .build();
+
+        System.out.println(createCommentDomain);
+
+        String json = objectMapper.writeValueAsString(createCommentDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING CREATE POST REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        int commentId = -1;
+        if (expectedStatusCode == 201) {
+            commentId = Integer.parseInt(EntityUtils.toString(response.getEntity(), "UTF-8"));
+        }
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+
+        System.out.println("post created: " + commentId);
+
+        return commentId;
+    }
 }

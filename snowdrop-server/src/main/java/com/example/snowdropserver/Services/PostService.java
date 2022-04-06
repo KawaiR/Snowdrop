@@ -71,7 +71,6 @@ public class PostService {
                 .upvotes(0)
                 .downvotes(0)
                 .uploadDate(LocalDateTime.now())
-                .children(null)
                 .build();
 
         System.out.println("created post");
@@ -191,8 +190,6 @@ public class PostService {
     }
 
     public int user_post_mapping(int postId, String username) {
-        int status = -1;
-
         // verify post
         Optional<Post> maybePost = postRepository.findById(postId);
         if (!maybePost.isPresent()) {
