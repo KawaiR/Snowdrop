@@ -30,11 +30,9 @@ public class Comment {
     int upvotes;
     int downvotes;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     User sender;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     Post parent;
 }
