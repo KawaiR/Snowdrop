@@ -1,5 +1,6 @@
 package com.example.snowdropserver.Controllers;
 
+import com.example.snowdropserver.Models.Domains.TagInfoDomain;
 import com.example.snowdropserver.Models.Tag;
 import com.example.snowdropserver.Services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,10 @@ public class TagController {
     @ResponseStatus(HttpStatus.CREATED)
     public int addTag(@PathVariable int plantId) {
         return tagService.addTag(plantId);
+    }
+
+    @GetMapping(value = "/list-tags")
+    public List<TagInfoDomain> listTags() {
+        return tagService.listTags();
     }
 }

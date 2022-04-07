@@ -2,6 +2,7 @@ package com.example.snowdropserver.Services;
 
 import com.example.snowdropserver.Exceptions.DuplicateTagException;
 import com.example.snowdropserver.Exceptions.PlantNotFoundException;
+import com.example.snowdropserver.Models.Domains.TagInfoDomain;
 import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Models.Tag;
 import com.example.snowdropserver.Repositories.PlantRepository;
@@ -55,5 +56,9 @@ public class TagService {
         tagRepository.save(tag);
 
         return tag.getId();
+    }
+
+    public List<TagInfoDomain> listTags() {
+        return tagRepository.getAllTags();
     }
 }
