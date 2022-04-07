@@ -1,5 +1,6 @@
 package com.example.snowdropserver.Services;
 
+import com.example.snowdropserver.Exceptions.CommentNotFoundException;
 import com.example.snowdropserver.Exceptions.PostNotFoundException;
 import com.example.snowdropserver.Exceptions.UserNotFoundException;
 import com.example.snowdropserver.Models.Comment;
@@ -62,5 +63,18 @@ public class CommentService {
         commentRepository.save(comment);
 
         return comment.getId();
+    }
+
+    public int deleteComment(int commentId) {
+        Optional<Comment> maybeComment = commentRepository.findById(commentId);
+        if (!maybeComment.isPresent()) {
+            System.out.println("no comment was found with this id");
+            throw new CommentNotFoundException();
+        }
+
+        Comment comment = maybeComment.get();
+        commentRepository.delete(comment);
+
+        return commentId;
     }
 }

@@ -34,4 +34,9 @@ public class CommentController {
     public int createComment(@PathVariable int postId, @RequestBody CreateCommentDomain createCommentDomain) {
         return commentService.createComment(postId, createCommentDomain);
     }
+
+    @PostMapping(value = "/{commentId}/delete-comment")
+    public int deleteComment(@PathVariable int commentId) {
+        return commentService.deleteComment(commentId);
+    }
 }

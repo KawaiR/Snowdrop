@@ -652,7 +652,7 @@ public class TestingUtils {
         httpPost.setHeader("Content-type", "application/json");
 
 
-        System.out.println("**** MAKING CREATE POST REQUEST ****");
+        System.out.println("**** MAKING CREATE COMMENT REQUEST ****");
         CloseableHttpResponse response = client.execute(httpPost);
 
         int commentId = -1;
@@ -663,8 +663,24 @@ public class TestingUtils {
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();
 
-        System.out.println("post created: " + commentId);
+        System.out.println("comment created: " + commentId);
 
         return commentId;
+    }
+
+    public static void deleteCommentAndExpect(int commentId, int expectedStatusCode)
+            throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/comments/" + commentId + "/delete-comment");
+
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        System.out.println("**** MAKING DELETE COMMENT REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
     }
 }
