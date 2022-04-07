@@ -36,7 +36,6 @@ public class CommentController {
     }
 
     @PostMapping(value = "/{commentId}/delete-comment")
-    @ResponseStatus(HttpStatus.CREATED)
     public int deleteComment(@PathVariable int commentId) {
         return commentService.deleteComment(commentId);
     }
