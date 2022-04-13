@@ -1,5 +1,6 @@
 package com.example.snowdropserver.Repositories;
 
+import com.example.snowdropserver.Models.Domains.TagInfoDomain;
 import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Models.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;

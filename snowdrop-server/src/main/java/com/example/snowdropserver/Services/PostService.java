@@ -1,9 +1,6 @@
 package com.example.snowdropserver.Services;
 
-import com.example.snowdropserver.Exceptions.PlantNotFoundException;
-import com.example.snowdropserver.Exceptions.PostNotFoundException;
-import com.example.snowdropserver.Exceptions.TagNotFoundException;
-import com.example.snowdropserver.Exceptions.UserNotFoundException;
+import com.example.snowdropserver.Exceptions.*;
 import com.example.snowdropserver.Models.*;
 import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Repositories.*;
@@ -213,6 +210,29 @@ public class PostService {
         }
 
         return vote;
+    }
+
+    public void deletePost(int postId, DeletePostDomain deletePostDomain) {
+        Optional<Post> maybePost = postRepository.findById(postId);
+        if (!maybePost.isPresent()) {
+            System.out.println("no post was found with this id");
+            throw new PostNotFoundException();
+        }
+        Post post = maybePost.get();
+
+        Optional<User> maybeUser = userRepository.getByUserName(deletePostDomain.getUsername());
+        if (!maybeUser.isPresent()) {
+            System.out.println("no user found with this username.");
+            throw new UserNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        if (!post.getSender().getUserName().equals(user.getUserName())) {
+            System.out.println("User didn't make this post");
+            throw new NotSenderException();
+        }
+
+        postRepository.delete(post);
     }
 
 }
