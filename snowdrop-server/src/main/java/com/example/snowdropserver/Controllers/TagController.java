@@ -34,9 +34,4 @@ public class TagController {
     public int addTag(@PathVariable int plantId) {
         return tagService.addTag(plantId);
     }
-
-    @GetMapping(value = "/list-tags")
-    public List<TagInfoDomain> listTags() {
-        return tagService.listTags();
-    }
 }

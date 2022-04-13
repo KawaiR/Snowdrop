@@ -13,5 +13,4 @@ import java.util.Optional;
 public interface TagRepository extends JpaRepository<Tag, Integer> {
     Optional<Tag> getByPlant(Plant plant);
     Optional<Tag> getById(int tagId);
-    List<TagInfoDomain> getAllTags();
 }

@@ -55,4 +55,9 @@ public class PostController {
         return postService.user_post_mapping(postId, username);
     }
 
+    @PostMapping(value="/{postId}/delete-post")
+    public void deletePost(@PathVariable int postId, @RequestBody DeletePostDomain deletePostDomain) {
+        postService.deletePost(postId, deletePostDomain);
+    }
+
 }

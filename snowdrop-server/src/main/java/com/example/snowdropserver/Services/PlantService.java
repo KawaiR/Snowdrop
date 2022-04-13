@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -366,5 +367,24 @@ public class PlantService {
         } else {
             return false;
         }
+    }
+
+    public List<WaterSchedulesDomain> getWaterSchedules(String username) {
+       User user = userService.authenticate_user(username);
+
+       List<PlantCare> userPlants = plantCareRepository.getByUser(user);
+
+       List<WaterSchedulesDomain> waterSchedules = new ArrayList<>();
+       for (PlantCare pc: userPlants) {
+           WaterSchedulesDomain waterSchedulesDomain = WaterSchedulesDomain.builder()
+                   .waterNext(pc.getWaterNext())
+                   .plantCareId(pc.getId())
+                   .nickname(pc.getNickname())
+                   .build();
+
+           waterSchedules.add(waterSchedulesDomain);
+       }
+
+       return waterSchedules;
     }
 }
