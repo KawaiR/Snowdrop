@@ -57,8 +57,4 @@ public class TagService {
 
         return tag.getId();
     }
-
-    public List<TagInfoDomain> listTags() {
-        return tagRepository.getAllTags();
-    }
 }
