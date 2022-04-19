@@ -45,9 +45,6 @@ public class User {
     @Column(name="expertise_level")
     String expertiseLevel;
 
-    @Column(name="total_score")
-    int totalScore;
-
 //    @OneToMany(mappedBy = "user")
 //    @JsonManagedReference
 //    @ToString.Exclude

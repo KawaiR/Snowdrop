@@ -93,6 +93,7 @@ public class UserService {
                 .authTokenHash(authTokenHash)
                 .googleID(null)
                 .totalPoints(0)
+                .expertiseLevel("")
                 .editorPrivilege(0)
                 .build();
 
@@ -167,6 +168,7 @@ public class UserService {
             return AuthConfirmDomain.builder()
                     .authTokenHash(authTokenHash)
                     .userName(user.getUserName())
+                    .userId(user.getId())
                     .build();
         }
     }
@@ -356,6 +358,24 @@ public class UserService {
         simpleMailMessage.setText("The email for " + user.getUserName() + " was changed.");
         simpleMailMessage.setFrom("snowdrop.plantapp@gmail.com");
         javaMailSender.send(simpleMailMessage);
+    }
+
+    public UserInfoDomain getUserInfo(int userId) {
+        Optional<User> maybeUser = userRepository.findById(userId);
+        if (!maybeUser.isPresent()) {
+            System.out.println("No user with this ID was found.");
+            throw new UserNotFoundException();
+        }
+
+        User user = maybeUser.get();
+        UserInfoDomain userInfoDomain = UserInfoDomain.builder()
+                .editorPrivilege(user.getEditorPrivilege())
+                .email(user.getEmail())
+                .username(user.getUserName())
+                .totalPoints(user.getTotalPoints())
+                .build();
+
+        return userInfoDomain;
     }
 
     // executed every 15 minutes

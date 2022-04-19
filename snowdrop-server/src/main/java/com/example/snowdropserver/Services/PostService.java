@@ -130,6 +130,7 @@ public class PostService {
             throw new PostNotFoundException();
         }
         Post post = maybePost.get();
+        User postSender = post.getSender();
 
         int userVote = user_post_mapping(post.getId(), user.getUserName());
 
@@ -166,6 +167,10 @@ public class PostService {
        newScore = numUpvotes - numDownvotes;
        post.setDownvotes(numDownvotes);
        post.setUpvotes(numUpvotes);
+
+       // update post sender score
+       postSender.setTotalPoints(postSender.getTotalPoints() - post.getTotalScore() + newScore);
+       // update total score to be displayed
        post.setTotalScore(newScore);
 
        if (userVote == -1) { // user is voting for the first time

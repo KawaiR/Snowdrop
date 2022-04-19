@@ -6,18 +6,18 @@ import org.junit.jupiter.api.Test;
 public class TestVoteOnPost {
     @Test
     public void testUpvote() throws Exception {
-        TestingUtils.createUserAndExpect("testUpvote",
-                "testUpvote@test.com",
-                "testUpvote",
+        TestingUtils.createUserAndExpect("testUpvote8",
+                "testUpvote8@test.com",
+                "testUpvote8",
                 201);
-        int postId = TestingUtils.createPostAndExpect("testUpvote",
-                "testUpvote",
-                "testUpvote",
+        int postId = TestingUtils.createPostAndExpect("testUpvote8",
+                "testUpvote8",
+                "testUpvote8",
                 74,
                 201);
         TestingUtils.voteAndExpect(postId,
-                "testUpvote",
-                1,
+                "testUpvote8",
+                0,
                 200);
     }
 
