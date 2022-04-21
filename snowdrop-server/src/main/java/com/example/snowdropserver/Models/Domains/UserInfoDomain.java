@@ -1,7 +1,9 @@
 package com.example.snowdropserver.Models.Domains;
 
+import com.example.snowdropserver.Models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 
 @Value
@@ -12,4 +14,11 @@ public class UserInfoDomain {
     String email;
     int totalPoints;
     int editorPrivilege;
+
+    public UserInfoDomain() {
+        username = "";
+        email = "";
+        totalPoints = 0;
+        editorPrivilege = 0;
+    }
 }

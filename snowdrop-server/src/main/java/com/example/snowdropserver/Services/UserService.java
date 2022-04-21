@@ -360,10 +360,10 @@ public class UserService {
         javaMailSender.send(simpleMailMessage);
     }
 
-    public UserInfoDomain getUserInfo(int userId) {
-        Optional<User> maybeUser = userRepository.findById(userId);
+    public UserInfoDomain getUserInfo(String username) {
+        Optional<User> maybeUser = userRepository.getByUserName(username);
         if (!maybeUser.isPresent()) {
-            System.out.println("No user with this ID was found.");
+            System.out.println("No user with this username was found.");
             throw new UserNotFoundException();
         }
 
@@ -457,6 +457,39 @@ public class UserService {
             throw new UserNotFoundException();
         }
         return maybeUser.get();
+    }
+
+    /*
+     * pre-condition: user was authenticated and exists
+     */
+    public boolean level_up(User user) {
+        int points = user.getTotalPoints();
+        String currentLevel = user.getExpertiseLevel();
+        boolean changedStatus = false;
+
+        if (points <= 100 && !currentLevel.equals("Novice")) {
+            user.setExpertiseLevel("Novice");
+            changedStatus = true;
+        } else if (points <= 1000 && !currentLevel.equals("Beginner")) {
+            user.setExpertiseLevel("Beginner");
+            changedStatus = true;
+        } else if (points <= 5000 && !currentLevel.equals("Intermediate")) {
+            user.setExpertiseLevel("Intermediate");
+            changedStatus = true;
+        } else if (points <= 10000 && !currentLevel.equals("Enthusiast")) {
+            user.setExpertiseLevel("Enthusiast");
+            changedStatus = true;
+        } else if (points <= 100000 && !currentLevel.equals("Expert")) {
+            user.setExpertiseLevel("Expert");
+            changedStatus = true;
+        } else if (points <= 500000 && !currentLevel.equals("Advanced")) {
+            user.setExpertiseLevel("Advanced");
+            changedStatus = true;
+        }
+
+        userRepository.save(user);
+
+        return changedStatus;
     }
 
     public boolean check_email_exists(String email) {
