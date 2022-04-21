@@ -23,6 +23,7 @@ import IndPostPage from './pages/IndPostPage/IndPostPage.js';
 import PostListPage from './pages/PostListPage/PostListPage.js';
 import Plant_Care_Recommendation from './pages/plantCare/Plant_Care_Recommendation.js';
 import { LogBox } from 'react-native';
+import Home from './pages/home/Home.js';
 LogBox.ignoreLogs(['Warning: ...']);
 
 const Stack = createNativeStackNavigator();
@@ -44,6 +45,7 @@ export default function App() {
         <Stack.Screen name="Page_Sign_In" component={Page_Sign_In} />
         <Stack.Screen name="Page_Create_Account" component={Page_Create_Account} />
         <Stack.Screen name="Location_Permission" component={Location_Permission} />
+        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Page_Profile_Email_Account" component={Page_Profile_Email_Account} />
         <Stack.Screen name="Page_Forgot_Password" component={Page_Forgot_Password} />
         <Stack.Screen name="Page_Change_Password" component={Page_Change_Password} />
