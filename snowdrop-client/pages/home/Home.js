@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Text, View, StyleSheet, Dimensions, ScrollView, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { Appbar, Card, Paragraph, Avatar, IconButton } from 'react-native-paper';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
@@ -34,7 +34,7 @@ const Home = ({ route, navigation }) => {
             getWeatherApiData();
             getPlants();
         }
-    }, [isFocused, city, region, currTemperature, maxTemperature, minTemperature, conditionText, conditionUrl, plantsList]);
+    }, [isFocused, city, region, currTemperature, maxTemperature, minTemperature, conditionText, conditionUrl]);
 
 
     async function getWeatherApiData() {
@@ -83,7 +83,6 @@ const Home = ({ route, navigation }) => {
                     }
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
-                            //console.log(result);
                             setPlantsList(result.caredFor.slice(0, 3));
                         });
                     }
@@ -102,13 +101,13 @@ const Home = ({ route, navigation }) => {
             </Appbar.Header>
 
             <ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
-                <View style={styles.weatherContainer}>
+                { locationAllowed && <View style={styles.weatherContainer}>
                     <View style={styles.rowContainer}>
-                        <View style={{ alignItems: "flex-start", }}>
+                        <View style={{ alignItems: "flex-start", paddingHorizontal: 10, }}>
                             <Text style={[styles.weatherText, { fontSize: 18, }]}>{city}, {region}</Text>
                             <Text style={styles.weatherText}>Current: {currTemperature} °F</Text>
                         </View>
-                        <View style={{ alignItems: "flex-end", }}>
+                        <View style={{ alignItems: "flex-end", paddingHorizontal: 10, }}>
                             <View style={{ flexDirection: "row", }}>
                                 <Avatar.Image
                                     source={{ uri: conditionUrl }}
@@ -121,12 +120,12 @@ const Home = ({ route, navigation }) => {
                             <Text style={styles.weatherText}>L: {minTemperature} °F</Text>
                         </View>
                     </View>
-                </View>
+                </View>}
 
                 <View style={styles.upcomingView}>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <Text style={styles.upcomingText}>Upcoming Watering</Text>
-                        <Text style={[styles.upcomingText, { fontSize: 16, fontWeight: 'normal', color: 'grey', textDecorationLine: "underline" }]}>View all</Text>
+                        <Text style={styles.viewAllText}>View all</Text>
                     </View>
 
                     <View>
@@ -220,13 +219,12 @@ const styles = StyleSheet.create({
     weatherText: {
         color: "white",
         fontFamily: "Lato_400Regular",
-        paddingHorizontal: width * 0.1,
         fontSize: 14,
     },
 
     // Upcoming reminder panel
     upcomingView: {
-        marginTop: 20,
+        marginTop: 30,
         alignSelf: 'center',
         backgroundColor: 'white',
         width: width * 390 / defaultW,
@@ -236,6 +234,15 @@ const styles = StyleSheet.create({
     upcomingText: {
         fontSize: 20,
         fontWeight: '500',
+        marginHorizontal: width * 15 / defaultW,
+        marginTop: height * 20 / defaultH,
+        marginBottom: height * 22 / defaultH,
+    },
+    viewAllText: {
+        fontSize: 16,
+        fontWeight: 'normal',
+        color: 'grey',
+        textDecorationLine: "underline",
         marginHorizontal: width * 15 / defaultW,
         marginTop: height * 20 / defaultH,
         marginBottom: height * 22 / defaultH,
