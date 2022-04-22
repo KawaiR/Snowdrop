@@ -247,7 +247,7 @@ public class PostService {
             throw new NotSenderException();
         }
 
-        post.setContent("[This post was deleted, but you can view the discussion below]");
+        post.setContent("[This post was deleted]");
         postRepository.save(post);
     }
 
