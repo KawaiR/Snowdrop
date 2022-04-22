@@ -711,6 +711,34 @@ public class TestingUtils {
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();
     }
+  
+      public static UserInfoDomain getUserInfoAndExpect(String username, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(baseUrl + "/users/" + username + "/get-info");
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING GET USER INFO REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpGet);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        UserInfoDomain userInfoDomain = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            userInfoDomain = objectMapper.readValue(jsonResponse,
+                    new TypeReference<UserInfoDomain>() {
+                    });
+        }
+        client.close();
+
+        return userInfoDomain;
+    }
 
     public static List<WaterSchedulesDomain> getWaterSchedulesAndExpect(String username,
                                                                         int expectedStatusCode) throws Exception {
@@ -718,9 +746,9 @@ public class TestingUtils {
 
         HttpGet httpGet = new HttpGet(baseUrl + "/plants/" + username + "/get-water-schedules");
 
+
         httpGet.setHeader("Accept", "application/json");
         httpGet.setHeader("Content-type", "application/json");
-
 
         System.out.println("**** MAKING GET WATER SCHEDULES REQUEST ****");
         CloseableHttpResponse response = client.execute(httpGet);
@@ -737,7 +765,6 @@ public class TestingUtils {
                     });
         }
         client.close();
-
         return waterSchedules;
     }
 }

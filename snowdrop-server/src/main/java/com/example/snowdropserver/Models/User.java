@@ -42,6 +42,9 @@ public class User {
     @Column(name="editor_privilege")
     int editorPrivilege;
 
+    @Column(name="expertise_level")
+    String expertiseLevel;
+
 //    @OneToMany(mappedBy = "user")
 //    @JsonManagedReference
 //    @ToString.Exclude
