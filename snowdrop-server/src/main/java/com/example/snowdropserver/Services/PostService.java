@@ -168,8 +168,6 @@ public class PostService {
            }
        }
 
-
-
        newScore = numUpvotes - numDownvotes;
        post.setDownvotes(numDownvotes);
        post.setUpvotes(numUpvotes);
@@ -249,7 +247,8 @@ public class PostService {
             throw new NotSenderException();
         }
 
-        postRepository.delete(post);
+        post.setContent("[This post was deleted, but you can view the discussion below]");
+        postRepository.save(post);
     }
 
 }
