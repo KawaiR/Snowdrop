@@ -46,6 +46,10 @@ public class Plant {
     @Column(name="reported_sunlight")
     int reportedSunlight;
 
+    // B: Beginner, I: Intermediate, E: Expert
+    @Column(name="difficulty")
+    String difficulty;
+
 //    @OneToMany(mappedBy = "plant")
 //    @ToString.Exclude
 //    List<PlantCare> caredFor;

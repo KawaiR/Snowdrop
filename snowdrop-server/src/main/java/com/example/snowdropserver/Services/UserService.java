@@ -93,6 +93,7 @@ public class UserService {
                 .authTokenHash(authTokenHash)
                 .googleID(null)
                 .totalPoints(0)
+                .expertiseLevel("")
                 .editorPrivilege(0)
                 .build();
 
@@ -167,6 +168,7 @@ public class UserService {
             return AuthConfirmDomain.builder()
                     .authTokenHash(authTokenHash)
                     .userName(user.getUserName())
+                    .userId(user.getId())
                     .build();
         }
     }
@@ -358,6 +360,24 @@ public class UserService {
         javaMailSender.send(simpleMailMessage);
     }
 
+    public UserInfoDomain getUserInfo(String username) {
+        Optional<User> maybeUser = userRepository.getByUserName(username);
+        if (!maybeUser.isPresent()) {
+            System.out.println("No user with this username was found.");
+            throw new UserNotFoundException();
+        }
+
+        User user = maybeUser.get();
+        UserInfoDomain userInfoDomain = UserInfoDomain.builder()
+                .editorPrivilege(user.getEditorPrivilege())
+                .email(user.getEmail())
+                .username(user.getUserName())
+                .totalPoints(user.getTotalPoints())
+                .build();
+
+        return userInfoDomain;
+    }
+
     // executed every 15 minutes
     @Scheduled(fixedRate = 900000)
     public void removeExpiredTokens() {
@@ -450,6 +470,39 @@ public class UserService {
             throw new UserNotFoundException();
         }
         return maybeUser.get();
+    }
+
+    /*
+     * pre-condition: user was authenticated and exists
+     */
+    public boolean level_up(User user) {
+        int points = user.getTotalPoints();
+        String currentLevel = user.getExpertiseLevel();
+        boolean changedStatus = false;
+
+        if (points <= 100 && !currentLevel.equals("Novice")) {
+            user.setExpertiseLevel("Novice");
+            changedStatus = true;
+        } else if (points <= 1000 && !currentLevel.equals("Beginner")) {
+            user.setExpertiseLevel("Beginner");
+            changedStatus = true;
+        } else if (points <= 5000 && !currentLevel.equals("Intermediate")) {
+            user.setExpertiseLevel("Intermediate");
+            changedStatus = true;
+        } else if (points <= 10000 && !currentLevel.equals("Enthusiast")) {
+            user.setExpertiseLevel("Enthusiast");
+            changedStatus = true;
+        } else if (points <= 100000 && !currentLevel.equals("Expert")) {
+            user.setExpertiseLevel("Expert");
+            changedStatus = true;
+        } else if (points <= 500000 && !currentLevel.equals("Advanced")) {
+            user.setExpertiseLevel("Advanced");
+            changedStatus = true;
+        }
+
+        userRepository.save(user);
+
+        return changedStatus;
     }
 
     public boolean check_email_exists(String email) {

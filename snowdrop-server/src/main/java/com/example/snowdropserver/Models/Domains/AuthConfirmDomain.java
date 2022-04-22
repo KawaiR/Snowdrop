@@ -11,9 +11,11 @@ import lombok.Value;
 public class AuthConfirmDomain {
     private String authTokenHash;
     private String userName;
+    private int userId;
 
     public AuthConfirmDomain() {
         authTokenHash = null;
         userName = null;
+        userId = 0;
     }
 }
