@@ -32,7 +32,7 @@ const PostListPage  = ({navigation}) => {
 					response.json().then((result) => {
                         console.log('success');
 						console.log(result);
-                        setPosts(result)
+                        setPosts(result.reverse())
 					});
 				}
 			});

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, ScrollView, Image, Dimensions, Alert } from "react-native";
-import { Appbar, Chip, Card, FAB, IconButton, ToggleButton } from 'react-native-paper';
+import { Appbar, Chip, Portal, Dialog, IconButton, Button, Provider, TextInput } from 'react-native-paper';
 
 import styles from './IndPostPageStyle.js';
 
@@ -21,6 +21,9 @@ const IndPostPage  = ({route, navigation}) => {
     const [status, setStatus] = React.useState(-1);
     const [upvoteSelected, setUpvoteSelected] = React.useState(0);
     const [downvoteSelected, setDownvoteSelected] = React.useState(0);
+
+    const [deleteVisible, setDeleteVisible] = React.useState(false);
+    const [newComment, setNewComment] = React.useState("");
 
 
     useEffect(() => {
@@ -74,6 +77,11 @@ const IndPostPage  = ({route, navigation}) => {
 		}
     }
 
+    async function deletePost() {
+        setDeleteVisible(false)
+        console.log("deletePost")
+    }
+
     async function getVoteResult(id) {
         console.log("getVoteResult");
         try {
@@ -100,6 +108,11 @@ const IndPostPage  = ({route, navigation}) => {
 			console.log("Fetch didnt work.");
 			console.log(err);
 		}
+    }
+
+    async function makeComment() {
+        console.log(newComment);
+        setNewComment("");
     }
 
     async function voteRequest(newVote) {
@@ -139,6 +152,7 @@ const IndPostPage  = ({route, navigation}) => {
     }
 
 	return (
+    <Provider>
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_PostList")}/>
@@ -165,8 +179,45 @@ const IndPostPage  = ({route, navigation}) => {
             </ToggleButton.Row> */}
             <Chip icon="thumb-up" onPress={() => voteRequest(1)} selected={upvoteSelected} textStyle={{fontSize: 12,}} style={styles.chip}>{upvote}</Chip>
             <Chip icon="thumb-down" onPress={() => voteRequest(0)} textStyle={{fontSize: 12,}} selected={downvoteSelected} style={styles.chip}>{downvote}</Chip>
+            {(global.userName == userName) && <IconButton icon="trash-can" style={{marginLeft: 'auto'}} onPress={() => setDeleteVisible(true)}></IconButton>}
         </View>
         </View>
+        <View style={styles.textInputView}>
+            <TextInput
+                style={styles.textInput}
+                label="New Comment"
+                activeUnderlineColor="#005500"
+                placeholder="New comment"
+                value={newComment}
+                multiline={true}
+                onChangeText={text => setNewComment(text)}
+            />
+            {(newComment != "") && <IconButton icon="send" onPress={makeComment}></IconButton>}
+        </View>
+
+        <View style={styles.post}>
+        <View style={styles.postContent}>
+            <View style={styles.postHeader}>
+                <Text>{"TODO: userName"}</Text>
+                <Text style={{textAlign:'right', flex: 1}}>TODO: date</Text>
+            </View>
+            <View style={styles.lineBreak}></View>
+            <Text>TODO: content</Text>
+        </View>
+        </View>
+
+        <Portal>
+            <Dialog visible={deleteVisible} onDismiss={() => setDeleteVisible(false)}>
+                <Dialog.Title>Deleting Post</Dialog.Title>
+                <Dialog.Content>
+                <Text>Do you want to delete this post?</Text>
+                </Dialog.Content>
+                <Dialog.Actions>
+                <Button onPress={deletePost}>Yes</Button>
+                <Button onPress={() => setDeleteVisible(false)}>Cancel</Button>
+                </Dialog.Actions>
+            </Dialog>
+        </Portal>
         
 	</ScrollView>
     <Appbar style={styles.bottom}>
@@ -176,5 +227,6 @@ const IndPostPage  = ({route, navigation}) => {
         <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
     </Appbar>
     </View>
+    </Provider>
 )}
 export default IndPostPage
