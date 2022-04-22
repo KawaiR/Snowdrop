@@ -138,7 +138,7 @@ const Page_Create_Account  = ({navigation}) => {
 								AsyncStorage.setItem("userName",global.userName);
 								// navigation.navigate("Location_Permission");
 								setLocation();
-								navigation.navigate("Page_Profile_Google_Account");
+								navigation.navigate("Home");
 							})
 						}
 					})	
@@ -189,7 +189,7 @@ const Page_Create_Account  = ({navigation}) => {
 						AsyncStorage.setItem("userName",global.userName);
 						// navigation.navigate("Location_Permission");
 						setLocation();
-						navigation.navigate("Page_Profile_Email_Account");
+						navigation.navigate("Home");
 					});
 				}
 			})

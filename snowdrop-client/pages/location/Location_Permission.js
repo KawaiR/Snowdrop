@@ -29,7 +29,7 @@ const Location_Permission  = ({navigation}) => {
 	return (
 		<View style={styles.container}>
 			<Text style={styles.paragraph}>{text}</Text>
-			<TouchableOpacity style={styles.button} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}}  >
+			<TouchableOpacity style={styles.button} onPress={() => { navigation.navigate("Home"); } }  >
 				<Text style={styles.buttonText}   >
 					Done
 				</Text>

@@ -143,7 +143,7 @@ const Page_Create_Google_Username  = ({navigation}) => {
 						// AsyncStorage.setItem("authTokenHash",global.authTokenHash);
 						// navigation.navigate("Location_Permission");
 						setLocation();
-						navigation.navigate("Page_Profile_Google_Account");
+						navigation.navigate("Home");
 					})
 				}				
 			})
