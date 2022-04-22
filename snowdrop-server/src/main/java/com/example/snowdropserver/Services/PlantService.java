@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -173,9 +174,9 @@ public class PlantService {
             throw new UserNotFoundException();
         }
         User user = maybeUser.get();
-
+        List<PlantCare> caredFor = plantCareRepository.getByUser(user);
         UserPlantsDomain userPlantsDomain = UserPlantsDomain.builder()
-                .caredFor(plantCareRepository.getByUser(user))
+                .caredFor(caredFor)
                 .build();
 
         return userPlantsDomain;

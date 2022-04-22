@@ -46,7 +46,7 @@ public class Plant {
     @Column(name="reported_sunlight")
     int reportedSunlight;
 
-    // N: Novice, B: Beginner, I: Intermediate, E: Enthusiast, X: Expert, A: Advanced
+    // B: Beginner, I: Intermediate, E: Expert
     @Column(name="difficulty")
     String difficulty;
 
