@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Text, View, StyleSheet, Dimensions, ScrollView, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { Appbar, Card, Paragraph, Avatar } from 'react-native-paper';
+import { Appbar, Card, Paragraph, Avatar, IconButton } from 'react-native-paper';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
@@ -25,12 +25,16 @@ const Home = ({ route, navigation }) => {
     const [region, setRegion] = React.useState("");
     const [locationAllowed, setLocationAllowed] = React.useState(false);
 
+    const [upcomingWatered, setUpcomingWatered] = React.useState();
+    const [plantsList, setPlantsList] = React.useState([]);
+
     const isFocused = useIsFocused()
     useEffect(() => {
         if (isFocused) {
             getWeatherApiData();
+            getPlants();
         }
-    }, [isFocused, city, region, currTemperature, maxTemperature, minTemperature, conditionText, conditionUrl]);
+    }, [isFocused, city, region, currTemperature, maxTemperature, minTemperature, conditionText, conditionUrl, plantsList]);
 
 
     async function getWeatherApiData() {
@@ -66,6 +70,30 @@ const Home = ({ route, navigation }) => {
         return <AppLoading />
     }
 
+    async function getPlants() {
+        try {
+            let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + global.userName + '/get-user-plants', { method: 'GET' })
+                .then((response) => {
+                    if (response.status == 400) {
+                        response.json().then((result) => {
+                            console.log('fail');
+                            console.log(result.message);
+                            console.log('fail');
+                        });
+                    }
+                    if (response.status == 200 || response.status == 201 || response.status == 202) {
+                        response.json().then((result) => {
+                            //console.log(result);
+                            setPlantsList(result.caredFor.slice(0, 3));
+                        });
+                    }
+                });
+        } catch (err) {
+            console.log("Fetch didnt work.");
+            console.log(err);
+        }
+    }
+
     return (
         <View style={styles.container}>
             {/* Header */}
@@ -77,21 +105,45 @@ const Home = ({ route, navigation }) => {
                 <View style={styles.weatherContainer}>
                     <View style={styles.rowContainer}>
                         <View style={{ alignItems: "flex-start", }}>
-                            <Text style={[styles.weatherText, { fontSize: 20, }]}>{city}, {region}</Text>
+                            <Text style={[styles.weatherText, { fontSize: 18, }]}>{city}, {region}</Text>
                             <Text style={styles.weatherText}>Current: {currTemperature} °F</Text>
                         </View>
                         <View style={{ alignItems: "flex-end", }}>
-                            <View style={{flexDirection: "row", }}>
+                            <View style={{ flexDirection: "row", }}>
                                 <Avatar.Image
                                     source={{ uri: conditionUrl }}
                                     size={width * 0.06}
                                     style={styles.weatherImage}
                                 />
-                                <Text style={[styles.weatherText, { fontSize: 18, paddingLeft: 5,}]}>{conditionText}</Text>
+                                <Text style={[styles.weatherText, { fontSize: 16, paddingLeft: 5, }]}>{conditionText}</Text>
                             </View>
                             <Text style={styles.weatherText}>H: {maxTemperature} °F</Text>
                             <Text style={styles.weatherText}>L: {minTemperature} °F</Text>
                         </View>
+                    </View>
+                </View>
+
+                <View style={styles.upcomingView}>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                        <Text style={styles.upcomingText}>Upcoming Watering</Text>
+                        <Text style={[styles.upcomingText, { fontSize: 16, fontWeight: 'normal', color: 'grey', textDecorationLine: "underline" }]}>View all</Text>
+                    </View>
+
+                    <View>
+                        {plantsList.map((plantCare) =>
+                            <Card mode="outlined" style={styles.card}>
+                                <Card.Title
+                                    key={plantCare.id}
+                                    style={styles.cardTitle}
+                                    titleStyle={styles.cardText}
+                                    subtitleStyle={styles.cardText}
+                                    title={(plantCare.nickname != null) ? plantCare.nickname : 'No common name'}
+                                    subtitle={(plantCare.waterNext != null) ? plantCare.waterNext : 'No water'}
+                                    left={(props) => <Avatar.Image {...props} size={height * 0.08} style={styles.cardImage} source={{ uri: plantCare.plant.plantImage }} />}
+                                    right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} />}
+                                />
+                            </Card>
+                        )}
                     </View>
                 </View>
 
@@ -168,7 +220,47 @@ const styles = StyleSheet.create({
     weatherText: {
         color: "white",
         fontFamily: "Lato_400Regular",
-        paddingHorizontal: width * 0.05,
-        fontSize: 16,
+        paddingHorizontal: width * 0.1,
+        fontSize: 14,
+    },
+
+    // Upcoming reminder panel
+    upcomingView: {
+        marginTop: 20,
+        alignSelf: 'center',
+        backgroundColor: 'white',
+        width: width * 390 / defaultW,
+        borderRadius: 15,
+        marginBottom: height * 27 / defaultH,
+    },
+    upcomingText: {
+        fontSize: 20,
+        fontWeight: '500',
+        marginHorizontal: width * 15 / defaultW,
+        marginTop: height * 20 / defaultH,
+        marginBottom: height * 22 / defaultH,
+    },
+    card: {
+        alignSelf: 'center',
+        backgroundColor: 'white',
+        width: width * 0.91787,
+        height: height * 0.1060,
+        borderRadius: 25,
+        marginBottom: height * 11 / defaultH,
+    },
+    cardTitle: {
+        justifyContent: 'center',
+        flex: 1,
+    },
+    cardText: {
+        marginLeft: width * 0.06,
+    },
+    cardImage: {
+        width: height * 0.08,
+        height: height * 0.08,
+        borderRadius: 1000,
+        backgroundColor: 'white',
+        borderColor: '#D3D3D3',
+        borderWidth: 1,
     },
 }); 
