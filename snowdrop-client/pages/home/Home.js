@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Text, View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
-import { Appbar, Card, Paragraph, Avatar, IconButton } from 'react-native-paper';
+import { Appbar, Card, Paragraph, Avatar, IconButton, Portal, Dialog, Button, Provider } from 'react-native-paper';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
@@ -25,8 +25,10 @@ const Home = ({ route, navigation }) => {
     const [region, setRegion] = React.useState("");
     const [locationAllowed, setLocationAllowed] = React.useState(false);
 
-    const [upcomingWatered, setUpcomingWatered] = React.useState();
     const [plantsList, setPlantsList] = React.useState([]);
+    const [waterVisible, setWaterVisible] = React.useState(false);
+    const [waterPlantId, setWaterPlantId] = React.useState(0);
+    const hideWater = () => setWaterVisible(false);
 
     const [posts, setPosts] = React.useState([]);
 
@@ -39,6 +41,15 @@ const Home = ({ route, navigation }) => {
         }
     }, [isFocused, city, region, currTemperature, maxTemperature, minTemperature, conditionText, conditionUrl]);
 
+    const waterYes = () => {
+        console.log("waterYes");
+        waterPlant(waterPlantId);
+        setWaterVisible(false);
+    }
+
+    const waterNo = () => {
+        setWaterVisible(false);
+    }
 
     async function getWeatherApiData() {
         let { status } = await Location.requestForegroundPermissionsAsync();
@@ -74,6 +85,7 @@ const Home = ({ route, navigation }) => {
     }
 
     async function getPlants() {
+        console.log("Fetching plantcare objects...");
         try {
             let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + global.userName + '/get-user-plants', { method: 'GET' })
                 .then((response) => {
@@ -85,6 +97,42 @@ const Home = ({ route, navigation }) => {
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
                             setPlantsList(result.caredFor.slice(0, 3));
+                            console.log("Plantcare objects fetched...");
+                            console.log("Plants = ", plantsList);
+                        });
+                    }
+                });
+        } catch (err) {
+            console.log("Fetch didnt work.");
+            console.log(err);
+        }
+    }
+
+    async function waterPlant(id) {
+        try {
+            let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + id + "/water-plant", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                }),
+            })
+                .then((response) => {
+                    if (response.status == 400) {
+                        response.json().then((result) => {
+                            console.log('fail');
+                            console.log(result.message);
+                            console.log('fail');
+                        });
+                    }
+                    if (response.status == 200 || response.status == 201 || response.status == 202) {
+                        response.json().then((result) => {
+                            console.log('success');
+                            console.log(result);
+                            console.log('success');
+                            getPlants();
                         });
                     }
                 });
@@ -118,101 +166,115 @@ const Home = ({ route, navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
-            {/* Header */}
-            <Appbar.Header style={styles.appbar}>
-                <Appbar.Content title={<Text style={styles.headerTitle}>SNOWDROP</Text>} style={styles.headerTitle} />
-            </Appbar.Header>
+        <Provider>
+            <View style={styles.container}>
+                {/* Header */}
+                <Appbar.Header style={styles.appbar}>
+                    <Appbar.Content title={<Text style={styles.headerTitle}>SNOWDROP</Text>} style={styles.headerTitle} />
+                </Appbar.Header>
 
-            <ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
-                {locationAllowed && <View style={styles.weatherContainer}>
-                    <View style={styles.rowContainer}>
-                        <View style={{ alignItems: "flex-start", paddingHorizontal: 10, }}>
-                            <Text style={[styles.weatherText, { fontSize: 18, }]}>{city}, {region}</Text>
-                            <Text style={styles.weatherText}>Current: {currTemperature} °F</Text>
-                        </View>
-                        <View style={{ alignItems: "flex-end", paddingHorizontal: 10, }}>
-                            <View style={{ flexDirection: "row", }}>
-                                <Avatar.Image
-                                    source={{ uri: conditionUrl }}
-                                    size={width * 0.06}
-                                    style={styles.weatherImage}
-                                />
-                                <Text style={[styles.weatherText, { fontSize: 16, paddingLeft: 5, }]}>{conditionText}</Text>
+                <ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
+                    {locationAllowed && <View style={styles.weatherContainer}>
+                        <View style={styles.rowContainer}>
+                            <View style={{ alignItems: "flex-start", paddingHorizontal: 10, }}>
+                                <Text style={[styles.weatherText, { fontSize: 18, }]}>{city}, {region}</Text>
+                                <Text style={styles.weatherText}>Current: {currTemperature} °F</Text>
                             </View>
-                            <Text style={styles.weatherText}>H: {maxTemperature} °F</Text>
-                            <Text style={styles.weatherText}>L: {minTemperature} °F</Text>
+                            <View style={{ alignItems: "flex-end", paddingHorizontal: 10, }}>
+                                <View style={{ flexDirection: "row", }}>
+                                    <Avatar.Image
+                                        source={{ uri: conditionUrl }}
+                                        size={width * 0.06}
+                                        style={styles.weatherImage}
+                                    />
+                                    <Text style={[styles.weatherText, { fontSize: 16, paddingLeft: 5, }]}>{conditionText}</Text>
+                                </View>
+                                <Text style={styles.weatherText}>H: {maxTemperature} °F</Text>
+                                <Text style={styles.weatherText}>L: {minTemperature} °F</Text>
+                            </View>
+                        </View>
+                    </View>}
+
+                    <View style={styles.upcomingView}>
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                            <Text style={styles.upcomingText}>Upcoming Watering</Text>
+                            <Text style={styles.viewAllText} onPress={() => navigation.navigate("Page_Plant")}>View all</Text>
+                        </View>
+
+                        <View>
+                            {plantsList.length > 0 && plantsList.map((plantCare) =>
+                                <Card mode="outlined" style={styles.card} onPress={() => navigation.navigate("Page_PlantDetail", { plant: plantCare, id: plantCare.id })}>
+                                    <Card.Title
+                                        key={plantCare.id}
+                                        style={styles.cardTitle}
+                                        titleStyle={styles.cardText}
+                                        subtitleStyle={styles.cardText}
+                                        title={(plantCare.nickname != null) ? plantCare.nickname : 'No common name'}
+                                        subtitle={(plantCare.waterNext != null) ? plantCare.waterNext.substring(0, 10) : 'No water'}
+                                        left={(props) => <Avatar.Image {...props} size={height * 0.08} style={styles.cardImage} source={{ uri: plantCare.plant.plantImage }} />}
+                                        right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => { setWaterVisible(true); setWaterPlantId(plantCare.id); }} />}
+                                    />
+                                </Card>
+                            )}
+                            {plantsList.length == 0 &&
+                                <Text style={{ textAlign: "center", justifyContent: "center", color: "grey", fontFamily: "Lato_400Regular", }}>No plants at this time.</Text>
+                            }
                         </View>
                     </View>
-                </View>}
 
-                <View style={styles.upcomingView}>
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <Text style={styles.upcomingText}>Upcoming Watering</Text>
-                        <Text style={styles.viewAllText} onPress={() => navigation.navigate("Page_Plant")}>View all</Text>
-                    </View>
+                    <View style={[styles.upcomingView, { marginBottom: height * 20 / defaultH, }]}>
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                            <Text style={styles.upcomingText}>Recent Posts</Text>
+                            <Text style={styles.viewAllText} onPress={() => navigation.navigate("Page_PostList")}>View all</Text>
+                        </View>
 
-                    <View>
-                        {plantsList.length > 0 && plantsList.map((plantCare) =>
-                            <Card mode="outlined" style={styles.card}>
-                                <Card.Title
-                                    key={plantCare.id}
-                                    style={styles.cardTitle}
-                                    titleStyle={styles.cardText}
-                                    subtitleStyle={styles.cardText}
-                                    title={(plantCare.nickname != null) ? plantCare.nickname : 'No common name'}
-                                    subtitle={(plantCare.waterNext != null) ? plantCare.waterNext : 'No water'}
-                                    left={(props) => <Avatar.Image {...props} size={height * 0.08} style={styles.cardImage} source={{ uri: plantCare.plant.plantImage }} />}
-                                    right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} />}
-                                />
-                            </Card>
-                        )}
-                        {plantsList.length == 0 &&
-                            <Text style={{textAlign: "center", justifyContent: "center", color: "grey", fontFamily: "Lato_400Regular",}}>No plants at this time.</Text>
-                        }
-                    </View>
-                </View>
-
-                <View style={[styles.upcomingView, {marginBottom: height * 20 / defaultH,}]}>
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <Text style={styles.upcomingText}>Recent Posts</Text>
-                        <Text style={styles.viewAllText} onPress={() => navigation.navigate("Page_PostList")}>View all</Text>
-                    </View>
-
-                    <View>
-                        {posts.length > 0 && posts.map((post) =>
-                            <TouchableOpacity style={styles.post} onPress={() => {
-                                navigation.navigate('Page_IndPost', { id: post.id });
-                            }}>
-                                <View style={styles.postContent}>
-                                    <View style={styles.postHeader}>
-                                        <Text style={{color: "grey", fontFamily: "Lato_400Regular",}}>{post.sender.userName}</Text>
-                                        <Text style={{color: "grey", fontFamily: "Lato_400Regular", textAlign: 'right', flex: 1 }}>{post.uploadDate}</Text>
+                        <View>
+                            {posts.length > 0 && posts.map((post) =>
+                                <TouchableOpacity style={styles.post} onPress={() => {
+                                    navigation.navigate('Page_IndPost', { id: post.id });
+                                }}>
+                                    <View style={styles.postContent}>
+                                        <View style={styles.postHeader}>
+                                            <Text style={{ color: "grey", fontFamily: "Lato_400Regular", }}>{post.sender.userName}</Text>
+                                            <Text style={{ color: "grey", fontFamily: "Lato_400Regular", textAlign: 'right', flex: 1 }}>{post.uploadDate}</Text>
+                                        </View>
+                                        <View style={styles.lineBreak}></View>
+                                        <Text style={styles.title}>{post.postTitle}</Text>
+                                        <TouchableOpacity style={styles.tagButton} onPress={() => { }}>
+                                            <Text style={styles.tagText}>{post.tag.plant.plantImage === "general-tag" ? "General" : (post.tag.plant.plantImage === "advice-tag" ? "Advice" : post.tag.plant.plantName)}</Text>
+                                        </TouchableOpacity>
                                     </View>
-                                    <View style={styles.lineBreak}></View>
-                                    <Text style={styles.title}>{post.postTitle}</Text>
-                                    <TouchableOpacity style={styles.tagButton} onPress={() => { }}>
-                                        <Text style={styles.tagText}>{post.tag.plant.plantImage === "general-tag" ? "General" : (post.tag.plant.plantImage === "advice-tag" ? "Advice" : post.tag.plant.plantName)}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </TouchableOpacity>
-                        )}
-                        {posts.length == 0 && 
-                            <Text style={{textAlign: "center", justifyContent: "center", color: "grey", fontFamily: "Lato_400Regular",}}>No posts at this time.</Text>
-                        }
+                                </TouchableOpacity>
+                            )}
+                            {posts.length == 0 &&
+                                <Text style={{ textAlign: "center", justifyContent: "center", color: "grey", fontFamily: "Lato_400Regular", }}>No posts at this time.</Text>
+                            }
+                        </View>
                     </View>
-                </View>
 
-            </ScrollView>
+                    <Portal>
+                        <Dialog visible={waterVisible} onDismiss={hideWater}>
+                            <Dialog.Title>Water</Dialog.Title>
+                            <Dialog.Content>
+                                <Text>Did you water your plant today?</Text>
+                            </Dialog.Content>
+                            <Dialog.Actions>
+                                <Button onPress={waterYes}>Yes</Button>
+                                <Button onPress={waterNo}>Exit</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal>
+                </ScrollView>
 
-            {/* Bottom Nav bar */}
-            <Appbar style={styles.bottom}>
-                <Appbar.Action icon="home" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} onPress={() => navigation.navigate("Home")} />
-                <Appbar.Action icon="leaf" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
-                <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList")} />
-                <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => { if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); } }} />
-            </Appbar>
-        </View>
+                {/* Bottom Nav bar */}
+                <Appbar style={styles.bottom}>
+                    <Appbar.Action icon="home" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} onPress={() => navigation.navigate("Home")} />
+                    <Appbar.Action icon="leaf" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
+                    <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList")} />
+                    <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => { if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); } }} />
+                </Appbar>
+            </View>
+        </Provider>
     );
 }
 
