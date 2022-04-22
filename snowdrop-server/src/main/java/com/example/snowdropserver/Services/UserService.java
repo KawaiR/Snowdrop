@@ -390,6 +390,19 @@ public class UserService {
         System.out.println("Routine pin removal was performed at: " + LocalDateTime.now());
     }
 
+    public User authenticate_user(String username) {
+        Optional<User> maybeUser = userRepository.getByUserName(username);
+
+        if (!maybeUser.isPresent()) {
+            System.out.println("User not found.");
+            throw new UserNotFoundException();
+        }
+
+        User user = maybeUser.get();
+
+        return user;
+    }
+
     public boolean check_username_exists(String username) {
         List<User> users = userRepository.findAllByUserName(username);
         return !users.isEmpty();
