@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Text, View, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
 import { Appbar, Card, Paragraph, Avatar, IconButton } from 'react-native-paper';
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
@@ -28,11 +28,14 @@ const Home = ({ route, navigation }) => {
     const [upcomingWatered, setUpcomingWatered] = React.useState();
     const [plantsList, setPlantsList] = React.useState([]);
 
+    const [posts, setPosts] = React.useState([]);
+
     const isFocused = useIsFocused()
     useEffect(() => {
         if (isFocused) {
             getWeatherApiData();
             getPlants();
+            getPosts();
         }
     }, [isFocused, city, region, currTemperature, maxTemperature, minTemperature, conditionText, conditionUrl]);
 
@@ -76,9 +79,7 @@ const Home = ({ route, navigation }) => {
                 .then((response) => {
                     if (response.status == 400) {
                         response.json().then((result) => {
-                            console.log('fail');
                             console.log(result.message);
-                            console.log('fail');
                         });
                     }
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
@@ -93,6 +94,29 @@ const Home = ({ route, navigation }) => {
         }
     }
 
+    async function getPosts() {
+        let url = "https://quiet-reef-93741.herokuapp.com/posts";
+        console.log("get post = ", width, height)
+        try {
+            let response = await fetch(url, { method: 'GET' })
+                .then((response) => {
+                    if (response.status == 400) {
+                        response.json().then((result) => {
+                            console.log(result.message);
+                        });
+                    }
+                    if (response.status == 200 || response.status == 201 || response.status == 202) {
+                        response.json().then((result) => {
+                            setPosts(result.slice(0, 3))
+                        });
+                    }
+                });
+        } catch (err) {
+            console.log("Fetch didnt work.");
+            console.log(err);
+        }
+    };
+
     return (
         <View style={styles.container}>
             {/* Header */}
@@ -101,7 +125,7 @@ const Home = ({ route, navigation }) => {
             </Appbar.Header>
 
             <ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
-                { locationAllowed && <View style={styles.weatherContainer}>
+                {locationAllowed && <View style={styles.weatherContainer}>
                     <View style={styles.rowContainer}>
                         <View style={{ alignItems: "flex-start", paddingHorizontal: 10, }}>
                             <Text style={[styles.weatherText, { fontSize: 18, }]}>{city}, {region}</Text>
@@ -125,11 +149,11 @@ const Home = ({ route, navigation }) => {
                 <View style={styles.upcomingView}>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <Text style={styles.upcomingText}>Upcoming Watering</Text>
-                        <Text style={styles.viewAllText}>View all</Text>
+                        <Text style={styles.viewAllText} onPress={() => navigation.navigate("Page_Plant")}>View all</Text>
                     </View>
 
                     <View>
-                        {plantsList.map((plantCare) =>
+                        {plantsList.length > 0 && plantsList.map((plantCare) =>
                             <Card mode="outlined" style={styles.card}>
                                 <Card.Title
                                     key={plantCare.id}
@@ -143,6 +167,39 @@ const Home = ({ route, navigation }) => {
                                 />
                             </Card>
                         )}
+                        {plantsList.length == 0 &&
+                            <Text style={{textAlign: "center", justifyContent: "center", color: "grey", fontFamily: "Lato_400Regular",}}>No plants at this time.</Text>
+                        }
+                    </View>
+                </View>
+
+                <View style={[styles.upcomingView, {marginBottom: height * 20 / defaultH,}]}>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                        <Text style={styles.upcomingText}>Recent Posts</Text>
+                        <Text style={styles.viewAllText} onPress={() => navigation.navigate("Page_PostList")}>View all</Text>
+                    </View>
+
+                    <View>
+                        {posts.length > 0 && posts.map((post) =>
+                            <TouchableOpacity style={styles.post} onPress={() => {
+                                navigation.navigate('Page_IndPost', { id: post.id });
+                            }}>
+                                <View style={styles.postContent}>
+                                    <View style={styles.postHeader}>
+                                        <Text style={{color: "grey", fontFamily: "Lato_400Regular",}}>{post.sender.userName}</Text>
+                                        <Text style={{color: "grey", fontFamily: "Lato_400Regular", textAlign: 'right', flex: 1 }}>{post.uploadDate}</Text>
+                                    </View>
+                                    <View style={styles.lineBreak}></View>
+                                    <Text style={styles.title}>{post.postTitle}</Text>
+                                    <TouchableOpacity style={styles.tagButton} onPress={() => { }}>
+                                        <Text style={styles.tagText}>{post.tag.plant.plantImage === "general-tag" ? "General" : (post.tag.plant.plantImage === "advice-tag" ? "Advice" : post.tag.plant.plantName)}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                        {posts.length == 0 && 
+                            <Text style={{textAlign: "center", justifyContent: "center", color: "grey", fontFamily: "Lato_400Regular",}}>No posts at this time.</Text>
+                        }
                     </View>
                 </View>
 
@@ -229,11 +286,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         width: width * 390 / defaultW,
         borderRadius: 15,
-        marginBottom: height * 27 / defaultH,
+        marginBottom: height / defaultH,
+        paddingBottom: 10,
     },
     upcomingText: {
         fontSize: 20,
         fontWeight: '500',
+        fontFamily: "Lato_400Regular",
         marginHorizontal: width * 15 / defaultW,
         marginTop: height * 20 / defaultH,
         marginBottom: height * 22 / defaultH,
@@ -242,6 +301,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'normal',
         color: 'grey',
+        fontFamily: "Lato_400Regular",
         textDecorationLine: "underline",
         marginHorizontal: width * 15 / defaultW,
         marginTop: height * 20 / defaultH,
@@ -257,10 +317,12 @@ const styles = StyleSheet.create({
     },
     cardTitle: {
         justifyContent: 'center',
+        fontFamily: "Lato_400Regular",
         flex: 1,
     },
     cardText: {
         marginLeft: width * 0.06,
+        fontFamily: "Lato_400Regular",
     },
     cardImage: {
         width: height * 0.08,
@@ -269,5 +331,58 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderColor: '#D3D3D3',
         borderWidth: 1,
+    },
+
+    // Posts panel
+    post: {
+        alignSelf: 'center',
+        backgroundColor: 'white',
+        width: width * 385 / defaultW,
+        margin: height * 0.006,
+    },
+    postContent: {
+        marginHorizontal: height * 0.005,
+        borderWidth: 1,
+        borderColor: '#dcdcdc',
+        flex: 1,
+        padding: 10,
+        borderRadius: 25,
+    },
+    postHeader: {
+        flexDirection: 'row',
+    },
+    lineBreak: {
+        borderBottomColor: 'grey',
+        borderBottomWidth: 1,
+        marginVertical: height * 0.01,
+    },
+    title: {
+        fontSize: 22,
+        fontFamily: "Lato_400Regular",
+        letterSpacing: -0.24,
+        fontWeight: '400',
+        marginBottom: height * 0.007,
+    },
+    tagButton: {
+        backgroundColor: '#82B47D',
+        borderRadius: 25,
+        alignItems: "center",
+        alignSelf: 'flex-start',
+        padding: 5,
+        paddingHorizontal: 15,
+        margin: 10,
+        marginLeft: 0,
+        shadowColor: '#EDEECB',
+        shadowOpacity: 0.8,
+        shadowOffset: {
+            width: 0,
+            height: 3
+        },
+    },
+    tagText: {
+        justifyContent: 'center',
+        color: 'white',
+        fontFamily: "Lato_400Regular",
+        fontSize: 16,
     },
 }); 
