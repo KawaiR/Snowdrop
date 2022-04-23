@@ -14,7 +14,7 @@ var blue = '#A8C1DD';
 export default StyleSheet.create({
     safeAreaContainer: {
         flex: 1,
-        paddingBottom: 80,
+        marginBottom: 65,
         borderBottomColor: 'grey',
     },
     container: {

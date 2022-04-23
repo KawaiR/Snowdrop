@@ -19,7 +19,6 @@ class Plants_Search extends React.Component {
 
     componentDidMount = () => {
         this.getPlants();
-        this.checkAllImagesValidity();
     }
 
     searchFilterFunction = (text) => {
@@ -73,7 +72,8 @@ class Plants_Search extends React.Component {
                     );
                 } else {
                     console.log("Fetch call succeeded");
-                    this.setState({ masterDataSource: data, filteredDataSource: data });
+                    var items = data.filter(item => item.plantImage !== "general-tag" && item.plantImage !== "advice-tag");
+                    this.setState({ masterDataSource: items, filteredDataSource: items });
                 }
             });
     };
@@ -150,20 +150,8 @@ class Plants_Search extends React.Component {
     checkAllImagesValidity = () => {
         for (let index = 0; index < this.state.masterDataSource.length; index++) {
             const element = this.state.masterDataSource[index];
-            if (this.checkImage(element.plantImage)) {
-                console.log("Image is good");
-            } else {
-                this.state.masterDataSource[index].plantImage = 'https://cdn-icons-png.flaticon.com/512/3090/3090496.png';
-                // 1. Make a shallow copy of the items
-                let items = [...this.state.filteredDataSource];
-                // 2. Make a shallow copy of the item you want to mutate
-                let item = { ...items[index] };
-                // 3. Replace the property you're intested in
-                item.plantImage = 'https://cdn-icons-png.flaticon.com/512/3090/3090496.png';
-                // 4. Put it back into our array. N.B. we *are* mutating the array here, but that's why we made a copy first
-                items[index] = item;
-                // 5. Set the state to our new copy
-                this.setState({ filteredDataSource: items });
+            if (!this.checkImage(element.plantImage)) {
+                this.state.masterDataSource[index].plantImage = 'https://www.okumcmission.org/wp-content/uploads/2019/07/250-2503958_potted-plants-clipart-transparent-background-plant-logo-free.jpg';
             }
         }
     }
@@ -229,6 +217,7 @@ class Plants_Search extends React.Component {
                 </Appbar.Header>
 
                 <SafeAreaView style={styles.safeAreaContainer}>
+                    {this.checkAllImagesValidity()}
                     <FlatList
                         style={styles.container}
                         data={this.state.filteredDataSource}

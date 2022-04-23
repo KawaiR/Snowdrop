@@ -127,8 +127,7 @@ const Tag_Search = ({ navigation }) => {
     function checkAllImagesValidity() {
         for (let index = 0; index < dataSource.length; index++) {
             const element = dataSource[index];
-            if (checkImage(element.plant.plantImage)) {
-            } else {
+            if (!checkImage(element.plant.plantImage)) {
                 element.plant.plantImage = 'https://www.okumcmission.org/wp-content/uploads/2019/07/250-2503958_potted-plants-clipart-transparent-background-plant-logo-free.jpg';
             }
         }
@@ -141,19 +140,6 @@ const Tag_Search = ({ navigation }) => {
         // navigation.navigate('Page_PostList', {
         // });
     };
-
-    function setGeneralOrAdvice() {
-        dataSource.forEach(tag => {
-            if (tag.tagName == "" && tag.scientificName == "" && tag.plant.plantImage === "advice-tag") {
-                tag.tagName = "Advice";
-                tag.plant.plantImage = "https://clipart.world/wp-content/uploads/2020/06/Question-Mark-clipart-transparent-background-1.png";
-            } else if (tag.tagName == null && tag.scientificName == null && tag.plant.plantImage === "general-tag") {
-                tag.tagName = "General";
-                tag.scientificName = "";
-                tag.plant.plantImage = "https://htmlcolors.com/color-image/82B47D.png";
-            }
-        });
-    }
 
     const renderItem = ({ item }) => (
         <TouchableOpacity onPress={() => onItemPressed(item.id)}>
