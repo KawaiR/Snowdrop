@@ -61,6 +61,7 @@ export default function App() {
         <Stack.Screen name="Write_Post" component={Write_Post} />
         <Stack.Screen name="Page_PostList" component={PostListPage} />
         <Stack.Screen name="Tag_Search" component={Tag_Search} />
+        <Stack.Screen name="Page_PostListTag" component={PostListPage} />
         <Stack.Screen name="Page_IndPost" component={IndPostPage} />
 
       </Stack.Navigator>
