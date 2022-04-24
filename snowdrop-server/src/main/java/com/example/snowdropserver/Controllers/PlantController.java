@@ -77,7 +77,7 @@ public class PlantController {
     }
 
     @GetMapping(value = "/{username}/get-water-schedules")
-    public List<WaterSchedulesDomain> getWaterSchedules(@PathVariable String username) {
+    public List<PlantCare> getWaterSchedules(@PathVariable String username) {
         return plantService.getWaterSchedules(username);
     }
 }
