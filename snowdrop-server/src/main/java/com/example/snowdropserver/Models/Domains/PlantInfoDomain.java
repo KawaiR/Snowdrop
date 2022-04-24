@@ -16,6 +16,7 @@ public class PlantInfoDomain {
     String soilType;
     int sunlightLevel;
     double minTemperature;
+    String difficulty;
 
     public PlantInfoDomain() {
         plantImage = null;
@@ -25,5 +26,6 @@ public class PlantInfoDomain {
         soilType = null;
         sunlightLevel = 0;
         minTemperature = 0;
+        difficulty = null;
     }
 }
