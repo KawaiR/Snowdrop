@@ -370,20 +370,22 @@ public class PlantService {
         }
     }
 
-    public List<WaterSchedulesDomain> getWaterSchedules(String username) {
+    public List<PlantCare> getWaterSchedules(String username) {
        User user = userService.authenticate_user(username);
 
        List<PlantCare> userPlants = plantCareRepository.getByUser(user);
 
-       List<WaterSchedulesDomain> waterSchedules = new ArrayList<>();
+       List<PlantCare> waterSchedules = new ArrayList<>();
+       int insert;
        for (PlantCare pc: userPlants) {
-           WaterSchedulesDomain waterSchedulesDomain = WaterSchedulesDomain.builder()
-                   .waterNext(pc.getWaterNext())
-                   .plantCareId(pc.getId())
-                   .nickname(pc.getNickname())
-                   .build();
-
-           waterSchedules.add(waterSchedulesDomain);
+           insert = 0;
+           for (int i = 0; i < waterSchedules.size(); i++) {
+               if (pc.getWaterNext().isBefore(waterSchedules.get(i).getWaterNext())) {
+                   insert = i;
+                   break;
+               }
+           }
+           waterSchedules.add(insert, pc);
        }
 
        return waterSchedules;

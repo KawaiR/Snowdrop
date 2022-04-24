@@ -740,7 +740,7 @@ public class TestingUtils {
         return userInfoDomain;
     }
 
-    public static List<WaterSchedulesDomain> getWaterSchedulesAndExpect(String username,
+    public static List<PlantCare> getWaterSchedulesAndExpect(String username,
                                                                         int expectedStatusCode) throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
 
@@ -754,14 +754,14 @@ public class TestingUtils {
         CloseableHttpResponse response = client.execute(httpGet);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
 
-        List<WaterSchedulesDomain> waterSchedules = null;
+        List<PlantCare> waterSchedules = null;
 
         if (expectedStatusCode == 200) {
             String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
             System.out.println("Got response:\n" +
                     jsonResponse);
             waterSchedules = objectMapper.readValue(jsonResponse,
-                    new TypeReference<List<WaterSchedulesDomain>>() {
+                    new TypeReference<List<PlantCare>>() {
                     });
         }
         client.close();
