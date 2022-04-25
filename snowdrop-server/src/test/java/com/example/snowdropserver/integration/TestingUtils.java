@@ -1,6 +1,7 @@
 package com.example.snowdropserver.integration;
 
 import com.example.snowdropserver.Models.Domains.*;
+import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Models.PlantCare;
 import com.example.snowdropserver.Models.Post;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,7 +31,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class TestingUtils {
     private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    // private static final String baseUrl = "http://localhost:8080";
+     //private static final String baseUrl = "http://localhost:8080";
     private static final String baseUrl = "https://quiet-reef-93741.herokuapp.com";
 
     public static void createUserAndExpect(String username, String email,
@@ -766,5 +767,32 @@ public class TestingUtils {
         }
         client.close();
         return waterSchedules;
+    }
+
+    public static List<Plant> getRecAndExpect(String username, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(baseUrl + "/plants/" + username + "/get-recommendation");
+
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+        System.out.println("**** MAKING GET RECOMMENDATION REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpGet);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        List<Plant> recommendations = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            recommendations = objectMapper.readValue(jsonResponse,
+                    new TypeReference<List<Plant>>() {
+                    });
+        }
+        client.close();
+        return recommendations;
     }
 }

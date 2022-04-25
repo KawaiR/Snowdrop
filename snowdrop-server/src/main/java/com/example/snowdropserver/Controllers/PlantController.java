@@ -80,4 +80,9 @@ public class PlantController {
     public List<PlantCare> getWaterSchedules(@PathVariable String username) {
         return plantService.getWaterSchedules(username);
     }
+
+    @GetMapping(value = "/{username}/get-recommendation")
+    public List<Plant> getRecommendation(@PathVariable String username) {
+        return plantService.getRecommendation(username);
+    }
 }

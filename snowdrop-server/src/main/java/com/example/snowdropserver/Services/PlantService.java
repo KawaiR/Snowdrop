@@ -66,15 +66,29 @@ public class PlantService {
                 .soilType(plant.getSoilType())
                 .sunlightLevel(plant.getSunlightLevel())
                 .minTemperature(plant.getMinTemperature())
+                .difficulty(plant.getDifficulty())
                 .build();
 
         return plantInfoDomain;
     }
 
     public int addNewPlant(AddNewPlantDomain addNewPlantDomain) {
-        if (check_common_name_exists(addNewPlantDomain.getCommonName()) && check_scientific_name_exists(addNewPlantDomain.getScientificName())) {
+        if (check_common_name_exists(addNewPlantDomain.getCommonName())
+                && check_scientific_name_exists(addNewPlantDomain.getScientificName())) {
             System.out.println("plant found already");
             throw new DuplicatePlantException();
+        }
+
+        String difficulty = "";
+
+        if (addNewPlantDomain.getWaterNeeds().equals("H") &&
+                (addNewPlantDomain.getSoilType().equals("A") || addNewPlantDomain.getSoilType().equals("N"))) {
+            difficulty = "E";
+        } else if (addNewPlantDomain.getWaterNeeds().equals("M") ||
+                (addNewPlantDomain.getSoilType().equals("N"))) {
+            difficulty = "I";
+        } else if (addNewPlantDomain.getWaterNeeds().equals("L") || addNewPlantDomain.getWaterNeeds().equals("VL")) {
+            difficulty = "B";
         }
 
         Plant plant = Plant.builder()
@@ -86,6 +100,7 @@ public class PlantService {
                 .sunlightLevel(addNewPlantDomain.getSunlightLevel())
                 .waterNeeds(addNewPlantDomain.getWaterNeeds())
                 .reportedSunlight(addNewPlantDomain.getReportedSunlight())
+                .difficulty(difficulty)
                 .build();
 
         plantRepository.save(plant);
@@ -390,4 +405,27 @@ public class PlantService {
 
        return waterSchedules;
     }
+
+    public List<Plant> getRecommendation(String username) {
+        User user = userService.authenticate_user(username);
+        String expertise = user.getExpertiseLevel();
+
+        // add plant recommendations in decreasing order of difficulty
+        List<Plant> toRecommend = new ArrayList<>();
+        if (expertise.equals("Expert") || expertise.equals("Advanced")) {
+            List<Plant> expert = plantRepository.findAllByDifficulty("E");
+            toRecommend.addAll(expert);
+        }
+
+        if (!(expertise.equals("Beginner") || expertise.equals("Novice"))) {
+            List<Plant> intermediate = plantRepository.findAllByDifficulty("I");
+            toRecommend.addAll(intermediate);
+        }
+
+        List<Plant> beginner = plantRepository.findAllByDifficulty("B");
+        toRecommend.addAll(beginner);
+
+        return toRecommend;
+    }
+
 }

@@ -131,6 +131,7 @@ public class UserService {
                 .authTokenHash(authTokenHash)
                 .googleID(userDomain.getGoogleID())
                 .totalPoints(0)
+                .expertiseLevel("Novice")
                 .build();
 
         userRepository.save(user); // will save into database
