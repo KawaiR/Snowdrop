@@ -101,6 +101,10 @@ const Page_Sign_In  = ({navigation}) => {
 		AsyncStorage.getItem("expoPushToken").then((expoPushToken)=>{
 			global.expoPushToken = expoPushToken;
 		})
+		AsyncStorage.getItem("editorPrivilege").then((editorPrivilege) => {
+			if (editorPrivilege == "false") global.editorPrivilege = false;
+			else global.editorPrivilege = true;
+		})
 		AsyncStorage
 		.getItem("isEmail")
 		.then((isEmail) => {
@@ -130,6 +134,36 @@ const Page_Sign_In  = ({navigation}) => {
 		onChangeTitle("Welcome back,\nSign in to continue with your journey");
 		onChangeEmail("");
 		onChangePassword("");
+	}
+
+	async function setEditorPrivilage() {
+		try {
+			let response = await fetch(`https://quiet-reef-93741.herokuapp.com/users/`+global.userName+`/get-info`, {
+				method: "GET",
+				headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				},
+			})
+			.then((response) => {
+				if (response.status == 404 || response.status == 400) {
+				}
+				else {
+					response.json().then((result) => {
+						if (result.editorPrivilege == 0) {
+							global.editorPrivilege = false;
+							AsyncStorage.setItem("editorPrivilege","false");
+						}
+						else {
+							global.editorPrivilege = true;
+							AsyncStorage.setItem("editorPrivilege","true");
+						}
+					})
+				}
+			})
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
 	}
 
 	async function signInWithGoogleAsync() {
@@ -167,7 +201,8 @@ const Page_Sign_In  = ({navigation}) => {
 								AsyncStorage.setItem("userName",global.userName);
 								resetScreen();
 								setLocation();
-								navigation.navigate("Page_Profile_Google_Account")
+								setEditorPrivilage();
+								navigation.navigate("Page_Profile_Google_Account");
 							})
 						}
 					})
@@ -212,6 +247,7 @@ const Page_Sign_In  = ({navigation}) => {
 						AsyncStorage.setItem("userName",global.userName);
 						resetScreen();
 						setLocation();
+						setEditorPrivilage();
 						navigation.navigate("Page_Profile_Email_Account");
 					});
 				}

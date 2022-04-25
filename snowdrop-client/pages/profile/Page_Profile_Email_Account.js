@@ -35,9 +35,11 @@ const Page_Profile_Email_Account = ({ navigation }) => {
             global.isEmail = undefined;
             global.email = undefined;
             global.username = undefined;
+            global.editorPrivilege = undefined;
             AsyncStorage.removeItem("isEmail");
             AsyncStorage.removeItem("email");
             AsyncStorage.removeItem("userName");
+            AsyncStorage.removeItem("editorPrivilege");
             if (global.expoPushToken != "null") {
                 AsyncStorage.removeItem("expoPushToken");
                 fetch('https://quiet-reef-93741.herokuapp.com/devices/remove', {

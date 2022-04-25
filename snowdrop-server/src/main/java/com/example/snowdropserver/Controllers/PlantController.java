@@ -80,4 +80,9 @@ public class PlantController {
     public List<PlantCare> getWaterSchedules(@PathVariable String username) {
         return plantService.getWaterSchedules(username);
     }
+
+    @PostMapping(value = "/update")
+    public void updatePlant(@RequestBody plantUpdateDomain domain) {
+        plantService.updatePlant(domain);
+    }
 }

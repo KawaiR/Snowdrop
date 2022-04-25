@@ -390,4 +390,18 @@ public class PlantService {
 
        return waterSchedules;
     }
+
+    public void updatePlant(plantUpdateDomain domain) {
+        Optional<Plant> maybePlant = plantRepository.getById(domain.getId());
+        if (!maybePlant.isPresent()) {
+            System.out.println("Plant not found");
+            throw new UserNotFoundException();
+        }
+        Plant plant = maybePlant.get();
+        plant.setSunlightLevel(domain.getSunlightLevel());
+        plant.setMinTemperature(domain.getMinTemperature());
+        plant.setSoilType(domain.getSoilType());
+        plant.setWaterNeeds(domain.getWaterNeeds());
+        plantRepository.save(plant);
+    }
 }

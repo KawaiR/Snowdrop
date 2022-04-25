@@ -31,9 +31,11 @@ const Page_Profile_Google_Account = ({ navigation }) => {
 		global.isEmail = undefined;
 		global.googleID = undefined;
 		global.userName = undefined;
+		global.editorPrivilege = undefined;
 		AsyncStorage.removeItem("isEmail");
 		AsyncStorage.removeItem("googleID");
 		AsyncStorage.removeItem("userName");
+		AsyncStorage.removeItem("editorPrivilege");
 		if (global.expoPushToken != "null") {
 			AsyncStorage.removeItem("expoPushToken");
 			fetch('https://quiet-reef-93741.herokuapp.com/devices/remove', {
