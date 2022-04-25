@@ -405,4 +405,27 @@ public class PlantService {
 
        return waterSchedules;
     }
+
+    public List<Plant> getRecommendation(String username) {
+        User user = userService.authenticate_user(username);
+        String expertise = user.getExpertiseLevel();
+
+        // add plant recommendations in decreasing order of difficulty
+        List<Plant> toRecommend = new ArrayList<>();
+        if (expertise.equals("Expert") || expertise.equals("Advanced")) {
+            List<Plant> expert = plantRepository.findAllByDifficulty("E");
+            toRecommend.addAll(expert);
+        }
+
+        if (!(expertise.equals("Beginner") || expertise.equals("Novice"))) {
+            List<Plant> intermediate = plantRepository.findAllByDifficulty("I");
+            toRecommend.addAll(intermediate);
+        }
+
+        List<Plant> beginner = plantRepository.findAllByDifficulty("B");
+        toRecommend.addAll(beginner);
+
+        return toRecommend;
+    }
+
 }
