@@ -1,13 +1,9 @@
 package com.example.snowdropserver.Services;
 
-import com.example.snowdropserver.Exceptions.PlantNotFoundException;
-import com.example.snowdropserver.Exceptions.PostNotFoundException;
-import com.example.snowdropserver.Exceptions.TagNotFoundException;
-import com.example.snowdropserver.Exceptions.UserNotFoundException;
+import com.example.snowdropserver.Exceptions.*;
 import com.example.snowdropserver.Models.*;
 import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Repositories.*;
-import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +18,16 @@ public class PostService {
     private final PlantRepository plantRepository;
     private final TagRepository tagRepository;
     private final UserPostMappingsRepository userPostRepository;
+    private final UserService userService;
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, PlantRepository plantRepository, TagRepository tagRepository, UserPostMappingsRepository userPostRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PlantRepository plantRepository, TagRepository tagRepository, UserPostMappingsRepository userPostRepository, UserService userService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.plantRepository = plantRepository;
         this.tagRepository = tagRepository;
         this.userPostRepository = userPostRepository;
+        this.userService = userService;
     }
 
     public List<Post> getAllPosts() {
@@ -130,6 +128,7 @@ public class PostService {
             throw new PostNotFoundException();
         }
         Post post = maybePost.get();
+        User postSender = post.getSender();
 
         int userVote = user_post_mapping(post.getId(), user.getUserName());
 
@@ -142,30 +141,43 @@ public class PostService {
                numUpvotes = post.getUpvotes() - 1;
                numDownvotes = post.getDownvotes();
                userPostRepository.delete(userPostRepository.findByPostAndUser(post, user).get()); // remove mapping
+//               postSender.setTotalPoints(postSender.getTotalPoints() - 1);
            } else if (userVote == 0) { // downvoted previously
                numUpvotes = post.getUpvotes() + 1;
                numDownvotes = post.getDownvotes() - 1;
+//               postSender.setTotalPoints(postSender.getTotalPoints() + 2);
            } else {
                numUpvotes = post.getUpvotes() + 1;
                numDownvotes = post.getDownvotes();
+//               postSender.setTotalPoints(postSender.getTotalPoints() + 1);
            }
        } else {
            if (userVote == 1) { //upvoted previously
                numUpvotes = post.getUpvotes() - 1;
                numDownvotes = post.getDownvotes() + 1;
+//               postSender.setTotalPoints(postSender.getTotalPoints() - 2);
            } else if (userVote == 0) { // downvoted previously
                numUpvotes = post.getUpvotes();
                numDownvotes = post.getDownvotes() - 1;
                userPostRepository.delete(userPostRepository.findByPostAndUser(post, user).get()); // remove mapping
+//               postSender.setTotalPoints(postSender.getTotalPoints() + 1);
            } else {
                numUpvotes = post.getUpvotes();
                numDownvotes = post.getDownvotes() + 1;
+//               postSender.setTotalPoints(postSender.getTotalPoints() - 1);
            }
        }
 
        newScore = numUpvotes - numDownvotes;
        post.setDownvotes(numDownvotes);
        post.setUpvotes(numUpvotes);
+
+       // update post sender score and expertise level accordingly
+       postSender.setTotalPoints(postSender.getTotalPoints() - post.getTotalScore() + newScore);
+       userService.level_up(postSender);
+
+       userRepository.save(postSender);
+       // update total score to be displayed
        post.setTotalScore(newScore);
 
        if (userVote == -1) { // user is voting for the first time
@@ -213,6 +225,30 @@ public class PostService {
         }
 
         return vote;
+    }
+
+    public void deletePost(int postId, DeletePostDomain deletePostDomain) {
+        Optional<Post> maybePost = postRepository.findById(postId);
+        if (!maybePost.isPresent()) {
+            System.out.println("no post was found with this id");
+            throw new PostNotFoundException();
+        }
+        Post post = maybePost.get();
+
+        Optional<User> maybeUser = userRepository.getByUserName(deletePostDomain.getUsername());
+        if (!maybeUser.isPresent()) {
+            System.out.println("no user found with this username.");
+            throw new UserNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        if (!post.getSender().getUserName().equals(user.getUserName())) {
+            System.out.println("User didn't make this post");
+            throw new NotSenderException();
+        }
+
+        post.setContent("[This post was deleted]");
+        postRepository.save(post);
     }
 
 }

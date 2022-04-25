@@ -98,6 +98,11 @@ public class UserController {
     public void deleteUser(@RequestBody AddUserDomain addUserDomain) {
         userService.deleteUser(addUserDomain.getUserName());
     }
+    
+    @GetMapping(value = "/{username}/get-info")
+    public UserInfoDomain getUserInfo(@PathVariable String username) {
+        return userService.getUserInfo(username);
+    }
     /*
     @PostMapping(value = "/plant-for-user")
     public List<PlantCare> plantForUser(@RequestBody AuthConfirmDomain authConfirmDomain) {

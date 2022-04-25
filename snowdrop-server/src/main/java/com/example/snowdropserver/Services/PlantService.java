@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -172,9 +174,9 @@ public class PlantService {
             throw new UserNotFoundException();
         }
         User user = maybeUser.get();
-
+        List<PlantCare> caredFor = plantCareRepository.getByUser(user);
         UserPlantsDomain userPlantsDomain = UserPlantsDomain.builder()
-                .caredFor(plantCareRepository.getByUser(user))
+                .caredFor(caredFor)
                 .build();
 
         return userPlantsDomain;
@@ -366,5 +368,26 @@ public class PlantService {
         } else {
             return false;
         }
+    }
+
+    public List<PlantCare> getWaterSchedules(String username) {
+       User user = userService.authenticate_user(username);
+
+       List<PlantCare> userPlants = plantCareRepository.getByUser(user);
+
+       List<PlantCare> waterSchedules = new ArrayList<>();
+       int insert;
+       for (PlantCare pc: userPlants) {
+           insert = 0;
+           for (int i = 0; i < waterSchedules.size(); i++) {
+               if (pc.getWaterNext().isBefore(waterSchedules.get(i).getWaterNext())) {
+                   insert = i;
+                   break;
+               }
+           }
+           waterSchedules.add(insert, pc);
+       }
+
+       return waterSchedules;
     }
 }

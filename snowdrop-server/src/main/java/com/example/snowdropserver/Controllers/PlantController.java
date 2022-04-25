@@ -75,4 +75,9 @@ public class PlantController {
                                     @RequestBody SunlightExposureDomain sunlightExposureDomain) {
         return plantService.logSunlightExposure(plantCareId, sunlightExposureDomain);
     }
+
+    @GetMapping(value = "/{username}/get-water-schedules")
+    public List<PlantCare> getWaterSchedules(@PathVariable String username) {
+        return plantService.getWaterSchedules(username);
+    }
 }

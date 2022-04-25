@@ -683,4 +683,88 @@ public class TestingUtils {
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();
     }
+
+    public static void deletePostAndExpect(int postId, String username,
+                                           int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/posts/" + postId + "/delete-post");
+
+
+        DeletePostDomain deletePostDomain = DeletePostDomain.builder()
+                .username(username)
+                .build();
+
+        System.out.println(deletePostDomain);
+
+        String json = objectMapper.writeValueAsString(deletePostDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        System.out.println("**** MAKING DELETE POST REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+    }
+  
+      public static UserInfoDomain getUserInfoAndExpect(String username, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(baseUrl + "/users/" + username + "/get-info");
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+
+        System.out.println("**** MAKING GET USER INFO REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpGet);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        UserInfoDomain userInfoDomain = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            userInfoDomain = objectMapper.readValue(jsonResponse,
+                    new TypeReference<UserInfoDomain>() {
+                    });
+        }
+        client.close();
+
+        return userInfoDomain;
+    }
+
+    public static List<PlantCare> getWaterSchedulesAndExpect(String username,
+                                                                        int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(baseUrl + "/plants/" + username + "/get-water-schedules");
+
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+        System.out.println("**** MAKING GET WATER SCHEDULES REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpGet);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        List<PlantCare> waterSchedules = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            waterSchedules = objectMapper.readValue(jsonResponse,
+                    new TypeReference<List<PlantCare>>() {
+                    });
+        }
+        client.close();
+        return waterSchedules;
+    }
 }
