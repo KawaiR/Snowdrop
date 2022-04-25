@@ -93,6 +93,11 @@ public class UserController {
     public void updateEmail(@RequestBody UpdateEmailDomain updateEmailDomain) {
         userService.updateEmail(updateEmailDomain);
     }
+
+    @PostMapping(value = "/delete")
+    public void deleteUser(@RequestBody AddUserDomain addUserDomain) {
+        userService.deleteUser(addUserDomain.getUserName());
+    }
     /*
     @PostMapping(value = "/plant-for-user")
     public List<PlantCare> plantForUser(@RequestBody AuthConfirmDomain authConfirmDomain) {

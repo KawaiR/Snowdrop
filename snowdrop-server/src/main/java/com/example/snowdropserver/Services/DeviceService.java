@@ -206,7 +206,7 @@ public class DeviceService {
         Optional<Device> deviceOptional = deviceRepository.getByExpoPushToken(deviceDomain.getExpoPushToken());
         if (deviceOptional.isEmpty()) return deviceDomain;
         Device device = deviceOptional.get();
-        device.setUser(null);
+//        device.setUser(null);
         deviceRepository.delete(device);
         DeviceDomain domain = new DeviceDomain(null,null,null);
         return domain;

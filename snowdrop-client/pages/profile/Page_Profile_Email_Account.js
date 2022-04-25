@@ -6,6 +6,7 @@ import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import { Appbar } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Dialog from "react-native-dialog";
 
 const {
     width,
@@ -26,7 +27,8 @@ const Page_Profile_Email_Account = ({ navigation }) => {
     useEffect(() => {
     }, []);
     const [email, onChangeEmail] = React.useState(global.email);
-
+    const [password, onChangePassword] = React.useState("");
+    const [isDialogVisible, setIsDialogVisible] = React.useState(false);
     async function signOut() {
         try {
             onChangeEmail("LogOut Successful");
@@ -63,6 +65,73 @@ const Page_Profile_Email_Account = ({ navigation }) => {
         }
     }
 
+    async function deleteAccount() {
+        try {
+			fetch('https://quiet-reef-93741.herokuapp.com/users/delete', {
+				method: 'POST',
+				headers: {
+					"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+					userName: global.userName,
+				}),
+			})
+			.then((response) => {
+				response.json().then((result) => {
+				    console.log("Delete Account Response: ", result);
+				})
+                global.isEmail = undefined;
+                global.email = undefined;
+                global.username = undefined;
+                global.expoPushToken = undefined;
+                AsyncStorage.removeItem("isEmail");
+                AsyncStorage.removeItem("email");
+                AsyncStorage.removeItem("userName");
+                AsyncStorage.removeItem("expoPushToken");
+                navigation.navigate("Page_Sign_In")
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
+
+    
+    async function verifyAccount() {
+		try {
+			let response = await fetch(`https://quiet-reef-93741.herokuapp.com/users/login`, {
+				method: "POST",
+				headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+				email: global.email,
+				password: password,
+				}),
+			})
+			.then((response) => {
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+						if (global.userName == result.userName) {
+                            deleteAccount();
+					        Alert.alert("Deletion Complete.",[{ text: 'OK', onPress: ()=> signOut()}])
+                        } else {
+                            Alert.alert("Warning: User Mismatch!","The information provided does not match the current account.\nWe will proceed signout process to protect the account.",[{ text: 'OK', onPress: ()=> signOut()}])
+                        }
+					});
+				} else {
+                    Alert.alert("Warning: User Mismatch!","The information provided does not match the current account.\nWe will proceed signout process to protect the account.",[{ text: 'OK', onPress: ()=> signOut()}])
+                }
+			})
+			
+		} catch (err) {
+            Alert.alert("Warning: User Mismatch!","The information provided does not match the current account.\nWe will proceed signout process to protect the account.",[{ text: 'OK', onPress: ()=> signOut()}])
+		}
+        
+	}
+
+
     let [fontsLoaded] = useFonts({
         Alata_400Regular,
         Lato_400Regular,
@@ -75,6 +144,15 @@ const Page_Profile_Email_Account = ({ navigation }) => {
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ height: Dimensions.get("window").height }}>
             <ScrollView bounces={false} showsVerticalScrollIndicator={false} style={{ height: Dimensions.get("window").height }}>
                 <View style={noneModeStyles._Page}    >
+                    <Dialog.Container visible = {isDialogVisible}>
+                        <Dialog.Title>Do you want to delete your account?</Dialog.Title>
+                        <Dialog.Description>
+                        Please enter your password to proceed.
+                        </Dialog.Description>
+                        <Dialog.Button label="Cancel"onPress={() => {setIsDialogVisible(false)}}/>
+                        <Dialog.Input value={password} onChangeText={onChangePassword} placeholder="Password" secureTextEntry={true}/>
+                        <Dialog.Button label= "Confirm" onPress={() => {setIsDialogVisible(false); verifyAccount();}}/>
+                    </Dialog.Container>
                     <Image style={noneModeStyles._Cactus_Image} source={require("../../assets/background/cactus.png")} />
                     <Image style={noneModeStyles._Monstera_Image} source={require("../../assets/background/monstera.png")} />
                     <Image style={noneModeStyles._Philodendron_Image} source={require("../../assets/background/philodendron.png")} />
@@ -95,7 +173,7 @@ const Page_Profile_Email_Account = ({ navigation }) => {
 						</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Delete_Account_Button]}    >
+                    <TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Delete_Account_Button]} onPress={()=> setIsDialogVisible(true)}   >
                         <Text style={noneModeStyles._Main_Button_Description}>
                             Delete Account
 						</Text>
