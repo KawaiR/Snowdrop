@@ -36,7 +36,7 @@ const Home = ({ route, navigation }) => {
     useEffect(() => {
         if (isFocused) {
             getWeatherApiData();
-            getPlants();
+            getUpcoming();
             getPosts();
         }
     }, [isFocused, city, region, currTemperature, maxTemperature, minTemperature, conditionText, conditionUrl]);
@@ -84,21 +84,20 @@ const Home = ({ route, navigation }) => {
         return <AppLoading />
     }
 
-    async function getPlants() {
+    async function getUpcoming() {
         console.log("Fetching plantcare objects...");
         try {
-            let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + global.userName + '/get-user-plants', { method: 'GET' })
+            let response = await fetch('https://quiet-reef-93741.herokuapp.com/plants/' + global.userName + '/get-water-schedules', { method: 'GET' })
                 .then((response) => {
-                    if (response.status == 400) {
+                    if (response.status == 400 || response.status == 500) {
                         response.json().then((result) => {
                             console.log(result.message);
                         });
                     }
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
-                            setPlantsList(result.caredFor.slice(0, 3));
-                            console.log("Plantcare objects fetched...");
-                            console.log("Plants = ", plantsList);
+                            setPlantsList(result.slice(0, 3));
+                            console.log("Plantcare objects fetched");
                         });
                     }
                 });
@@ -132,7 +131,7 @@ const Home = ({ route, navigation }) => {
                             console.log('success');
                             console.log(result);
                             console.log('success');
-                            getPlants();
+                            getUpcoming();
                         });
                     }
                 });
@@ -144,7 +143,6 @@ const Home = ({ route, navigation }) => {
 
     async function getPosts() {
         let url = "https://quiet-reef-93741.herokuapp.com/posts";
-        console.log("get post = ", width, height)
         try {
             let response = await fetch(url, { method: 'GET' })
                 .then((response) => {
