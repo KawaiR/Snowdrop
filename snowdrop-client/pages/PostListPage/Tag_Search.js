@@ -217,7 +217,7 @@ export default Tag_Search;
 const styles = StyleSheet.create({
     safeAreaContainer: {
         flex: 1,
-        paddingBottom: 80,
+        marginBottom: 60,
         borderBottomColor: 'grey',
     },
     container: {
