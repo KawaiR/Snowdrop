@@ -87,7 +87,7 @@ public class CommentService {
         }
         Post post = maybePost.get();
 
-        List<Comment> comments = commentRepository.getByPost(post);
+        List<Comment> comments = commentRepository.findByParent(post);
 
         return comments;
     }

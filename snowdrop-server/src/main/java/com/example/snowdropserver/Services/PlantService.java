@@ -430,7 +430,6 @@ public class PlantService {
 
     public PlantInfoDomain editPlantInfo(int plantId, PlantInfoDomain newInfo) {
         return null;
-
     }
 
 }

@@ -800,7 +800,7 @@ public class TestingUtils {
     public static List<Comment> getPostCommentsAndExpect(int postId, int expectedStatusCode) throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
 
-        HttpGet httpGet = new HttpGet(baseUrl + "/posts/" + postId + "/get-comments");
+        HttpGet httpGet = new HttpGet(baseUrl + "/comments/" + postId + "/get-comments");
 
 
         httpGet.setHeader("Accept", "application/json");

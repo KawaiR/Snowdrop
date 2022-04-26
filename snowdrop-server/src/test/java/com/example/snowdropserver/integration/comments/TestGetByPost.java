@@ -9,17 +9,17 @@ import java.util.List;
 public class TestGetByPost {
     @Test
     public void postExists() throws Exception {
-        TestingUtils.createUserAndExpect("listCommentsSuccess",
-                "listCommentsSuccess@test.com",
-                "listCommentsSuccess",
+        TestingUtils.createUserAndExpect("listCommentsSuccess1",
+                "listCommentsSuccess1@test.com",
+                "listCommentsSuccess1",
                 201);
-        int postId = TestingUtils.createPostAndExpect("listCommentsSuccess",
-                "listCommentsSuccess",
-                        "listCommentsSuccess",
+        int postId = TestingUtils.createPostAndExpect("listCommentsSuccess1",
+                "listCommentsSuccess1",
+                        "listCommentsSuccess1",
                 64,
                 201);
         TestingUtils.createCommentAndExpect(postId,
-                "listCommentsSuccess",
+                "listCommentsSuccess1",
                 "comment content",
                 201);
         List<Comment> comments = TestingUtils.getPostCommentsAndExpect(postId, 200);
