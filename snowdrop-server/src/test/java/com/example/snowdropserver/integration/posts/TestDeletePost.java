@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 public class TestDeletePost {
     @Test
     public void deletePostSuccess() throws Exception {
-        TestingUtils.createUserAndExpect("deletePostSuccess11", "deletePostSuccess11@test.com",
-                "deletePostSuccess11", 201);
-        int postId = TestingUtils.createPostAndExpect("deletePostSuccess11", "deletePostSuccess11",
-                "deletePostSuccess11", 64, 201);
-        TestingUtils.deletePostAndExpect(postId, "deletePostSuccess11", 200);
+        TestingUtils.createUserAndExpect("deletePostSuccess2", "deletePostSuccess2@test.com",
+                "deletePostSuccess2", 201);
+        int postId = TestingUtils.createPostAndExpect("deletePostSuccess2", "deletePostSuccess2",
+                "deletePostSuccess2", 64, 201);
+        TestingUtils.deletePostAndExpect(postId, "deletePostSuccess2", 200);
     }
 
     @Test
