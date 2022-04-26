@@ -134,7 +134,7 @@ const Plant_Recommendations = ({ navigation }) => {
                             title={(plant.plantName != null) ? plant.plantName : 'No common name'}
                             subtitle={(plant.difficulty === "B") ? "Difficulty: Beginner" : (plant.difficulty === "I" ? "Difficulty: Intermediate" : "Diffculty: Expert")}
                             left={(props) => <Avatar.Image {...props} size={height * 0.08} style={styles.cardImage} source={{ uri: plant.plantImage }} />}
-                            right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => navigation.navigate('Page_PlantDetail', { plant: plant, id: plant.id })} />}
+                            right={(props) => <IconButton {...props} icon="plus" size={35} color={'#4E4E4E'} onPress={() => navigation.navigate("Save_Plant", { plantId: plant.id })} />}
                         />
 
                     )}
