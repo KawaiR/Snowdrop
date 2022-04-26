@@ -1,9 +1,6 @@
 package com.example.snowdropserver.Services;
 
-import com.example.snowdropserver.Exceptions.NoPlantUserComboException;
-import com.example.snowdropserver.Exceptions.PlantNotFoundException;
-import com.example.snowdropserver.Exceptions.UserNotFoundException;
-import com.example.snowdropserver.Exceptions.DuplicatePlantException;
+import com.example.snowdropserver.Exceptions.*;
 import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Models.PlantCare;
@@ -65,6 +62,7 @@ public class PlantService {
                 .plantImage(plant.getPlantImage())
                 .soilType(plant.getSoilType())
                 .sunlightLevel(plant.getSunlightLevel())
+                .reportedSunlight(plant.getReportedSunlight())
                 .minTemperature(plant.getMinTemperature())
                 .difficulty(plant.getDifficulty())
                 .build();
@@ -428,8 +426,75 @@ public class PlantService {
         return toRecommend;
     }
 
-    public PlantInfoDomain editPlantInfo(int plantId, PlantInfoDomain newInfo) {
-        return null;
+    /*
+     * pre-condition: all information to remain unchanged should be set to default values as shown in constructor
+     */
+    public PlantInfoDomain editPlantInfo(int plantId, EditPlantDomain newInfo) {
+        User user = userService.authenticate_user(newInfo.getUsername());
+
+        Optional<Plant> maybePlant = plantRepository.getById(plantId);
+        if (!maybePlant.isPresent()) {
+            System.out.println("Plant not found");
+            throw new PlantNotFoundException();
+        }
+        Plant plant = maybePlant.get();
+
+        if (!userService.is_editor(user)) {
+            System.out.println("User doesn't have necessary privilege to access.");
+            throw new NotEditorException();
+        }
+
+        if (!newInfo.getPlantImage().equals("n/a")) {
+            plant.setPlantImage(newInfo.getPlantImage());
+        }
+
+        if (!newInfo.getPlantName().equals("n/a")) {
+            plant.setPlantName(newInfo.getPlantName());
+        }
+
+        if (!newInfo.getScientificName().equals("n/a")) {
+            plant.setScientificName(newInfo.getScientificName());
+        }
+
+        if (!newInfo.getWaterNeeds().equals("n/a")) {
+            plant.setWaterNeeds(newInfo.getWaterNeeds());
+        }
+
+        if (!newInfo.getSoilType().equals("n/a")) {
+            plant.setSoilType(newInfo.getSoilType());
+        }
+
+        if (newInfo.getSunlightLevel() != 0) {
+            plant.setSunlightLevel(newInfo.getSunlightLevel());
+        }
+
+        if (newInfo.getReportedSunlight() != 0) {
+            plant.setReportedSunlight(newInfo.getReportedSunlight());
+        }
+
+        if (newInfo.getMinTemperature() != 0) {
+            plant.setMinTemperature(newInfo.getMinTemperature());
+        }
+
+        if (!newInfo.getDifficulty().equals("n/a")) {
+            plant.setDifficulty(newInfo.getDifficulty());
+        }
+
+        plantRepository.save(plant);
+
+        PlantInfoDomain plantInfoDomain = PlantInfoDomain.builder()
+                .plantName(plant.getPlantName())
+                .scientificName(plant.getScientificName())
+                .plantImage(plant.getPlantImage())
+                .waterNeeds(plant.getWaterNeeds())
+                .soilType(plant.getSoilType())
+                .sunlightLevel(plant.getSunlightLevel())
+                .reportedSunlight(plant.getReportedSunlight())
+                .minTemperature(plant.getMinTemperature())
+                .difficulty(plant.getDifficulty())
+                .build();
+
+        return plantInfoDomain;
     }
 
 }
