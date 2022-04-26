@@ -1,0 +1,191 @@
+import React, { useEffect } from 'react';
+import { Text, View, StyleSheet, Dimensions, ScrollView, PixelRatio } from 'react-native';
+import { Appbar, Avatar } from 'react-native-paper';
+import AppLoading from 'expo-app-loading';
+import { useIsFocused } from "@react-navigation/native";
+import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
+import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
+
+const {
+    width,
+    height,
+} = Dimensions.get("window");
+
+const defaultW = 414;
+const defaultH = 896;
+
+function pxRD(px, cur_screen, base) {
+    return Math.round(PixelRatio.roundToNearestPixel(cur_screen / base * px));
+}
+
+const Plant_Recommendations = ({ navigation }) => {
+    const [expertise, setExpertise] = React.useState("");
+    const [isExpertiseSet, setIsExpertiseSet] = React.useState(false);
+    const [plantsList, setPlantsList] = React.useState([]);
+    const [expertiseUrl, setExpertiseUrl] = React.useState();
+
+    const isFocused = useIsFocused()
+    useEffect(() => {
+        if (isFocused) {
+            getPlantRecommendations();
+        }
+    }, [isFocused]);
+
+    let [fontsLoaded] = useFonts({
+        Alata_400Regular,
+        Lato_400Regular,
+        Lato_700Bold,
+    });
+    if (!fontsLoaded) {
+        return <AppLoading />
+    }
+
+    async function getPlantRecommendations() {
+        var resultExpertise = "Novice";
+        setIsExpertiseSet(true);
+        setExpertise(resultExpertise);
+
+        if (resultExpertise === "Beginner") {
+            setExpertiseUrl("https://www.pngitem.com/pimgs/m/126-1266771_magnifying-glass-clipart-transparent-png-png-download.png");
+        } else if (resultExpertise === "Expert" || resultExpertise === "Advanced") {
+            setExpertiseUrl("https://thumbs.dreamstime.com/b/gold-medal-red-ribbon-vector-icon-flat-cartoon-golden-medallion-award-hanging-isolated-white-clipart-gold-medal-red-114163088.jpg");
+        } else if (resultExpertise === "Intermediate" || resultExpertise === "Novice") {
+            setExpertiseUrl("https://www.adazing.com/wp-content/uploads/2019/02/open-book-clipart-03.png");
+        }
+        
+
+    }
+
+    return (
+        <View style={styles.container}>
+            {/* Header */}
+            <Appbar.Header style={styles.appbar}>
+                <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_Plant")} />
+                <Appbar.Content title={<Text style={styles.headerTitle}>Add Plant</Text>} style={styles.headerTitle} />
+            </Appbar.Header>
+
+            <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+                <View style={styles.expertiseContainer}>
+                    {isExpertiseSet &&
+                        <View style={styles.rowContainer}>
+                            <Text style={styles.expertiseText}>Your Expertise Level: {expertise}</Text>
+                            <Avatar.Image
+                                source={{ uri: expertiseUrl }}
+                                size={width * 0.08}
+                                style={styles.difficultyImage}
+                            />
+                    </View>}
+                    {!isExpertiseSet &&
+                        <Text style={styles.text}>Expertise not set yet, recommendations cannot be done at this time</Text>}
+                    {isExpertiseSet && <Text style={styles.text}>Here's a list of plants you could grow based on your expertise level:</Text>}
+                </View>
+
+                <View style={styles.cardList}>
+                    {plantsList.length > 0 && plantsList.map((plant) =>
+                        <Card.Title
+                            key={plant.id}
+                            style={styles.card}
+                            titleStyle={styles.cardText}
+                            subtitleStyle={styles.cardText}
+                            title={(plant.plantName != null) ? plant.plantName : 'No common name'}
+                            subtitle={(plant.scientificName != null) ? plant.scientificName : 'No scientfic name'}
+                            left={(props) => <Avatar.Image {...props} size={height * 0.08} style={styles.cardImage} source={{ uri: plant.plantImage }} />}
+                            right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => navigation.navigate('Page_PlantDetail', { plant: plant, id: plant.id })} />}
+                        />
+
+                    )}
+                    {plantsList.length == 0 && isExpertiseSet && 
+                        <Text style={{ textAlign: "center", justifyContent: "center", color: "black", fontFamily: "Lato_400Regular", fontSize: 18, }}>No plants at this time.</Text>
+                    }
+
+                </View>
+            </ScrollView>
+
+            {/* Add navigation to bottom appbar */}
+            {/* Bottom Nav bar */}
+            <Appbar style={styles.bottom}>
+                <Appbar.Action icon="home" color="#005500" size={Math.min(width * 0.09, height * 0.05)} />
+                <Appbar.Action icon="leaf" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
+                <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList")} />
+                <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} />
+            </Appbar>
+        </View>
+    );
+}
+
+export default Plant_Recommendations;
+
+const styles = StyleSheet.create({
+    // Appbar styles
+    appbar: {
+        width: width,
+        backgroundColor: '#82B47D',
+        flexDirection: "row",
+        height: height * 0.078125, // 70defaultH
+    },
+    headerTitle: {
+        alignSelf: "center",
+        alignItems: "flex-start",
+        fontSize: 24,
+        fontFamily: "Lato_400Regular",
+        color: "white",
+    },
+    bottom: {
+        justifyContent: 'center',
+        backgroundColor: '#82B47D',
+        height: height * 0.078125,
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+
+    container: {
+        width: width,
+        height: height,
+        backgroundColor: "#EDEECB",
+    },
+
+    expertiseContainer: {
+        width: width,
+        // height: height * (150 / defaultH),
+        alignItems: "center",
+        backgroundColor: "#A8C1DD",
+        borderBottomRightRadius: height * (150 / defaultH),
+        borderBottomLeftRadius: height * (150 / defaultH),
+        padding: 20,
+        marginBottom: 30,
+    },
+
+    rowContainer: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    difficultyImage: {
+        width: width * 0.09,
+        height: width * 0.09,
+        backgroundColor: 'white',
+        alignItems: "center",
+        justifyContent: "center",
+        marginLeft: 10,
+    },
+    expertiseText: {
+        color: "black",
+        fontFamily: "Lato_400Regular",
+        textAlignVertical: "center",
+        textAlign: "center",
+        maxWidth: width * 0.9,
+        fontSize: 20,
+        marginVertical: 10,
+    },
+    text: {
+        color: "black",
+        fontFamily: "Lato_400Regular",
+        textAlignVertical: "center",
+        textAlign: "center",
+        maxWidth: width * 0.75,
+        fontSize: 18,
+        marginVertical: 10,
+    }
+}); 

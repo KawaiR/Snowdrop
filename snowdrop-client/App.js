@@ -23,6 +23,7 @@ import IndPostPage from './pages/IndPostPage/IndPostPage.js';
 import PostListPage from './pages/PostListPage/PostListPage.js';
 import Plant_Care_Recommendation from './pages/plantCare/Plant_Care_Recommendation.js';
 import { LogBox } from 'react-native';
+import Plant_Recommendations from './pages/plant_recommendation/Plant_Recommendations.js';
 LogBox.ignoreLogs(['Warning: ...']);
 
 const Stack = createNativeStackNavigator();
@@ -55,6 +56,7 @@ export default function App() {
         <Stack.Screen name="Page_PlantDetail" component={PlantDetailPage} />
         <Stack.Screen name="Plant_Care_Recommendation" component={Plant_Care_Recommendation} />
         <Stack.Screen name="Page_Plant" component={PlantsPage} />
+        <Stack.Screen name="Plant_Recommendations" component={Plant_Recommendations} />
         <Stack.Screen name="Plant_Search" component={Plant_Search} />
         <Stack.Screen name="Save_Plant" component={Save_Plant} />
         <Stack.Screen name="Write_Post" component={Write_Post} />
