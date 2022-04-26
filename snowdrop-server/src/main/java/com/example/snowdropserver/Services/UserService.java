@@ -379,6 +379,19 @@ public class UserService {
         return userInfoDomain;
     }
 
+    public void makeEditor(String username) {
+        User user = authenticate_user(username);
+
+        if (!is_editor_candidate(user)) {
+            System.out.println("This user is not a valid candidate.");
+            throw new NotCandidateException();
+        }
+
+        // Grant editing privileges
+        user.setEditorPrivilege(1);
+        userRepository.save(user);
+    }
+
     // executed every 15 minutes
     @Scheduled(fixedRate = 900000)
     public void removeExpiredTokens() {
@@ -504,6 +517,14 @@ public class UserService {
         userRepository.save(user);
 
         return changedStatus;
+    }
+
+    public boolean is_editor_candidate(User user) {
+        return user.getExpertiseLevel().equals("Advanced");
+    }
+
+    public boolean is_editor(User user) {
+        return (user.getEditorPrivilege() == 1);
     }
 
     public boolean check_email_exists(String email) {

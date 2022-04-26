@@ -428,4 +428,8 @@ public class PlantService {
         return toRecommend;
     }
 
+    public PlantInfoDomain editPlantInfo(int plantId, PlantInfoDomain newInfo) {
+        return null;
+    }
+
 }
