@@ -1,5 +1,6 @@
 package com.example.snowdropserver.integration;
 
+import com.example.snowdropserver.Models.Comment;
 import com.example.snowdropserver.Models.Domains.*;
 import com.example.snowdropserver.Models.Plant;
 import com.example.snowdropserver.Models.PlantCare;
@@ -794,5 +795,32 @@ public class TestingUtils {
         }
         client.close();
         return recommendations;
+    }
+
+    public static List<Comment> getPostCommentsAndExpect(int postId, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpGet httpGet = new HttpGet(baseUrl + "/posts/" + postId + "/get-comments");
+
+
+        httpGet.setHeader("Accept", "application/json");
+        httpGet.setHeader("Content-type", "application/json");
+
+        System.out.println("**** MAKING GET COMMENTS PER POST REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpGet);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        List<Comment> comments = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            comments = objectMapper.readValue(jsonResponse,
+                    new TypeReference<List<Comment>>() {
+                    });
+        }
+        client.close();
+        return comments;
     }
 }
