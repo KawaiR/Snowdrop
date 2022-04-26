@@ -12,4 +12,5 @@ public interface PlantRepository extends JpaRepository<Plant, Integer> {
     Optional<Plant> getById(int plantId);
     List<Plant> findAllByPlantName(String commonName);
     List<Plant> findAllByScientificName(String scientificName);
+    List<Plant> findAllByDifficulty(String difficulty);
 }
