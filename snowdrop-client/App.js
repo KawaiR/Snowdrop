@@ -22,6 +22,7 @@ import Write_Post from './pages/write_posts/Write_Post.js';
 import IndPostPage from './pages/IndPostPage/IndPostPage.js';
 import PostListPage from './pages/PostListPage/PostListPage.js';
 import Plant_Care_Recommendation from './pages/plantCare/Plant_Care_Recommendation.js';
+import Tag_Search from './pages/PostListPage/Tag_Search.js';
 import { LogBox } from 'react-native';
 import Plant_Recommendations from './pages/plant_recommendation/Plant_Recommendations.js';
 LogBox.ignoreLogs(['Warning: ...']);
@@ -61,6 +62,8 @@ export default function App() {
         <Stack.Screen name="Save_Plant" component={Save_Plant} />
         <Stack.Screen name="Write_Post" component={Write_Post} />
         <Stack.Screen name="Page_PostList" component={PostListPage} />
+        <Stack.Screen name="Tag_Search" component={Tag_Search} />
+        <Stack.Screen name="Page_PostListTag" component={PostListPage} />
         <Stack.Screen name="Page_IndPost" component={IndPostPage} />
 
       </Stack.Navigator>

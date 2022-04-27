@@ -2,13 +2,12 @@ package com.example.snowdropserver.Models.Domains;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.Value;
 
 @Value
 @Builder
 @AllArgsConstructor
-public class PlantInfoDomain {
+public class EditPlantDomain {
     String plantName;
     String scientificName;
     String plantImage;
@@ -19,15 +18,18 @@ public class PlantInfoDomain {
     double minTemperature;
     String difficulty;
 
-    public PlantInfoDomain() {
-        plantImage = null;
-        scientificName = null;
-        plantName = null;
-        waterNeeds = null;
-        soilType = null;
-        sunlightLevel = 0;
+    String username;
+
+    public EditPlantDomain() {
+        plantImage = "n/a";
+        scientificName = "n/a";
+        plantName = "n/a";
+        waterNeeds = "n/a";
+        soilType = "n/a";
         reportedSunlight = 0;
+        sunlightLevel = 0;
         minTemperature = 0;
-        difficulty = null;
+        difficulty = "n/a";
+        username = "";
     }
 }
