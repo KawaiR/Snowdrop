@@ -16,6 +16,8 @@ const defaultW = 414;
 const defaultH = 896;
 
 const Home = ({ route, navigation }) => {
+    global.fertilizeTimes = new Map();
+
     const [maxTemperature, setMaxTemperature] = React.useState(0.0);
     const [minTemperature, setMinTemperature] = React.useState(0.0);
     const [conditionText, setConditionText] = React.useState("");

@@ -30,7 +30,7 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
     const [sunlightString, setSunlightString] = React.useState("");
     const [minTemperature, setMinTemperature] = React.useState(0.0);
     const [temperatureString, setTemperatureString] = React.useState("");
-    const [fertilizer, setFertilizer] = React.useState("");
+    const [difficulty, setDifficulty] = React.useState("");
 
     const [currTemperature, setCurrTemperature] = React.useState(0.0);
     const [currSunlight, setCurrSunlight] = React.useState(0);
@@ -39,7 +39,6 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
     useEffect(() => {
         if (isFocused) {
             getWeatherApiData();
-            getPlantCareInfo(plant.id);
             getPlantName(id);
             if ((upcomingWatered != null) && (upcomingWatered != "")) {
                 setUpcomingWatered(upcomingWatered.substring(0, 10));
@@ -74,28 +73,6 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
     });
     if (!fontsLoaded) {
         return <AppLoading />
-    }
-
-    async function getPlantCareInfo(plantCareId) {
-        try {
-            let response = await fetch('https://quiet-reef-93741.herokuapp.com/plant-care/' + plantCareId + '/get-plant-info', { method: 'GET' })
-                .then((response) => {
-                    if (response.status == 400) {
-                        response.json().then((result) => {
-                            console.log('get plant care info fail');
-                            console.log(result.message);
-                        });
-                    }
-                    if (response.status == 200 || response.status == 201 || response.status == 202) {
-                        response.json().then((result) => {
-                            setFertilizer(result.fertilizer);
-                        });
-                    }
-                });
-        } catch (err) {
-            console.log("Fetch didnt work.");
-            console.log(err);
-        }
     }
 
     async function getPlantName(id) {
@@ -137,9 +114,6 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
 
                             setSunlightNum(result.sunlightLevel)
 
-                            console.log(result.sunlightLevel)
-                            console.log(sunlightNum)
-                            console.log(currSunlight)
                             if (currSunlight > sunlightNum) {
                                 setSunlightString("is greater than required")
                             } else if (currSunlight < sunlightNum) {
@@ -155,6 +129,8 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                             } else if (currTemperature < minTemperature) {
                                 setTemperatureString("is less than required")
                             }
+
+                            setDifficulty(result.difficulty);
                         });
                     }
                 });
@@ -179,7 +155,8 @@ const Plant_Care_Recommendation = ({ route, navigation }) => {
                         <View style={styles.plantNameContent}>
                             <Text style={styles.plantNameText}>{commonName}</Text>
                             <Text style={styles.plantNameText}>{scientificName}</Text>
-                            <Text style={styles.plantNameText}>{upcomingWatered}</Text>
+                            <Text style={styles.plantNameText}>{upcomingWatered === "" ? "" : "Upcoming watered: " + upcomingWatered}</Text>
+                            <Text style={styles.plantNameText}>{(difficulty === "B") ? "Difficulty: Beginner" : (difficulty === "I" ? "Difficulty: Intermediate" : "Difficulty: Expert")}</Text>
                         </View>
                     </View>
                 </View>

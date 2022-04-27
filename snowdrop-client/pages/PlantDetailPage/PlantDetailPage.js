@@ -25,6 +25,7 @@ const PlantDetailPage  = ({route, navigation}) => {
     const [upcomingWatered, setUpcomingWatered] = React.useState(plant.waterNext);
     const [value, setValue] = React.useState("" + plant.reportedExposure + "");
     const [sunlight, setSunlight] = React.useState("" + plant.reportedExposure + "");
+    const [difficulty, setDifficulty] = React.useState("");
 
     const [sunlightBool, setSunlightBool] = React.useState(0);
 
@@ -215,6 +216,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         } else {
                             setImage(require('snowdrop-client/assets/plant-image.jpeg'));
                         }
+                        setDifficulty(result.difficulty);
 					});
 				}
 			});
@@ -238,7 +240,8 @@ const PlantDetailPage  = ({route, navigation}) => {
                 <View style={styles.plantNameContent}>
                     <Text style={styles.plantNameText}>{commonName}</Text>
                     <Text style={styles.plantNameText}>{scientificName}</Text>
-                    <Text style={styles.plantNameText}>{upcomingWatered}</Text>
+                    <Text style={styles.plantNameText}>{upcomingWatered === "" ? "" : "Upcoming watered: " + upcomingWatered}</Text>
+                    <Text style={styles.plantNameText}>{(difficulty === "B") ? "Difficulty: Beginner" : (difficulty === "I" ? "Difficulty: Intermediate" : "Difficulty: Expert")}</Text>
                 </View>
             </View>
         </ImageBackground>
