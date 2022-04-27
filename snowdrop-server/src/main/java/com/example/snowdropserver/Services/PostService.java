@@ -247,8 +247,8 @@ public class PostService {
             throw new NotSenderException();
         }
 
-        post.setContent("[This post was deleted]");
-        postRepository.save(post);
+        postRepository.delete(post);
+        System.out.println("Post deleted!");
     }
 
 }
