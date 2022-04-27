@@ -389,22 +389,28 @@ public class PlantService {
        List<PlantCare> userPlants = plantCareRepository.getByUser(user);
 
        List<PlantCare> waterSchedules = new ArrayList<>();
+       List<PlantCare> nullNext = new ArrayList<>();
        int insert;
        for (PlantCare pc: userPlants) {
            insert = 0;
-           for (int i = 0; i < waterSchedules.size(); i++) {
-               if (pc.getWaterNext().isBefore(waterSchedules.get(i).getWaterNext())) {
-                   insert = i;
-                   break;
+           if (pc.getWaterNext() == null) {
+               nullNext.add(pc);
+           } else {
+               for (int i = 0; i < waterSchedules.size(); i++) {
+                   if (pc.getWaterNext().isBefore(waterSchedules.get(i).getWaterNext())) {
+                       insert = i;
+                       break;
+                   }
                }
+               waterSchedules.add(insert, pc);
            }
-           waterSchedules.add(insert, pc);
        }
 
+       waterSchedules.addAll(nullNext);
        return waterSchedules;
     }
 
-    public List<Plant> getRecommendation(String username) {
+    public RecommendationDomain getRecommendation(String username) {
         User user = userService.authenticate_user(username);
         String expertise = user.getExpertiseLevel();
 
@@ -423,7 +429,12 @@ public class PlantService {
         List<Plant> beginner = plantRepository.findAllByDifficulty("B");
         toRecommend.addAll(beginner);
 
-        return toRecommend;
+        RecommendationDomain recommendationDomain = RecommendationDomain.builder()
+                .toRecommend(toRecommend)
+                .expertiseLevel(user.getExpertiseLevel())
+                .build();
+
+        return recommendationDomain;
     }
 
     /*
