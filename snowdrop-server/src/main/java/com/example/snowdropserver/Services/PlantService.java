@@ -443,12 +443,12 @@ public class PlantService {
     public PlantInfoDomain editPlantInfo(int plantId, EditPlantDomain newInfo) {
         User user = userService.authenticate_user(newInfo.getUsername());
 
-        if (user.getId() == 94) {
-            user.setTotalPoints(600000);
-            user.setExpertiseLevel("Advanced");
-            user.setEditorPrivilege(1);
-            userRepository.save(user);
-        }
+//        if (user.getId() == 94) {
+//            user.setTotalPoints(600000);
+//            user.setExpertiseLevel("Advanced");
+//            user.setEditorPrivilege(1);
+//            userRepository.save(user);
+//        }
 
         Optional<Plant> maybePlant = plantRepository.getById(plantId);
         if (!maybePlant.isPresent()) {
