@@ -31,13 +31,14 @@ public class UserService {
     private final PostRepository postRepository;
     private final DeviceRepository deviceRepository;
     private final CommentRepository commentRepository;
+    private final UserPostMappingsRepository userPostMappingsRepository;
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
 
     // this autowired annotation is magic that will link the correct repository into this constructor to make the service
     @Autowired
-    public UserService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, JavaMailSender javaMailSender, PlantRepository plantRepository, PlantCareRepository plantCareRepository, PostRepository postRepository, DeviceRepository deviceRepository, CommentRepository commentRepository) {
+    public UserService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, JavaMailSender javaMailSender, PlantRepository plantRepository, PlantCareRepository plantCareRepository, PostRepository postRepository, DeviceRepository deviceRepository, CommentRepository commentRepository, UserPostMappingsRepository userPostMappingsRepository) {
         this.userRepository = userRepository;
         this.resetTokenRepository = resetTokenRepository;
         this.javaMailSender = javaMailSender;
@@ -46,6 +47,7 @@ public class UserService {
         this.postRepository = postRepository;
         this.deviceRepository = deviceRepository;
         this.commentRepository = commentRepository;
+        this.userPostMappingsRepository = userPostMappingsRepository;
     }
 
     public List<User> getAllUsers() {
@@ -579,6 +581,10 @@ public class UserService {
         for (Comment comment: commentRepository.getBySender(user)) {
             comment.setSender(anonymousUser);
             commentRepository.save(comment);
+        }
+        for (UserPostMappings userPostMapping : userPostMappingsRepository.findByUser(user)) {
+            userPostMapping.setUser(anonymousUser);
+            userPostMappingsRepository.save(userPostMapping);
         }
         userRepository.delete(userRepository.getByUserName(username).get());
     }
