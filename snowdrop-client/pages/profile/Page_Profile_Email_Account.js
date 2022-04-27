@@ -78,20 +78,6 @@ const Page_Profile_Email_Account = ({ navigation }) => {
 					userName: global.userName,
 				}),
 			})
-			.then((response) => {
-				response.json().then((result) => {
-				    console.log("Delete Account Response: ", result);
-				})
-                global.isEmail = undefined;
-                global.email = undefined;
-                global.username = undefined;
-                global.expoPushToken = undefined;
-                AsyncStorage.removeItem("isEmail");
-                AsyncStorage.removeItem("email");
-                AsyncStorage.removeItem("userName");
-                AsyncStorage.removeItem("expoPushToken");
-                navigation.navigate("Page_Sign_In")
-			});
 		} catch (err) {
 			console.log("Fetch didnt work.");
 			console.log(err);
@@ -117,7 +103,7 @@ const Page_Profile_Email_Account = ({ navigation }) => {
 					response.json().then((result) => {
 						if (global.userName == result.userName) {
                             deleteAccount();
-					        Alert.alert("Deletion Complete.",[{ text: 'OK', onPress: ()=> signOut()}])
+					        Alert.alert("Deletion Complete.","You will be redirected to sign in page.",[{ text: 'OK', onPress: ()=> signOut()}])
                         } else {
                             Alert.alert("Warning: User Mismatch!","The information provided does not match the current account.\nWe will proceed signout process to protect the account.",[{ text: 'OK', onPress: ()=> signOut()}])
                         }
