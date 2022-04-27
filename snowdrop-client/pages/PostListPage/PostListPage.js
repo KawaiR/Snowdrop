@@ -52,23 +52,26 @@ const PostListPage  = ({navigation}) => {
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.post} onPress={() => {
-            navigation.navigate('Page_IndPost', {id: item.id});
+            if (item.content != "[This post was deleted]") {
+                navigation.navigate('Page_IndPost', {id: item.id});
+            }
             }}>
             <View style={styles.postContent}>
                 <View style={styles.postHeader}>
-                    <Text>{item.sender.userName}</Text>
-                    <Text style={{textAlign:'right', flex: 1}}>{item.uploadDate}</Text>
+                    {(item.content != "[This post was deleted]") && <Text>{item.sender.userName}</Text>}
+                    {(item.content != "[This post was deleted]") && <Text style={{textAlign:'right', flex: 1}}>{item.uploadDate}</Text>}
                 </View>
                 <View style={styles.lineBreak}></View>
-                <Text style={styles.title}>{item.postTitle}</Text>
+                {(item.content != "[This post was deleted]") && <Text style={styles.title}>{item.postTitle}</Text>}
                 <Text>{item.content}</Text>
-                <TouchableOpacity style={styles.tagButton} onPress = {() => {}}>
+                {(item.content != "[This post was deleted]") && <TouchableOpacity style={styles.tagButton} onPress = {() => {}}>
                     <Text style={styles.tagText}>{item.tag.plant.plantImage === "general-tag" ? "General" : (item.tag.plant.plantImage === "advice-tag" ? "Advice" : item.tag.plant.plantName)}</Text>
                 </TouchableOpacity>
-                <View style={styles.voteRowStyle}>
+                }
+                {(item.content != "[This post was deleted]") && <View style={styles.voteRowStyle}>
                     <Chip icon="thumb-up" textStyle={{fontSize: 12,}} style={styles.chip}>{item.upvotes}</Chip>
                     <Chip icon="thumb-down" textStyle={{fontSize: 12,}}>{item.downvotes}</Chip>
-                </View>
+                </View>}
             </View>
         </TouchableOpacity>
     );

@@ -27,6 +27,31 @@ const Page_Profile_Email_Account = ({ navigation }) => {
     }, []);
     const [email, onChangeEmail] = React.useState(global.email);
 
+    async function getPost(id) {
+        try {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/users/' + global.userName + '/get-info', {
+                method: 'GET'
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log(result);
+                        
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
     async function signOut() {
         try {
             onChangeEmail("LogOut Successful");
