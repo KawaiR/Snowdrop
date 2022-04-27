@@ -138,6 +138,7 @@ const Page_Create_Account  = ({navigation}) => {
 								AsyncStorage.setItem("userName",global.userName);
 								// navigation.navigate("Location_Permission");
 								setLocation();
+								setEditorPrivilage();
 								navigation.navigate("Home");
 							})
 						}
@@ -189,8 +190,39 @@ const Page_Create_Account  = ({navigation}) => {
 						AsyncStorage.setItem("userName",global.userName);
 						// navigation.navigate("Location_Permission");
 						setLocation();
+						setEditorPrivilage();
 						navigation.navigate("Home");
 					});
+				}
+			})
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+	}
+
+	async function setEditorPrivilage() {
+		try {
+			let response = await fetch(`https://quiet-reef-93741.herokuapp.com/users/`+global.userName+`/get-info`, {
+				method: "GET",
+				headers: {
+				"Content-Type": "application/json; charset=utf-8",
+				},
+			})
+			.then((response) => {
+				if (response.status == 404 || response.status == 400) {
+				}
+				else {
+					response.json().then((result) => {
+						if (result.editorPrivilege == 0) {
+							global.editorPrivilege = false;
+							AsyncStorage.setItem("editorPrivilege","false");
+						}
+						else {
+							global.editorPrivilege = true;
+							AsyncStorage.setItem("editorPrivilege","true");
+						}
+					})
 				}
 			})
 		} catch (err) {

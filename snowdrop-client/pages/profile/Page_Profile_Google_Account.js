@@ -5,7 +5,7 @@ import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import * as Google from 'expo-google-app-auth';
-import { Appbar } from 'react-native-paper';
+import { Appbar, Dialog } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {
@@ -31,9 +31,11 @@ const Page_Profile_Google_Account = ({ navigation }) => {
 		global.isEmail = undefined;
 		global.googleID = undefined;
 		global.userName = undefined;
+		global.editorPrivilege = undefined;
 		AsyncStorage.removeItem("isEmail");
 		AsyncStorage.removeItem("googleID");
 		AsyncStorage.removeItem("userName");
+		AsyncStorage.removeItem("editorPrivilege");
 		if (global.expoPushToken != "null") {
 			AsyncStorage.removeItem("expoPushToken");
 			fetch('https://quiet-reef-93741.herokuapp.com/devices/remove', {
@@ -57,6 +59,56 @@ const Page_Profile_Google_Account = ({ navigation }) => {
 		}
 		navigation.navigate("Page_Sign_In");
 	}
+
+	async function deleteAccount() {
+        try {
+			fetch('https://quiet-reef-93741.herokuapp.com/users/delete', {
+				method: 'POST',
+				headers: {
+					"Content-Type": "application/json; charset=utf-8",
+				},
+				body: JSON.stringify({
+					userName: global.userName,
+				}),
+			})
+			.then((response) => {
+				response.json().then((result) => {
+				    console.log("Delete Account Response: ", result);
+				})
+				global.isEmail = undefined;
+				global.googleID = undefined;
+				global.userName = undefined;
+                global.expoPushToken = undefined;
+				AsyncStorage.removeItem("isEmail");
+				AsyncStorage.removeItem("googleID");
+				AsyncStorage.removeItem("userName");
+                AsyncStorage.removeItem("expoPushToken");
+                navigation.navigate("Page_Sign_In")
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
+	async function verifyAccount() {
+		try {
+			const result = await Google.logInAsync({
+			androidClientId: "1057168519364-q6ubd34uinifouhjccbfa17nsgngvhgn.apps.googleusercontent.com",
+			iosClientId: "1057168519364-13l42e2uflp9m7898h7vvug7hogr9cjt.apps.googleusercontent.com",
+			scopes: ['profile', 'email'],
+			});
+			if (result.type === 'success') {
+				if (global.googleID == result.user.id) {
+					deleteAccount();
+					return;
+				}
+			}
+		} catch (e) {
+		}
+		Alert.alert("Warning: User Mismatch!","The information provided does not match the current account.\nWe will proceed signout process to protect the account.",[{ text: 'OK', onPress: ()=> signOutWithGoogleAsync()}])
+	}
+
 
 	let [fontsLoaded] = useFonts({
 		Alata_400Regular,
@@ -90,7 +142,7 @@ const Page_Profile_Google_Account = ({ navigation }) => {
 						</Text>
 					</TouchableOpacity>
 
-					<TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Delete_Account_Button]}    >
+					<TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Delete_Account_Button]} onPress={()=>{verifyAccount();}}   >
 						<Text style={noneModeStyles._Main_Button_Description}>
 							Delete Account
 						</Text>

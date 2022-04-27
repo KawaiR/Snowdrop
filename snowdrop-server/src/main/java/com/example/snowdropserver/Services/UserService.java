@@ -1,15 +1,9 @@
 package com.example.snowdropserver.Services;
 
 import com.example.snowdropserver.Exceptions.*;
+import com.example.snowdropserver.Models.*;
 import com.example.snowdropserver.Models.Domains.*;
-import com.example.snowdropserver.Models.Plant;
-import com.example.snowdropserver.Models.PlantCare;
-import com.example.snowdropserver.Models.ResetToken;
-import com.example.snowdropserver.Models.User;
-import com.example.snowdropserver.Repositories.PlantCareRepository;
-import com.example.snowdropserver.Repositories.PlantRepository;
-import com.example.snowdropserver.Repositories.ResetTokenRepository;
-import com.example.snowdropserver.Repositories.UserRepository;
+import com.example.snowdropserver.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.google.common.hash.Hashing;
 
+import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -33,18 +28,26 @@ public class UserService {
     private final JavaMailSender javaMailSender;
     private final PlantRepository plantRepository;
     private final PlantCareRepository plantCareRepository;
+    private final PostRepository postRepository;
+    private final DeviceRepository deviceRepository;
+    private final CommentRepository commentRepository;
+    private final UserPostMappingsRepository userPostMappingsRepository;
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
 
     // this autowired annotation is magic that will link the correct repository into this constructor to make the service
     @Autowired
-    public UserService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, JavaMailSender javaMailSender, PlantRepository plantRepository, PlantCareRepository plantCareRepository) {
+    public UserService(UserRepository userRepository, ResetTokenRepository resetTokenRepository, JavaMailSender javaMailSender, PlantRepository plantRepository, PlantCareRepository plantCareRepository, PostRepository postRepository, DeviceRepository deviceRepository, CommentRepository commentRepository, UserPostMappingsRepository userPostMappingsRepository) {
         this.userRepository = userRepository;
         this.resetTokenRepository = resetTokenRepository;
         this.javaMailSender = javaMailSender;
         this.plantRepository = plantRepository;
         this.plantCareRepository = plantCareRepository;
+        this.postRepository = postRepository;
+        this.deviceRepository = deviceRepository;
+        this.commentRepository = commentRepository;
+        this.userPostMappingsRepository = userPostMappingsRepository;
     }
 
     public List<User> getAllUsers() {
@@ -554,4 +557,75 @@ public class UserService {
         return user.get().getPlants();
     }
     */
+
+
+    @PostConstruct
+    public void init() {
+        Optional<User> maybeUser = userRepository.getByUserName("anonymous");
+        if (!maybeUser.isPresent()) {
+            User user = User.builder()
+                    .email(null)
+                    .passwordHash(null)
+                    .userName("anonymous")
+                    .authTokenHash(null)
+                    .googleID(null)
+                    .totalPoints(0)
+                    .expertiseLevel("")
+                    .editorPrivilege(0)
+                    .build();
+            userRepository.save(user);
+        }
+    }
+
+    public void deleteUser(String username) {
+        Optional<User> maybeUser = userRepository.getByUserName(username);
+        if (!maybeUser.isPresent()) {
+            System.out.println("User not found.");
+            throw new EmailNotFoundException();
+        }
+        User user = maybeUser.get();
+        Optional<User> maybeAnonymousUser = userRepository.getByUserName("anonymous");
+        if (!maybeAnonymousUser.isPresent()) {
+            System.out.println("User not found.");
+            throw new EmailNotFoundException();
+        }
+        User anonymousUser = maybeAnonymousUser.get();
+        // delete all the plantCare Information of the user
+        for (PlantCare plantCare: plantCareRepository.getByUser(user)) {
+            plantCareRepository.delete(plantCare);
+        }
+        for (Device device: deviceRepository.getByUser(user)) {
+            deviceRepository.delete(device);
+        }
+        for (Post post: postRepository.getBySender(user)) {
+            post.setSender(anonymousUser);
+            postRepository.save(post);
+        }
+        for (Comment comment: commentRepository.getBySender(user)) {
+            comment.setSender(anonymousUser);
+            commentRepository.save(comment);
+        }
+        for (UserPostMappings userPostMapping : userPostMappingsRepository.findByUser(user)) {
+            userPostMapping.setUser(anonymousUser);
+            userPostMappingsRepository.save(userPostMapping);
+        }
+        userRepository.delete(userRepository.getByUserName(username).get());
+    }
+
+
 }
+
+
+//        Optional<User> maybeAnonymousUser = userRepository.getByUserName("anonymous");
+//        if (!maybeAnonymousUser.isPresent()) {
+//            AddUserDomain domain = AddUserDomain.builder().userName("anonymous").email("anonymous").password("\t").build();
+//            addUser(domain);
+//            maybeAnonymousUser = userRepository.getByUserName("anonymous");
+//        }
+//        User anonymousUser = maybeAnonymousUser.get();
+//        // set post sender to anonymous
+//        for (Post post: postRepository.getBySender(user)) {
+//            post.setSender();
+//        }
+//        // delete the user object
+//        userRepository.delete(user);

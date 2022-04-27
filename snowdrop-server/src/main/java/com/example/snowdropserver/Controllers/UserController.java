@@ -94,6 +94,11 @@ public class UserController {
         userService.updateEmail(updateEmailDomain);
     }
 
+    @PostMapping(value = "/delete")
+    public void deleteUser(@RequestBody AddUserDomain addUserDomain) {
+        userService.deleteUser(addUserDomain.getUserName());
+    }
+    
     @GetMapping(value = "/{username}/get-info")
     public UserInfoDomain getUserInfo(@PathVariable String username) {
         return userService.getUserInfo(username);

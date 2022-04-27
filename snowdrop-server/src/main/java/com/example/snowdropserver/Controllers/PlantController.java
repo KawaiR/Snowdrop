@@ -81,6 +81,11 @@ public class PlantController {
         return plantService.getWaterSchedules(username);
     }
 
+    @PostMapping(value = "/update")
+    public void updatePlant(@RequestBody plantUpdateDomain domain) {
+        plantService.updatePlant(domain);
+    }
+    
     @GetMapping(value = "/{username}/get-recommendation")
     public RecommendationDomain getRecommendation(@PathVariable String username) {
         return plantService.getRecommendation(username);

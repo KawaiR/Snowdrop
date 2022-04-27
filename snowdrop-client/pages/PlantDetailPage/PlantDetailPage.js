@@ -269,7 +269,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 </Card>
                 <TouchableOpacity style={styles.plantCareButton} onPress={() => navigation.navigate("Plant_Care_Recommendation", { plant: plant, id: plant.plant.id })} >
                     <Text style={styles.plantCareText}>
-                        View plant care recommendations
+                        View plant care recommendations 
 				    </Text>
                 </TouchableOpacity>
             </View>
@@ -360,10 +360,12 @@ const PlantDetailPage  = ({route, navigation}) => {
         </Portal>
 	</ScrollView>
     <FAB
+        visible={global.editorPrivilege}
+        // visible={true}
         style={styles.fab}
         icon="square-edit-outline"
         color="white"
-        onPress={() => console.log(plant)}
+        onPress={() => navigation.navigate('Plant_Edit', {plant: plant.plant})}
     />
     {/* Bottom Nav Bar */}
     <Appbar style={styles.bottom}>

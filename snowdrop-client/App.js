@@ -22,6 +22,7 @@ import Write_Post from './pages/write_posts/Write_Post.js';
 import IndPostPage from './pages/IndPostPage/IndPostPage.js';
 import PostListPage from './pages/PostListPage/PostListPage.js';
 import Plant_Care_Recommendation from './pages/plantCare/Plant_Care_Recommendation.js';
+import Plant_Edit from './pages/plants/Plant_Edit.js';
 import Tag_Search from './pages/PostListPage/Tag_Search.js';
 import Home from './pages/home/Home.js';
 import Plant_Recommendations from './pages/plant_recommendation/Plant_Recommendations.js';
@@ -67,7 +68,8 @@ export default function App() {
         <Stack.Screen name="Tag_Search" component={Tag_Search} />
         <Stack.Screen name="Page_PostListTag" component={PostListPage} />
         <Stack.Screen name="Page_IndPost" component={IndPostPage} />
-
+        <Stack.Screen name="Plant_Edit" component={Plant_Edit} />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
