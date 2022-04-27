@@ -28,6 +28,7 @@ import Home from './pages/home/Home.js';
 import Plant_Recommendations from './pages/plant_recommendation/Plant_Recommendations.js';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Warning: ...']);
+LogBox.ignoreAllLogs();
 
 const Stack = createNativeStackNavigator();
 
