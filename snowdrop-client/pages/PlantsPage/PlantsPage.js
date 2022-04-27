@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, ScrollView, Image, Dimensions, Alert } from "react-native";
+import { View, Text, ScrollView, Image, Dimensions, Alert, TouchableOpacity } from "react-native";
 import { Appbar, Avatar, Card, FAB, IconButton } from 'react-native-paper';
 import { useIsFocused } from "@react-navigation/native";
 import styles from './PlantsPageStyle.js';
@@ -89,6 +89,11 @@ const PlantsPage  = ({ navigation }) => {
                 <Image style={styles.plantsImage} source={require('snowdrop-client/assets/golden-pothos.png')}></Image>
             </View>
         </View>
+        <TouchableOpacity style={styles.recommendButton} onPress={() => navigation.navigate("Plant_Recommendations")} >
+            <Text style={styles.recommendText}>
+                Recommend a new plant!
+			</Text>
+        </TouchableOpacity>
 		<View style={styles.cardList}>
             {plantsList.map((plant) => 
                 <Card.Title
@@ -118,7 +123,7 @@ const PlantsPage  = ({ navigation }) => {
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={Math.min(width * 0.09, height * 0.05)} onPress={() => navigation.navigate("Home")} />
         <Appbar.Action icon="leaf" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
-        <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList")} />
+        <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList", {tagId: ""})} />
         <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
     </Appbar>
     </View>

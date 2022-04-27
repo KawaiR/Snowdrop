@@ -141,7 +141,7 @@ const IndPostPage  = ({route, navigation}) => {
 	return (
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
-        <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_PostList")}/>
+        <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_PostList", {tagId: ""})}/>
         <Appbar.Content title={<Text style={styles.headerTitle}>View Post</Text>} style={styles.headerTitle} />
         {/* <Appbar.Action icon="brightness-5" color="white" style={{marginLeft: 'auto'}}/> */}
     </Appbar.Header>
@@ -172,7 +172,7 @@ const IndPostPage  = ({route, navigation}) => {
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={Math.min(width * 0.09, height * 0.05)} onPress={() => navigation.navigate("Home")} />
         <Appbar.Action icon="leaf" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
-        <Appbar.Action icon="account-supervisor" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList")} />
+        <Appbar.Action icon="account-supervisor" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList", {tagId: ""})} />
         <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
     </Appbar>
     </View>

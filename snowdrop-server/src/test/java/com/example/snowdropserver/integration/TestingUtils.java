@@ -783,18 +783,19 @@ public class TestingUtils {
         CloseableHttpResponse response = client.execute(httpGet);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
 
-        List<Plant> recommendations = null;
+        RecommendationDomain recommendations = null;
 
         if (expectedStatusCode == 200) {
             String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
             System.out.println("Got response:\n" +
                     jsonResponse);
             recommendations = objectMapper.readValue(jsonResponse,
-                    new TypeReference<List<Plant>>() {
+                    new TypeReference<RecommendationDomain>() {
                     });
         }
         client.close();
-        return recommendations;
+
+        return recommendations.getToRecommend();
     }
 
     public static List<Comment> getPostCommentsAndExpect(int postId, int expectedStatusCode) throws Exception {
