@@ -8,13 +8,11 @@ import com.example.snowdropserver.Models.User;
 import com.example.snowdropserver.Repositories.PlantCareRepository;
 import com.example.snowdropserver.Repositories.PlantRepository;
 import com.example.snowdropserver.Repositories.UserRepository;
-import liquibase.pro.packaged.S;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -410,7 +408,7 @@ public class PlantService {
        return waterSchedules;
     }
 
-    public void updatePlant(plantUpdateDomain domain) {
+    public void updatePlant(PlantUpdateDomain domain) {
         Optional<Plant> maybePlant = plantRepository.getById(domain.getId());
         if (!maybePlant.isPresent()) {
             System.out.println("Plant not found");

@@ -7,14 +7,14 @@ import lombok.Value;
 @Value
 @Builder
 @AllArgsConstructor
-public class plantUpdateDomain {
+public class PlantUpdateDomain {
     int id;
     int sunlightLevel;
     double minTemperature;
     String soilType;
     String waterNeeds;
 
-    public plantUpdateDomain() {
+    public PlantUpdateDomain() {
         this.id = -1;
         this.sunlightLevel = -1;
         this.minTemperature = -1;

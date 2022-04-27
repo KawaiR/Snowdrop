@@ -96,7 +96,7 @@ public class UserService {
                 .authTokenHash(authTokenHash)
                 .googleID(null)
                 .totalPoints(0)
-                .expertiseLevel("")
+                .expertiseLevel("Novice")
                 .editorPrivilege(0)
                 .build();
 
@@ -377,6 +377,7 @@ public class UserService {
                 .email(user.getEmail())
                 .username(user.getUserName())
                 .totalPoints(user.getTotalPoints())
+                .expertiseLevel(user.getExpertiseLevel())
                 .build();
 
         return userInfoDomain;
@@ -517,9 +518,24 @@ public class UserService {
             changedStatus = true;
         }
 
+        if (changedStatus) {
+            user.setLeveledUp(1);
+        }
+
         userRepository.save(user);
 
         return changedStatus;
+    }
+
+    public boolean check_level(String username) {
+        User user = authenticate_user(username);
+
+        if (user.getLeveledUp() == 1) {
+            user.setLeveledUp(0);
+            return true;
+        }
+
+        return false;
     }
 
     public boolean is_editor_candidate(User user) {
@@ -557,7 +573,6 @@ public class UserService {
         return user.get().getPlants();
     }
     */
-
 
     @PostConstruct
     public void init() {
@@ -611,7 +626,6 @@ public class UserService {
         }
         userRepository.delete(userRepository.getByUserName(username).get());
     }
-
 
 }
 

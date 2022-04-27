@@ -109,6 +109,11 @@ public class UserController {
         userService.makeEditor(username);
     }
 
+    @PostMapping(value = "/{username}/check-level")
+    public boolean check_level(@PathVariable String username) {
+        return userService.check_level(username);
+    }
+
     /*
     @PostMapping(value = "/plant-for-user")
     public List<PlantCare> plantForUser(@RequestBody AuthConfirmDomain authConfirmDomain) {

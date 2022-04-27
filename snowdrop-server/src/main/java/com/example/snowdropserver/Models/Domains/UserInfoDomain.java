@@ -14,11 +14,13 @@ public class UserInfoDomain {
     String email;
     int totalPoints;
     int editorPrivilege;
+    String expertiseLevel;
 
     public UserInfoDomain() {
         username = "";
         email = "";
         totalPoints = 0;
         editorPrivilege = 0;
+        expertiseLevel = "";
     }
 }

@@ -45,6 +45,9 @@ public class User {
     @Column(name="expertise_level")
     String expertiseLevel;
 
+    @Column(name="leveled_up")
+    int leveledUp;
+
 //    @OneToMany(mappedBy = "user")
 //    @JsonManagedReference
 //    @ToString.Exclude

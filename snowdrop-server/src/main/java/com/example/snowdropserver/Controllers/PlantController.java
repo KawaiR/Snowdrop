@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -82,17 +81,12 @@ public class PlantController {
     }
 
     @PostMapping(value = "/update")
-    public void updatePlant(@RequestBody plantUpdateDomain domain) {
+    public void updatePlant(@RequestBody PlantUpdateDomain domain) {
         plantService.updatePlant(domain);
     }
     
     @GetMapping(value = "/{username}/get-recommendation")
     public RecommendationDomain getRecommendation(@PathVariable String username) {
         return plantService.getRecommendation(username);
-    }
-
-    @PostMapping(value = "/{plantId}/edit-info")
-    public PlantInfoDomain editPlantInfo(@PathVariable int plantId, @RequestBody EditPlantDomain editPlantDomain) {
-        return plantService.editPlantInfo(plantId, editPlantDomain);
     }
 }
