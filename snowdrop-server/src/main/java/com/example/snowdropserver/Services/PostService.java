@@ -19,15 +19,17 @@ public class PostService {
     private final TagRepository tagRepository;
     private final UserPostMappingsRepository userPostRepository;
     private final UserService userService;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, PlantRepository plantRepository, TagRepository tagRepository, UserPostMappingsRepository userPostRepository, UserService userService) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PlantRepository plantRepository, TagRepository tagRepository, UserPostMappingsRepository userPostRepository, UserService userService, CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.plantRepository = plantRepository;
         this.tagRepository = tagRepository;
         this.userPostRepository = userPostRepository;
         this.userService = userService;
+        this.commentRepository = commentRepository;
     }
 
     public List<Post> getAllPosts() {
@@ -247,8 +249,18 @@ public class PostService {
             throw new NotSenderException();
         }
 
+        List<Comment> comments = commentRepository.findByParent(post);
+        for (Comment c: comments) {
+            commentRepository.delete(c);
+        }
+
+        List<UserPostMappings> mappings = userPostRepository.findByPost(post);
+        for (UserPostMappings m: mappings) {
+            userPostRepository.delete(m);
+        }
+
         postRepository.delete(post);
-        System.out.println("Post deleted!");
+        System.out.println("Post and comments deleted!");
     }
 
 }

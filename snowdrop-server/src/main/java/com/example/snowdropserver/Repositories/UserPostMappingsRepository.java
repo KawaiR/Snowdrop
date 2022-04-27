@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface UserPostMappingsRepository extends JpaRepository<UserPostMappings, Integer> {
     List<UserPostMappings> findByUser(User user);
     Optional<UserPostMappings> findByPostAndUser(Post post, User user);
+    List<UserPostMappings> findByPost(Post post);
 }

@@ -532,6 +532,7 @@ public class UserService {
 
         if (user.getLeveledUp() == 1) {
             user.setLeveledUp(0);
+            userRepository.save(user);
             return true;
         }
 
