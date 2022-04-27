@@ -203,7 +203,7 @@ const Home = ({ route, navigation }) => {
 
                         <View>
                             {plantsList.length > 0 && plantsList.map((plantCare) =>
-                                <Card mode="outlined" style={styles.card} onPress={() => navigation.navigate("Page_PlantDetail", { plant: plantCare, id: plantCare.id })}>
+                                <Card mode="outlined" style={styles.card} onPress={() => navigation.navigate("Page_PlantDetailHome", { plant: plantCare, id: plantCare.id })}>
                                     <Card.Title
                                         key={plantCare.id}
                                         style={styles.cardTitle}
