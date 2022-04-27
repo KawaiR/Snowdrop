@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, ScrollView, Image, Dimensions, Alert } from "react-native";
-import { Appbar, Chip, Card, FAB, IconButton, ToggleButton } from 'react-native-paper';
+import { View, Text, ScrollView, FlatList, Dimensions, Alert } from "react-native";
+import { Appbar, Chip, Portal, Dialog, IconButton, Button, Provider, TextInput } from 'react-native-paper';
+import { useIsFocused } from "@react-navigation/native";
 
 import styles from './IndPostPageStyle.js';
 
@@ -22,14 +23,21 @@ const IndPostPage  = ({route, navigation}) => {
     const [upvoteSelected, setUpvoteSelected] = React.useState(0);
     const [downvoteSelected, setDownvoteSelected] = React.useState(0);
 
+    const [deleteVisible, setDeleteVisible] = React.useState(false);
+    const [commentDeleteVisible, setCommentDeleteVisible] = React.useState(false);
+    const [newComment, setNewComment] = React.useState("");
+    const [commentList, setCommentList] = React.useState([]);
+    const [deletingComment, setDeletingComment] = React.useState("");
 
+    const isFocused = useIsFocused()
     useEffect(() => {
         if (userName == "") {
             console.log("use effect");
             getPost(id);
+            getComment(id);
             getVoteResult(id);
         }
-        console.log("status- " + status);
+        console.log("comment- " + commentList);
         if (status == 1) {
             setUpvoteSelected(true);
             setDownvoteSelected(false);
@@ -41,7 +49,7 @@ const IndPostPage  = ({route, navigation}) => {
             setUpvoteSelected(false);
         }
         
-    });
+    }, [isFocused]);
 
     async function getPost(id) {
         try {
@@ -66,6 +74,97 @@ const IndPostPage  = ({route, navigation}) => {
                         setDownvote(result.downvotes);
                         // setStatus(result.voted);
 					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
+    async function getComment(id) {
+        try {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/comments/' + id + '/get-comments', {
+                method: 'GET'
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log(result);
+                        setCommentList(result);
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
+    async function deletePost() {
+        setDeleteVisible(false)
+        console.log("delete post entered")
+        try {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/posts/' + id + "/delete-post", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                }),
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+                        console.log('fail');
+                        setDeleteVisible(false);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+                    console.log('success');
+                    navigation.navigate("Page_PostList");
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
+    async function deleteComment() {
+        console.log("delete Comment entered")
+        console.log(deletingComment)
+        setCommentDeleteVisible(false)
+        try {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/comments/' + deletingComment + "/delete-comment", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                }),
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+                        console.log('fail');
+                        setCommentDeleteVisible(false);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+                    console.log('success');
+                    getComment(id);
 				}
 			});
 		} catch (err) {
@@ -100,6 +199,40 @@ const IndPostPage  = ({route, navigation}) => {
 			console.log("Fetch didnt work.");
 			console.log(err);
 		}
+    }
+
+    async function makeComment() {
+        console.log(newComment);
+        try {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/comments/' + id + "/create-comment", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                    content: newComment,
+                }),
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+                        console.log('fail');
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+                    console.log('success');
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+        setNewComment("");
+        getComment(id)
+
     }
 
     async function voteRequest(newVote) {
@@ -138,14 +271,34 @@ const IndPostPage  = ({route, navigation}) => {
 		}
     }
 
+    const renderItem = ({ item }) => (
+        <View style={styles.post}>
+        <View style={styles.postContent}>
+            <View style={styles.postHeader}>
+                <Text>{item.sender.userName}</Text>
+                <Text style={{textAlign:'right', flex: 1}}>{item.uploadDate}</Text>
+            </View>
+            <View style={styles.lineBreak}></View>
+            <Text>{item.content}</Text>
+        </View>
+        {(global.userName == item.sender.userName) && <IconButton icon="trash-can" style={{marginLeft: 'auto'}} onPress={() => {setDeletingComment(item.id); setCommentDeleteVisible(true);}}></IconButton>}
+        </View>
+    );
+
+    const renderEmpty = () => (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20, backgroundColor: '#EDEECB',}}>
+            <Text style={styles.noPostText}>No comments at the moment</Text>
+        </View>
+    )
+
 	return (
+    <Provider>
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_PostList", {tagId: ""})}/>
         <Appbar.Content title={<Text style={styles.headerTitle}>View Post</Text>} style={styles.headerTitle} />
-        {/* <Appbar.Action icon="brightness-5" color="white" style={{marginLeft: 'auto'}}/> */}
     </Appbar.Header>
-	<ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
+	{/* <ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
         <View style={styles.post}>
         <View style={styles.postContent}>
             <View style={styles.postHeader}>
@@ -158,17 +311,98 @@ const IndPostPage  = ({route, navigation}) => {
 
         </View>
         <View style={styles.postVotes}>
-            {/* <Text>{upvote + " upvote\t" + downvote + " downvotes"}</Text>
-            <ToggleButton.Row onValueChange={value => votePost(value)} value={vote}>
-                <ToggleButton icon="thumb-up-outline" value="up" size={20} style={styles.toggle}/>
-                <ToggleButton icon="thumb-down-outline" value="down" size={20} style={styles.toggle}/>
-            </ToggleButton.Row> */}
             <Chip icon="thumb-up" onPress={() => voteRequest(1)} selected={upvoteSelected} textStyle={{fontSize: 12,}} style={styles.chip}>{upvote}</Chip>
             <Chip icon="thumb-down" onPress={() => voteRequest(0)} textStyle={{fontSize: 12,}} selected={downvoteSelected} style={styles.chip}>{downvote}</Chip>
+            {(global.userName == userName) && <IconButton icon="trash-can" style={{marginLeft: 'auto'}} onPress={() => setDeleteVisible(true)}></IconButton>}
         </View>
         </View>
+        <View style={styles.textInputView}>
+            <TextInput
+                style={styles.textInput}
+                label="New Comment"
+                activeUnderlineColor="#005500"
+                placeholder="New comment"
+                value={newComment}
+                multiline={true}
+                onChangeText={text => setNewComment(text)}
+            />
+            {(newComment != "") && <IconButton icon="send" onPress={makeComment}></IconButton>}
+        </View> */}
+
+        <FlatList
+            ListHeaderComponent={
+                <>
+                    <View style={styles.post}>
+                    <View style={styles.postContent}>
+                        <View style={styles.postHeader}>
+                            <Text>{"@" + userName}</Text>
+                            <Text style={{textAlign:'right', flex: 1}}>{date}</Text>
+                        </View>
+                        <View style={styles.lineBreak}></View>
+                        <Text style={styles.title}>{title}</Text>
+                        <Text>{postContent}</Text>
+
+                    </View>
+                    <View style={styles.postVotes}>
+                        <Chip icon="thumb-up" onPress={() => voteRequest(1)} selected={upvoteSelected} textStyle={{fontSize: 12,}} style={styles.chip}>{upvote}</Chip>
+                        <Chip icon="thumb-down" onPress={() => voteRequest(0)} textStyle={{fontSize: 12,}} selected={downvoteSelected} style={styles.chip}>{downvote}</Chip>
+                        {(global.userName == userName) && <IconButton icon="trash-can" style={{marginLeft: 'auto'}} onPress={() => setDeleteVisible(true)}></IconButton>}
+                    </View>
+                    </View>
+                    <View style={styles.textInputView}>
+                        <TextInput
+                            style={styles.textInput}
+                            label="New Comment"
+                            activeUnderlineColor="#005500"
+                            placeholder="New comment"
+                            value={newComment}
+                            multiline={true}
+                            onChangeText={text => setNewComment(text)}
+                        />
+                        {(newComment != "") && <IconButton icon="send" onPress={makeComment}></IconButton>}
+                    </View>
+                    <Portal>
+                        <Dialog visible={deleteVisible} onDismiss={() => setDeleteVisible(false)}>
+                            <Dialog.Title>Deleting Post</Dialog.Title>
+                            <Dialog.Content>
+                            <Text>Do you want to delete this post?</Text>
+                            </Dialog.Content>
+                            <Dialog.Actions>
+                            <Button onPress={deletePost}>Yes</Button>
+                            <Button onPress={() => setDeleteVisible(false)}>Cancel</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                        <Dialog visible={commentDeleteVisible} onDismiss={() => setCommentDeleteVisible(false)}>
+                            <Dialog.Title>Deleting Comment</Dialog.Title>
+                            <Dialog.Content>
+                            <Text>Do you want to delete this comment?</Text>
+                            </Dialog.Content>
+                            <Dialog.Actions>
+                            <Button onPress={deleteComment}>Yes</Button>
+                            <Button onPress={() => setCommentDeleteVisible(false)}>Cancel</Button>
+                            </Dialog.Actions>
+                        </Dialog>
+                    </Portal>
+                </>
+            }
+            data={commentList}
+            renderItem={renderItem}
+        />
+
+        {/* <Portal>
+            <Dialog visible={deleteVisible} onDismiss={() => setDeleteVisible(false)}>
+                <Dialog.Title>Deleting Post</Dialog.Title>
+                <Dialog.Content>
+                <Text>Do you want to delete this post?</Text>
+                </Dialog.Content>
+                <Dialog.Actions>
+                <Button onPress={deletePost}>Yes</Button>
+                <Button onPress={() => setDeleteVisible(false)}>Cancel</Button>
+                </Dialog.Actions>
+            </Dialog>
+        </Portal>
         
-	</ScrollView>
+	</ScrollView> */}
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={Math.min(width * 0.09, height * 0.05)} onPress={() => navigation.navigate("Home")} />
         <Appbar.Action icon="leaf" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
@@ -176,5 +410,6 @@ const IndPostPage  = ({route, navigation}) => {
         <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
     </Appbar>
     </View>
+    </Provider>
 )}
 export default IndPostPage

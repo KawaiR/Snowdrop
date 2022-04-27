@@ -23,9 +23,13 @@ function pxRD(px, cur_screen, base) {
 
 const Page_Profile_Google_Account = ({ navigation }) => {
 
+    const isFocused = useIsFocused();
 	useEffect(() => {
-	}, []);
+            getUser();
+    }, [isFocused]);
 	const [token, onChangeToken] = React.useState(global.googleID);
+	const [level, setLevel] = React.useState("");
+
 	async function signOutWithGoogleAsync() {
 		global.isEmail = undefined;
 		global.googleID = undefined;
@@ -89,6 +93,33 @@ const Page_Profile_Google_Account = ({ navigation }) => {
 			console.log(err);
 		}
     }
+	
+	async function getUser(id) {
+        try {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/users/' + global.userName + '/get-info', {
+                method: 'GET'
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log(result);
+                        if (level != result.expertiseLevel) {
+                            setLevel(result.expertiseLevel);
+                        }
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
 
 	async function verifyAccount() {
 		try {
@@ -134,6 +165,8 @@ const Page_Profile_Google_Account = ({ navigation }) => {
 
 					<Text style={{ top: pxRD(150, height, base_height), alignSelf: "center", fontFamily: 'Lato_400Regular', fontSize: 18, textAlign: "center", width: pxRD(base_width * 0.8, width, base_width) }} numberOfLines={1}>{"Google ID: " + token}</Text>
 					<Text style={{ top: pxRD(160, height, base_height), alignSelf: "center", fontFamily: 'Lato_400Regular', fontSize: 18, textAlign: "center", width: pxRD(base_width * 0.8, width, base_width) }} numberOfLines={1}>{"Username: " + global.userName}</Text>
+					<Text style={{ top: pxRD(170, height, base_height), fontFamily: 'Lato_400Regular', alignSelf: "center", textAlign: "center", fontSize: 18, width: pxRD(base_width * 0.8, width, base_width) }} numberOfLines={1}>{level}</Text>
+
 					
 					<TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Sign_Out]} onPress={() => signOutWithGoogleAsync()}  >
 						<Text style={[noneModeStyles._Main_Button_Description, { fontSize: 12 }]}>

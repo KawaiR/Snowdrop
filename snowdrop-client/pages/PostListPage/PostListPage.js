@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, SafeAreaView, FlatList, Dimensions, Alert, TouchableOpacity } from "react-native";
-import { Appbar, Chip, Card, Title, Paragraph, FAB } from 'react-native-paper';
+import { Appbar, Chip, Card, Title, Paragraph, Portal, Provider, FAB, Dialog, Button } from 'react-native-paper';
 import { useIsFocused } from "@react-navigation/native";
 
 import styles from './PostListPageStyle.js';
@@ -12,6 +12,8 @@ const PostListPage  = ({route, navigation}) => {
 
     const [tag, setTag] = React.useState(tagId); // change to route later
     const [posts, setPosts] = React.useState([]);
+
+    const [levelup, setLevelup] = React.useState(false);
 
     async function getPosts() {
         // console.log("get post")
@@ -31,8 +33,41 @@ const PostListPage  = ({route, navigation}) => {
 				}
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
-                        console.log('success');
-                        setPosts(result)
+                        // console.log('success');
+						// console.log(result);
+                        setPosts(result.reverse())
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    };
+
+    async function getLevelHelper() {
+        console.log("helper")
+        let url = "https://quiet-reef-93741.herokuapp.com/users/" + global.userName + "/check-level";
+        try {
+			let response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                }),
+            }).then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log('!!!!helper!!!');
+                        console.log('success: ' + result);
+                        setLevelup(result);
 					});
 				}
 			});
@@ -46,13 +81,14 @@ const PostListPage  = ({route, navigation}) => {
     useEffect(() => {
         if (isFocused) {
             getPosts();
+            getLevelHelper();
         }
         
     }, [isFocused]);
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.post} onPress={() => {
-            navigation.navigate('Page_IndPost', {id: item.id});
+                navigation.navigate('Page_IndPost', {id: item.id});
             }}>
             <View style={styles.postContent}>
                 <View style={styles.postHeader}>
@@ -80,6 +116,7 @@ const PostListPage  = ({route, navigation}) => {
     )
 
 	return (
+    <Provider>
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
     <Appbar.BackAction color="white" onPress={() => navigation.navigate("Home")}/>
@@ -88,11 +125,39 @@ const PostListPage  = ({route, navigation}) => {
     </Appbar.Header>
 	<SafeAreaView style={styles.scroll}>
         <FlatList
+            ListHeaderComponent={
+                <>
+                <Portal>
+                    <Dialog visible={levelup} onDismiss={() => setLevelup(false)}>
+                        <Dialog.Title>Congrats!</Dialog.Title>
+                        <Dialog.Content>
+                        <Text>Expertise level up!</Text>
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                        <Button onPress={() => setLevelup(false)}>Okay</Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
+                </>
+            }
             data={posts}
             renderItem={renderItem}
             ListEmptyComponent={renderEmpty}
         />
 	</SafeAreaView>
+
+    {/* <Portal>
+        <Dialog visible={levelup} onDismiss={() => setLevelup(false)}>
+            <Dialog.Title>Congrats!</Dialog.Title>
+            <Dialog.Content>
+            <Text>Expertise level up!</Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+            <Button onPress={() => setLevelup(false)}>Okay</Button>
+            </Dialog.Actions>
+        </Dialog>
+    </Portal> */}
+
     <FAB
         style={styles.fab}
         icon="plus"
@@ -107,5 +172,6 @@ const PostListPage  = ({route, navigation}) => {
         <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
     </Appbar>
     </View>
+    </Provider>
 )}
 export default PostListPage
