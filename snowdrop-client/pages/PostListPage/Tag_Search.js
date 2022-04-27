@@ -6,7 +6,6 @@ import { useIsFocused } from "@react-navigation/native";
 import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
-import plantImage from '../../assets/golden-pothos.png';
 
 const {
     width,

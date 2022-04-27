@@ -32,22 +32,22 @@ class Plants_Search extends React.Component {
                 if (item.plantName != null && item.scientificName != null) {
                     // Both name and scientific name are not null
                     // Filter using either one
-                    const itemName = item.plantName;
-                    const itemScientific = item.scientificName;
-                    const textData = text;
+                    const itemName = item.plantName.toLowerCase();
+                    const itemScientific = item.scientificName.toLowerCase();
+                    const textData = text.toLowerCase();
                     return itemName.indexOf(textData) > -1 || itemScientific.indexOf(textData) > -1;
                 } else if (item.plantName != null) {
                     // Only name is not null - filter using name
-                    itemData = item.plantName;
+                    itemData = item.plantName.toLowerCase();
                 } else if (item.scientificName != null) {
                     // Only scientific is not null - filter using scientific
-                    itemData = item.scientificName;
+                    itemData = item.scientificName.toLowerCase();
                 } else {
                     // Both are null - shouldn't happen
                     console.log("This shouldn't happen");
                     return false;
                 }
-                const textData = text;
+                const textData = text.toLowerCase();
                 return itemData.indexOf(textData) > -1;
             });
             this.setState({ search: text, filteredDataSource: newData, });
