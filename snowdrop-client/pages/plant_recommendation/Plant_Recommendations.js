@@ -29,7 +29,7 @@ const Plant_Recommendations = ({ navigation }) => {
         if (isFocused) {
             getPlantRecommendations();
         }
-    }, [isFocused]);
+    }, [isFocused, expertise]);
 
     let [fontsLoaded] = useFonts({
         Alata_400Regular,
@@ -51,17 +51,17 @@ const Plant_Recommendations = ({ navigation }) => {
                     }
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
-                            setPlantsList(result);
+                            var items = result.toRecommend.filter(item => item.plantImage !== "general-tag" && item.plantImage !== "advice-tag");
+                            setPlantsList(items);
 
-                            var resultExpertise = "Intermediate";
                             setIsExpertiseSet(true);
-                            setExpertise(resultExpertise);
+                            setExpertise(result.expertiseLevel);
 
-                            if (resultExpertise === "Beginner") {
+                            if (expertise === "Novice" || expertise === "Beginner") {
                                 setExpertiseUrl("https://www.pngitem.com/pimgs/m/126-1266771_magnifying-glass-clipart-transparent-png-png-download.png");
-                            } else if (resultExpertise === "Expert" || resultExpertise === "Advanced") {
+                            } else if (expertise === "Expert" || expertise === "Advanced") {
                                 setExpertiseUrl("https://thumbs.dreamstime.com/b/gold-medal-red-ribbon-vector-icon-flat-cartoon-golden-medallion-award-hanging-isolated-white-clipart-gold-medal-red-114163088.jpg");
-                            } else if (resultExpertise === "Intermediate" || resultExpertise === "Novice") {
+                            } else if (expertise === "Intermediate" || expertise === "Enthusiast") {
                                 setExpertiseUrl("https://www.adazing.com/wp-content/uploads/2019/02/open-book-clipart-03.png");
                             }
                         });
@@ -107,7 +107,7 @@ const Plant_Recommendations = ({ navigation }) => {
                 <Appbar.Content title={<Text style={styles.headerTitle}>Add Plant</Text>} style={styles.headerTitle} />
             </Appbar.Header>
 
-            <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+            <ScrollView style={{ marginBottom: 65, }} bounces={false} showsVerticalScrollIndicator={false}>
                 <View style={styles.expertiseContainer}>
                     {isExpertiseSet &&
                         <View style={styles.rowContainer}>
@@ -132,7 +132,7 @@ const Plant_Recommendations = ({ navigation }) => {
                             titleStyle={styles.cardText}
                             subtitleStyle={styles.cardText}
                             title={(plant.plantName != null) ? plant.plantName : 'No common name'}
-                            subtitle={(plant.difficulty === "B") ? "Difficulty: Beginner" : (plant.difficulty === "I" ? "Difficulty: Intermediate" : "Diffculty: Expert")}
+                            subtitle={(plant.difficulty === "B") ? "Difficulty: Beginner" : (plant.difficulty === "I" ? "Difficulty: Intermediate" : "Difficulty: Expert")}
                             left={(props) => <Avatar.Image {...props} size={height * 0.08} style={styles.cardImage} source={{ uri: plant.plantImage }} />}
                             right={(props) => <IconButton {...props} icon="plus" size={35} color={'#4E4E4E'} onPress={() => navigation.navigate("Save_Plant", { plantId: plant.id })} />}
                         />
@@ -151,7 +151,7 @@ const Plant_Recommendations = ({ navigation }) => {
                 <Appbar.Action icon="home" color="#005500" size={Math.min(width * 0.09, height * 0.05)} />
                 <Appbar.Action icon="leaf" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
                 <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList")} />
-                <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} />
+                <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}}  />
             </Appbar>
         </View>
     );
