@@ -256,7 +256,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setWaterVisible(true);}} />}
                     />
                 </Card>
-                <Card mode="outlined" style={styles.card}>
+                {/* <Card mode="outlined" style={styles.card}>
                     <Card.Title
                         style={styles.cardTitle}
                         titleStyle={styles.cardText}
@@ -266,7 +266,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                         left={(props) =>  <IconButton {...props} icon="leaf" size={50} color={'#4E4E4E'}/>}
                         right={(props) => <IconButton {...props} icon="checkbox-marked-circle-outline" size={30} color={'#4E4E4E'} onPress={() => {setFertilizerVisible(true);}} />}
                     />
-                </Card>
+                </Card> */}
                 <TouchableOpacity style={styles.plantCareButton} onPress={() => navigation.navigate("Plant_Care_Recommendation", { plant: plant, id: plant.plant.id })} >
                     <Text style={styles.plantCareText}>
                         View plant care recommendations

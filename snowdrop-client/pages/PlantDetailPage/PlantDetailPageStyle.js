@@ -92,7 +92,7 @@ export default StyleSheet.create({
         width: width * 0.91787,
         height: height * 0.1060,
         borderRadius: 25,
-        marginBottom: height * 11 / defaultH,
+        marginBottom: height * 5 / defaultH,
     },
     cardTitle: {
         justifyContent: 'center',
@@ -125,7 +125,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
         padding: 10,
         marginTop: 10,
-        marginBottom: 10,
+        marginBottom: 15,
         shadowColor: '#EDEECB',
         shadowOpacity: 0.8,
         shadowOffset: {

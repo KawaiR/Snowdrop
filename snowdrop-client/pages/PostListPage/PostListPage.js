@@ -82,6 +82,7 @@ const PostListPage  = ({route, navigation}) => {
 	return (
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
+    <Appbar.BackAction color="white" onPress={() => navigation.navigate("Home")}/>
     <Appbar.Content title={<Text style={styles.headerTitle}>Community</Text>} style={styles.headerTitle} />
     <Appbar.Action icon="magnify" color="white" style={{marginLeft: 'auto'}} onPress={() => {navigation.navigate("Tag_Search")}}/>
     </Appbar.Header>
