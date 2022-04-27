@@ -49,6 +49,7 @@ export default function App() {
         <Stack.Screen name="Page_Create_Account" component={Page_Create_Account} />
         <Stack.Screen name="Location_Permission" component={Location_Permission} />
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Page_IndPostHome" component={IndPostPage} />
         <Stack.Screen name="Page_Profile_Email_Account" component={Page_Profile_Email_Account} />
         <Stack.Screen name="Page_Forgot_Password" component={Page_Forgot_Password} />
         <Stack.Screen name="Page_Change_Password" component={Page_Change_Password} />

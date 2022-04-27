@@ -231,7 +231,7 @@ const Home = ({ route, navigation }) => {
                         <View>
                             {posts.length > 0 && posts.map((post) =>
                                 <TouchableOpacity style={styles.post} onPress={() => {
-                                    navigation.navigate('Page_IndPost', { id: post.id });
+                                    navigation.navigate('Page_IndPostHome', { id: post.id });
                                 }}>
                                     <View style={styles.postContent}>
                                         <View style={styles.postHeader}>
