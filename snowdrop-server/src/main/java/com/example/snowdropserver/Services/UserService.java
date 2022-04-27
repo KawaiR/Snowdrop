@@ -563,13 +563,14 @@ public class UserService {
     public void init() {
         Optional<User> maybeUser = userRepository.getByUserName("anonymous");
         if (!maybeUser.isPresent()) {
-            User user = User
-                    .builder()
+            User user = User.builder()
+                    .email(null)
+                    .passwordHash(null)
                     .userName("anonymous")
-                    .email("\u001a")
-                    .googleID("\u001a")
-                    .passwordHash("\u001a")
+                    .authTokenHash(null)
+                    .googleID(null)
                     .totalPoints(0)
+                    .expertiseLevel("")
                     .editorPrivilege(0)
                     .build();
             userRepository.save(user);
