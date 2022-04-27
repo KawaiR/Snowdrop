@@ -77,4 +77,18 @@ public class CommentService {
 
         return commentId;
     }
+
+    public List<Comment> getByPost(int postId) {
+        Optional<Post> maybePost = postRepository.findById(postId);
+
+        if (!maybePost.isPresent()) {
+            System.out.println("Post doesn't exist");
+            throw new PostNotFoundException();
+        }
+        Post post = maybePost.get();
+
+        List<Comment> comments = commentRepository.findByParent(post);
+
+        return comments;
+    }
 }

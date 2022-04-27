@@ -103,6 +103,12 @@ public class UserController {
     public UserInfoDomain getUserInfo(@PathVariable String username) {
         return userService.getUserInfo(username);
     }
+
+    @PostMapping(value = "/{username}/make-editor")
+    public void makeEditor(@PathVariable String username) {
+        userService.makeEditor(username);
+    }
+
     /*
     @PostMapping(value = "/plant-for-user")
     public List<PlantCare> plantForUser(@RequestBody AuthConfirmDomain authConfirmDomain) {
