@@ -223,7 +223,7 @@ const Home = ({ route, navigation }) => {
                     <View style={[styles.upcomingView, { marginBottom: height * 20 / defaultH, }]}>
                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                             <Text style={styles.upcomingText}>Recent Posts</Text>
-                            <Text style={styles.viewAllText} onPress={() => navigation.navigate("Page_PostList")}>View all</Text>
+                            <Text style={styles.viewAllText} onPress={() => navigation.navigate("Page_PostList", { tagId: "" })}>View all</Text>
                         </View>
 
                         <View>
@@ -268,7 +268,7 @@ const Home = ({ route, navigation }) => {
                 <Appbar style={styles.bottom}>
                     <Appbar.Action icon="home" color="#EDEECB" size={Math.min(width * 0.09, height * 0.05)} onPress={() => navigation.navigate("Home")} />
                     <Appbar.Action icon="leaf" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
-                    <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList")} />
+                    <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_PostList", { tagId: "" })} />
                     <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => { if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); } }} />
                 </Appbar>
             </View>
