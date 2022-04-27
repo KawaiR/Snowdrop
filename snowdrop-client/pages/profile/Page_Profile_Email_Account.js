@@ -7,6 +7,9 @@ import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import { Appbar } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { useIsFocused } from "@react-navigation/native";
+
+
 const {
     width,
     height,
@@ -23,11 +26,15 @@ function pxRD(px, cur_screen, base) {
 const Page_Profile_Email_Account = ({ navigation }) => {
     global.fertilizeTimes = new Map();
 
+    const isFocused = useIsFocused();
     useEffect(() => {
-    }, []);
-    const [email, onChangeEmail] = React.useState(global.email);
+        getUser();
+    }, [isFocused]);
 
-    async function getPost(id) {
+    const [email, onChangeEmail] = React.useState(global.email);
+    const [level, setLevel] = React.useState("");
+
+    async function getUser(id) {
         try {
 			let response = await fetch('https://quiet-reef-93741.herokuapp.com/users/' + global.userName + '/get-info', {
                 method: 'GET'
@@ -42,7 +49,9 @@ const Page_Profile_Email_Account = ({ navigation }) => {
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
                         console.log(result);
-                        
+                        if (level != result.expertiseLevel) {
+                            setLevel(result.expertiseLevel);
+                        }
 					});
 				}
 			});
@@ -113,6 +122,8 @@ const Page_Profile_Email_Account = ({ navigation }) => {
 
                     <Text style={{ top: pxRD(100, height, base_height), fontFamily: 'Lato_400Regular', alignSelf: "center", textAlign: "center", fontSize: 18, width: pxRD(base_width * 0.8, width, base_width) }} numberOfLines={1}>{"Email: " + email}</Text>
                     <Text style={{ top: pxRD(110, height, base_height), fontFamily: 'Lato_400Regular', alignSelf: "center", textAlign: "center", fontSize: 18, width: pxRD(base_width * 0.8, width, base_width) }} numberOfLines={1}>{"Username: " + global.userName}</Text>
+                    <Text style={{ top: pxRD(120, height, base_height), fontFamily: 'Lato_400Regular', alignSelf: "center", textAlign: "center", fontSize: 18, width: pxRD(base_width * 0.8, width, base_width) }} numberOfLines={1}>{level}</Text>
+
 
                     <TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Sign_Out]} onPress={() => signOut()}  >
                         <Text style={[noneModeStyles._Main_Button_Description, { fontSize: 12 }]}>

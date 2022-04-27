@@ -109,6 +109,7 @@ const IndPostPage  = ({route, navigation}) => {
 
     async function deletePost() {
         setDeleteVisible(false)
+        console.log("delete post entered")
         try {
 			let response = await fetch('https://quiet-reef-93741.herokuapp.com/posts/' + id + "/delete-post", {
                 method: 'POST',

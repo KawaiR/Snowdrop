@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, SafeAreaView, FlatList, Dimensions, Alert, TouchableOpacity } from "react-native";
-import { Appbar, Chip, Card, Title, Paragraph, FAB } from 'react-native-paper';
+import { Appbar, Chip, Card, Title, Paragraph, Portal, Provider, FAB, Dialog, Button } from 'react-native-paper';
 import { useIsFocused } from "@react-navigation/native";
 
 import styles from './PostListPageStyle.js';
@@ -11,6 +11,8 @@ const PostListPage  = ({navigation}) => {
 
     const [tag, setTag] = React.useState(""); // change to route later
     const [posts, setPosts] = React.useState([]);
+
+    const [levelup, setLevelup] = React.useState(false);
 
     async function getPosts() {
         // console.log("get post")
@@ -30,9 +32,41 @@ const PostListPage  = ({navigation}) => {
 				}
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
 					response.json().then((result) => {
-                        console.log('success');
-						console.log(result);
+                        // console.log('success');
+						// console.log(result);
                         setPosts(result.reverse())
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    };
+
+    async function getLevelHelper() {
+        console.log("helper")
+        let url = "https://quiet-reef-93741.herokuapp.com/users/" + global.userName + "/check-level";
+        try {
+			let response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                }),
+            }).then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log('!!!!helper!!!');
+                        console.log('success: ' + result);
+                        setLevelup(result);
 					});
 				}
 			});
@@ -46,32 +80,30 @@ const PostListPage  = ({navigation}) => {
     useEffect(() => {
         if (isFocused) {
             getPosts();
+            getLevelHelper();
         }
         
     }, [isFocused]);
 
     const renderItem = ({ item }) => (
         <TouchableOpacity style={styles.post} onPress={() => {
-            if (item.content != "[This post was deleted]") {
                 navigation.navigate('Page_IndPost', {id: item.id});
-            }
             }}>
             <View style={styles.postContent}>
                 <View style={styles.postHeader}>
-                    {(item.content != "[This post was deleted]") && <Text>{item.sender.userName}</Text>}
-                    {(item.content != "[This post was deleted]") && <Text style={{textAlign:'right', flex: 1}}>{item.uploadDate}</Text>}
+                    <Text>{item.sender.userName}</Text>
+                    <Text style={{textAlign:'right', flex: 1}}>{item.uploadDate}</Text>
                 </View>
                 <View style={styles.lineBreak}></View>
-                {(item.content != "[This post was deleted]") && <Text style={styles.title}>{item.postTitle}</Text>}
+                <Text style={styles.title}>{item.postTitle}</Text>
                 <Text>{item.content}</Text>
-                {(item.content != "[This post was deleted]") && <TouchableOpacity style={styles.tagButton} onPress = {() => {}}>
+                <TouchableOpacity style={styles.tagButton} onPress = {() => {}}>
                     <Text style={styles.tagText}>{item.tag.plant.plantImage === "general-tag" ? "General" : (item.tag.plant.plantImage === "advice-tag" ? "Advice" : item.tag.plant.plantName)}</Text>
                 </TouchableOpacity>
-                }
-                {(item.content != "[This post was deleted]") && <View style={styles.voteRowStyle}>
+                <View style={styles.voteRowStyle}>
                     <Chip icon="thumb-up" textStyle={{fontSize: 12,}} style={styles.chip}>{item.upvotes}</Chip>
                     <Chip icon="thumb-down" textStyle={{fontSize: 12,}}>{item.downvotes}</Chip>
-                </View>}
+                </View>
             </View>
         </TouchableOpacity>
     );
@@ -83,17 +115,46 @@ const PostListPage  = ({navigation}) => {
     )
 
 	return (
+    <Provider>
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
     <Appbar.Content title={<Text style={styles.headerTitle}>Community</Text>} style={styles.headerTitle} />
     </Appbar.Header>
 	<SafeAreaView style={styles.scroll}>
         <FlatList
+            ListHeaderComponent={
+                <>
+                <Portal>
+                    <Dialog visible={levelup} onDismiss={() => setLevelup(false)}>
+                        <Dialog.Title>Congrats!</Dialog.Title>
+                        <Dialog.Content>
+                        <Text>Expertise level up!</Text>
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                        <Button onPress={() => setLevelup(false)}>Okay</Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
+                </>
+            }
             data={posts}
             renderItem={renderItem}
             ListEmptyComponent={renderEmpty}
         />
 	</SafeAreaView>
+
+    {/* <Portal>
+        <Dialog visible={levelup} onDismiss={() => setLevelup(false)}>
+            <Dialog.Title>Congrats!</Dialog.Title>
+            <Dialog.Content>
+            <Text>Expertise level up!</Text>
+            </Dialog.Content>
+            <Dialog.Actions>
+            <Button onPress={() => setLevelup(false)}>Okay</Button>
+            </Dialog.Actions>
+        </Dialog>
+    </Portal> */}
+
     <FAB
         {...console.log(isFocused)}
         style={styles.fab}
@@ -109,5 +170,6 @@ const PostListPage  = ({navigation}) => {
         <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { navigation.navigate("Page_Profile_Email_Account"); } else { navigation.navigate("Page_Profile_Google_Account"); }}} />
     </Appbar>
     </View>
+    </Provider>
 )}
 export default PostListPage
