@@ -90,4 +90,9 @@ public class PlantController {
     public RecommendationDomain getRecommendation(@PathVariable String username) {
         return plantService.getRecommendation(username);
     }
+
+    @PostMapping(value = "/{plantId}/edit-info")
+    public PlantInfoDomain editPlantInfo(@PathVariable int plantId, @RequestBody EditPlantDomain editPlantDomain) {
+        return plantService.editPlantInfo(plantId, editPlantDomain);
+    }
 }
