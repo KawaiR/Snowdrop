@@ -79,8 +79,7 @@ const PlantsPage  = ({ navigation }) => {
 	return (
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
-        <Appbar.BackAction color="white"/>
-        <Appbar.Action icon="brightness-5" color="white" style={{marginLeft: 'auto'}}/>
+        <Appbar.BackAction color="white" onPress={() => navigation.navigate("Home")}/>
     </Appbar.Header>
 	<ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
         <View style={styles.ovalBg}>
