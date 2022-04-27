@@ -22,12 +22,12 @@ public class TestDeletePost {
 
     @Test
     public void deletePostNotUser() throws Exception {
-        TestingUtils.createUserAndExpect("deletePostNotUser11", "deletePostNotUser11@test.com",
+        TestingUtils.createUserAndExpect("deletePostNotUser111", "deletePostNotUser111@test.com",
                 "deletePostNotUser11", 201);
-        TestingUtils.createUserAndExpect("deletePostUser111", "deletePostUser111@test.com",
+        TestingUtils.createUserAndExpect("deletePostUser1111", "deletePostUser1111@test.com",
                 "deletePostUser111", 201);
-        int postId = TestingUtils.createPostAndExpect("deletePostUser11", "deletePostNotUser11",
-                "deletePostNotUser11", 544, 201);
-        TestingUtils.deletePostAndExpect(postId,"deletePostNotUser11", 400);
+        int postId = TestingUtils.createPostAndExpect("deletePostUser1111", "deletePostNotUser1111",
+                "deletePostNotUser1111", 544, 201);
+        TestingUtils.deletePostAndExpect(postId,"deletePostNotUser111", 400);
     }
 }
