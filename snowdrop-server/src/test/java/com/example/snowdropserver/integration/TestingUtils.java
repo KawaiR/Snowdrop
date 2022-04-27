@@ -824,4 +824,55 @@ public class TestingUtils {
         client.close();
         return comments;
     }
+
+    public static PlantInfoDomain updatePlantAndExpect(String username, int plantId,
+                                                       String plantImage,
+                                                       String waterNeeds, String soilType, int sunlightLevel,
+                                                       int reportedSunlight, double minTemperature, String difficulty,
+                                                       int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/plants/" + plantId + "/edit-info");
+
+
+        EditPlantDomain editPlantDomain = EditPlantDomain.builder()
+                .plantImage(plantImage)
+                .waterNeeds(waterNeeds)
+                .soilType(soilType)
+                .sunlightLevel(sunlightLevel)
+                .reportedSunlight(reportedSunlight)
+                .minTemperature(minTemperature)
+                .difficulty(difficulty)
+                .username(username)
+                .build();
+
+        System.out.println(editPlantDomain);
+
+        String json = objectMapper.writeValueAsString(editPlantDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        System.out.println("**** MAKING UPDATE PLANT REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+
+        PlantInfoDomain newInfo = null;
+
+        if (expectedStatusCode == 200) {
+            String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
+            System.out.println("Got response:\n" +
+                    jsonResponse);
+            newInfo = objectMapper.readValue(jsonResponse,
+                    new TypeReference<PlantInfoDomain>() {
+                    });
+        }
+        client.close();
+
+        return newInfo;
+    }
 }
