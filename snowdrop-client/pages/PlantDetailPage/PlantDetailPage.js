@@ -360,8 +360,8 @@ const PlantDetailPage  = ({route, navigation}) => {
         </Portal>
 	</ScrollView>
     <FAB
-        // visible={global.editorPrivilege}
-        visible={true}
+        visible={global.editorPrivilege}
+        // visible={true}
         style={styles.fab}
         icon="square-edit-outline"
         color="white"
