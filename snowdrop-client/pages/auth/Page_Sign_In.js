@@ -201,6 +201,7 @@ const Page_Sign_In  = ({navigation}) => {
 								AsyncStorage.setItem("userName",global.userName);
 								resetScreen();
 								setLocation();
+								setEditorPrivilage();
 								navigation.navigate("Home")
 							})
 						}
@@ -246,6 +247,7 @@ const Page_Sign_In  = ({navigation}) => {
 						AsyncStorage.setItem("userName",global.userName);
 						resetScreen();
 						setLocation();
+						setEditorPrivilage();
 						navigation.navigate("Home");
 					});
 				}
