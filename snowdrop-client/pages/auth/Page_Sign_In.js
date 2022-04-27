@@ -113,13 +113,13 @@ const Page_Sign_In  = ({navigation}) => {
 				if (isEmail == "false") {
 					AsyncStorage.getItem("googleID").then((googleID) => {global.googleID = googleID}).then(()=>{
 					AsyncStorage.getItem("userName").then((userName) => {global.userName = userName}).then(()=>{
-					navigation.navigate("Page_Profile_Google_Account");	
+					navigation.navigate("Home");	
 					})
 					})
 				} else {
 					AsyncStorage.getItem("email").then((email) => {global.email = email}).then(()=>{
 					AsyncStorage.getItem("userName").then((userName) => {global.userName = userName}).then(()=>{
-					navigation.navigate("Page_Profile_Email_Account");
+					navigation.navigate("Home");
 					})
 					})
 				}
@@ -201,8 +201,7 @@ const Page_Sign_In  = ({navigation}) => {
 								AsyncStorage.setItem("userName",global.userName);
 								resetScreen();
 								setLocation();
-								setEditorPrivilage();
-								navigation.navigate("Page_Profile_Google_Account");
+								navigation.navigate("Home")
 							})
 						}
 					})
@@ -247,8 +246,7 @@ const Page_Sign_In  = ({navigation}) => {
 						AsyncStorage.setItem("userName",global.userName);
 						resetScreen();
 						setLocation();
-						setEditorPrivilage();
-						navigation.navigate("Page_Profile_Email_Account");
+						navigation.navigate("Home");
 					});
 				}
 			})

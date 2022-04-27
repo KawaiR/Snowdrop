@@ -32,22 +32,22 @@ class Plants_Search extends React.Component {
                 if (item.plantName != null && item.scientificName != null) {
                     // Both name and scientific name are not null
                     // Filter using either one
-                    const itemName = item.plantName;
-                    const itemScientific = item.scientificName;
-                    const textData = text;
+                    const itemName = item.plantName.toLowerCase();
+                    const itemScientific = item.scientificName.toLowerCase();
+                    const textData = text.toLowerCase();
                     return itemName.indexOf(textData) > -1 || itemScientific.indexOf(textData) > -1;
                 } else if (item.plantName != null) {
                     // Only name is not null - filter using name
-                    itemData = item.plantName;
+                    itemData = item.plantName.toLowerCase();
                 } else if (item.scientificName != null) {
                     // Only scientific is not null - filter using scientific
-                    itemData = item.scientificName;
+                    itemData = item.scientificName.toLowerCase();
                 } else {
                     // Both are null - shouldn't happen
                     console.log("This shouldn't happen");
                     return false;
                 }
-                const textData = text;
+                const textData = text.toLowerCase();
                 return itemData.indexOf(textData) > -1;
             });
             this.setState({ search: text, filteredDataSource: newData, });
@@ -231,7 +231,7 @@ class Plants_Search extends React.Component {
 
                 {/* Bottom Nav Bar */}
                 <Appbar style={styles.bottom}>
-                    <Appbar.Action icon="home" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} onPress={() => Alert.alert("Home", "Home page not yet implemented", [{ text: 'OK' }],)} />
+                    <Appbar.Action icon="home" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} onPress={() => navigation.navigate("Home")} />
                     <Appbar.Action icon="leaf" color="#EDEECB" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => this.props.navigation.navigate("Page_Plant")} />
                     <Appbar.Action icon="account-supervisor" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => this.props.navigation.navigate("Page_PostList", {tagId: ""})} />
                     <Appbar.Action icon="brightness-5" color="#005500" size={Math.min(this.state.width * 0.09, this.state.height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => {if (global.googleID == undefined) { this.props.navigation.navigate("Page_Profile_Email_Account"); } else { this.props.navigation.navigate("Page_Profile_Google_Account"); }}} />
