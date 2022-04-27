@@ -6,27 +6,27 @@ import org.junit.Test;
 public class TestAddNewPlant {
     @Test
     public void addPlantSuccess() throws Exception {
-        TestingUtils.addNewPlant("abietinella moss",
-                "Abietinella abietina (Hedw.) Fleisch.",
-                "https://upload.wikimedia.org/wikipedia/commons/7/74/Abietinella_abietina_0293.JPG",
-                "VL",
-                "N",
-                3,
+        TestingUtils.addNewPlant("tiny bladderwort",
+                "Utricularia pusilla Vahl",
+                null,
+                "",
+                "",
                 0,
-                1,
+                0,
+                0,
                 201);
     }
 
     @Test
     public void addPlant2Success() throws Exception {
-        TestingUtils.addNewPlant("shrubby Indian mallow",
-                "Abutilon abutiloides (Jacq.) Garcke ex Hochr.",
-                "https://upload.wikimedia.org/wikipedia/commons/7/74/Abietinella_abietina_0293.JPG%22",
+        TestingUtils.addNewPlant("California valerian",
+                "Valeriana californica A. Heller",
+                null,
                 "VL",
                 "N",
-                3,
                 0,
-                1,
+                0,
+                2,
                 201);
     }
 

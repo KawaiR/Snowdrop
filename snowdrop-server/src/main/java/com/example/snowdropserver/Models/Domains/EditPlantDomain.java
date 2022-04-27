@@ -8,8 +8,6 @@ import lombok.Value;
 @Builder
 @AllArgsConstructor
 public class EditPlantDomain {
-    String plantName;
-    String scientificName;
     String plantImage;
     String waterNeeds;
     String soilType;
@@ -22,8 +20,6 @@ public class EditPlantDomain {
 
     public EditPlantDomain() {
         plantImage = "n/a";
-        scientificName = "n/a";
-        plantName = "n/a";
         waterNeeds = "n/a";
         soilType = "n/a";
         reportedSunlight = 0;
