@@ -32,8 +32,8 @@ import static org.hamcrest.Matchers.equalTo;
 public class TestingUtils {
     private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-     //private static final String baseUrl = "http://localhost:8080";
-    private static final String baseUrl = "https://quiet-reef-93741.herokuapp.com";
+    private static final String baseUrl = "http://localhost:8080";
+//    private static final String baseUrl = "https://quiet-reef-93741.herokuapp.com";
 
     public static void createUserAndExpect(String username, String email,
                                            String password, int expectedStatusCode) throws Exception {
@@ -874,5 +874,32 @@ public class TestingUtils {
         client.close();
 
         return newInfo;
+    }
+
+    public static void voteCommentAndExpect(int commentId, String username, int upvote, int expectedStatusCode)
+            throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(baseUrl + "/comments/" + commentId + "/vote");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        VoteOnPostDomain voteOnPostDomain = VoteOnPostDomain.builder()
+                .username(username)
+                .upvote(upvote)
+                .build();
+
+
+        String json = objectMapper.writeValueAsString(voteOnPostDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        System.out.println("**** MAKING VOTE COMMENT REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
     }
 }

@@ -25,5 +25,6 @@
     <include file="db/changelogs/20220418231200-razanalkawai.xml" />
     <include file="db/changelogs/20220421172600-razanalkawai.xml" />
     <include file="db/changelogs/20220427161200-razanalkawai.xml" />
+    <include file="db/changelogs/20220428185600-razanalkawai.xml" />
 
 </databaseChangeLog>
