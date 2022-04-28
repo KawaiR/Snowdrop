@@ -75,20 +75,20 @@ const Page_Profile_Google_Account = ({ navigation }) => {
 					userName: global.userName,
 				}),
 			})
-			.then((response) => {
-				response.json().then((result) => {
-				    console.log("Delete Account Response: ", result);
-				})
-				global.isEmail = undefined;
-				global.googleID = undefined;
-				global.userName = undefined;
-                global.expoPushToken = undefined;
-				AsyncStorage.removeItem("isEmail");
-				AsyncStorage.removeItem("googleID");
-				AsyncStorage.removeItem("userName");
-                AsyncStorage.removeItem("expoPushToken");
-                navigation.navigate("Page_Sign_In")
-			});
+			// .then((response) => {
+			// 	response.json().then((result) => {
+			// 	    console.log("Delete Account Response: ", result);
+			// 	})
+			// 	global.isEmail = undefined;
+			// 	global.googleID = undefined;
+			// 	global.userName = undefined;
+            //     global.expoPushToken = undefined;
+			// 	AsyncStorage.removeItem("isEmail");
+			// 	AsyncStorage.removeItem("googleID");
+			// 	AsyncStorage.removeItem("userName");
+            //     AsyncStorage.removeItem("expoPushToken");
+            //     navigation.navigate("Page_Sign_In")
+			// });
 		} catch (err) {
 			console.log("Fetch didnt work.");
 			console.log(err);
