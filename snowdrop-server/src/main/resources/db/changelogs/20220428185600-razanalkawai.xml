@@ -1,0 +1,32 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+    <changeSet id="20220428185600" author="razanalkawai">
+        <createTable tableName="comment_user_mappings">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"
+                             nullable="false"
+                             unique="true" />
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="upvote" type="int">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="comment_user_mappings"
+                                 baseColumnNames="comment_id"
+                                 constraintName="fk_comment_mappings_comment_id"
+                                 referencedTableName="comments"
+                                 referencedColumnNames="id" />
+        <addForeignKeyConstraint baseTableName="comment_user_mappings"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_comment_mappings_user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id" />
+    </changeSet>
+</databaseChangeLog>

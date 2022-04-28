@@ -26,7 +26,6 @@ public class Comment {
 
     @Column(name="total_score")
     int totalScore;
-
     int upvotes;
     int downvotes;
 

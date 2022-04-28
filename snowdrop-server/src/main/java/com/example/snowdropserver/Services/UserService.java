@@ -207,7 +207,7 @@ public class UserService {
         simpleMailMessage.setTo(user.getEmail());
         simpleMailMessage.setSubject("[SNOWDROP PLANT APP] Forgot your password?");
         simpleMailMessage.setText("Here's the pin to sign into your account: " + resetTokenPin);
-        simpleMailMessage.setFrom("snowdrop.plantapp@gmail.com");
+        simpleMailMessage.setFrom("snowdrop.purdue@gmail.com");
         javaMailSender.send(simpleMailMessage);
 
         System.out.println("Successfully sent email.");
@@ -311,7 +311,7 @@ public class UserService {
         simpleMailMessage.setTo(user.getEmail());
         simpleMailMessage.setSubject("[SNOWDROP PLANT APP] Change Your Email");
         simpleMailMessage.setText("Here's the pin to change your email: " + resetTokenPin);
-        simpleMailMessage.setFrom("snowdrop.plantapp@gmail.com");
+        simpleMailMessage.setFrom("snowdrop.purdue@gmail.com");
         javaMailSender.send(simpleMailMessage);
 
         System.out.println("Successfully sent email.");
@@ -360,7 +360,7 @@ public class UserService {
         simpleMailMessage.setTo(user.getEmail());
         simpleMailMessage.setSubject("[SNOWDROP PLANT APP] Your new email");
         simpleMailMessage.setText("The email for " + user.getUserName() + " was changed.");
-        simpleMailMessage.setFrom("snowdrop.plantapp@gmail.com");
+        simpleMailMessage.setFrom("snowdrop.purdue@gmail.com");
         javaMailSender.send(simpleMailMessage);
     }
 

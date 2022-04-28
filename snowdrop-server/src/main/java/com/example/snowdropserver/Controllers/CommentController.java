@@ -2,6 +2,8 @@ package com.example.snowdropserver.Controllers;
 
 import com.example.snowdropserver.Models.Comment;
 import com.example.snowdropserver.Models.Domains.CreateCommentDomain;
+import com.example.snowdropserver.Models.Domains.VoteOnPostDomain;
+import com.example.snowdropserver.Models.Domains.VoteResultDomain;
 import com.example.snowdropserver.Services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,5 +45,10 @@ public class CommentController {
     @GetMapping(value = "/{postId}/get-comments")
     public List<Comment> getByPost(@PathVariable int postId) {
         return commentService.getByPost(postId);
+    }
+
+    @PostMapping(value = "/{commentId}/vote")
+    public VoteResultDomain voteOnComment(@PathVariable int commentId, @RequestBody VoteOnPostDomain voteOnPostDomain) {
+        return commentService.voteOnComment(commentId, voteOnPostDomain);
     }
 }
