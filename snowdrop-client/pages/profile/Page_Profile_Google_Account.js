@@ -132,12 +132,14 @@ const Page_Profile_Google_Account = ({ navigation }) => {
 			if (result.type === 'success') {
 				if (global.googleID == result.user.id) {
 					deleteAccount();
-					return;
+					Alert.alert("Deletion Complete.","You will be redirected to sign in page.",[{ text: 'OK', onPress: ()=> signOutWithGoogleAsync()}])
+				} else {
+					Alert.alert("Warning: User Mismatch!","The information provided does not match the current account.\nWe will proceed signout process to protect the account.",[{ text: 'OK', onPress: ()=> signOutWithGoogleAsync()}])
 				}
 			}
 		} catch (e) {
+			Alert.alert("Warning: User Mismatch!","The information provided does not match the current account.\nWe will proceed signout process to protect the account.",[{ text: 'OK', onPress: ()=> signOutWithGoogleAsync()}])
 		}
-		Alert.alert("Warning: User Mismatch!","The information provided does not match the current account.\nWe will proceed signout process to protect the account.",[{ text: 'OK', onPress: ()=> signOutWithGoogleAsync()}])
 	}
 
 
