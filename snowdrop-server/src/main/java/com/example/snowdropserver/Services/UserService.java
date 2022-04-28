@@ -493,6 +493,7 @@ public class UserService {
     /*
      * pre-condition: user was authenticated and exists
      */
+    //TODO: revise the logic of this function
     public boolean level_up(User user) {
         int points = user.getTotalPoints();
         String currentLevel = user.getExpertiseLevel();
@@ -626,6 +627,21 @@ public class UserService {
             userPostMappingsRepository.save(userPostMapping);
         }
         userRepository.delete(userRepository.getByUserName(username).get());
+    }
+
+    public void editUser(String username, EditUserDomain editUserDomain) {
+        Optional<User> maybeUser = userRepository.getByUserName(username);
+        if (!maybeUser.isPresent()) {
+            System.out.println("User not found.");
+            throw new EmailNotFoundException();
+        }
+        User user = maybeUser.get();
+
+        user.setTotalPoints(editUserDomain.getTotalScore());
+        user.setEditorPrivilege(editUserDomain.getEditorPrivilege());
+        user.setExpertiseLevel(editUserDomain.getExpertiseLevel());
+
+        userRepository.save(user);
     }
 
 }

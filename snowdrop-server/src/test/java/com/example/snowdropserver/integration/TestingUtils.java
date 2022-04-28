@@ -902,4 +902,34 @@ public class TestingUtils {
         assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
         client.close();
     }
+
+    public static void updateUserAndExpect(String username, int totalScore, String expertiseLevel,
+                                           int editorPrivilege, int expectedStatusCode) throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(baseUrl + "/users/" + username + "/edit-user");
+
+
+        EditUserDomain editUserDomain = EditUserDomain.builder()
+                .editorPrivilege(editorPrivilege)
+                .expertiseLevel(expertiseLevel)
+                .totalScore(totalScore)
+                .build();
+
+        System.out.println(editUserDomain);
+
+        String json = objectMapper.writeValueAsString(editUserDomain);
+        System.out.println(json);
+
+        StringEntity entity = new StringEntity(json);
+        httpPost.setEntity(entity);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        System.out.println("**** MAKING UPDATE PLANT REQUEST ****");
+        CloseableHttpResponse response = client.execute(httpPost);
+
+        assertThat(response.getStatusLine().getStatusCode(), equalTo(expectedStatusCode));
+        client.close();
+    }
 }
