@@ -32,8 +32,8 @@ import static org.hamcrest.Matchers.equalTo;
 public class TestingUtils {
     private static final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    private static final String baseUrl = "http://localhost:8080";
-//    private static final String baseUrl = "https://quiet-reef-93741.herokuapp.com";
+//    private static final String baseUrl = "http://localhost:8080";
+    private static final String baseUrl = "https://quiet-reef-93741.herokuapp.com";
 
     public static void createUserAndExpect(String username, String email,
                                            String password, int expectedStatusCode) throws Exception {
