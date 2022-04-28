@@ -143,7 +143,7 @@ const IndPostPage  = ({route, navigation}) => {
 				}
 				if (response.status == 200 || response.status == 201 || response.status == 202) {
                     console.log('success');
-                    navigation.navigate("Page_PostList");
+                    navigation.navigate("Page_PostList", {tagId: ""});
 				}
 			});
 		} catch (err) {
