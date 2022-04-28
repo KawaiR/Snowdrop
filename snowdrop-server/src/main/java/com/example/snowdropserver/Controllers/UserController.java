@@ -114,6 +114,11 @@ public class UserController {
         return userService.check_level(username);
     }
 
+    @PostMapping(value = "/{username}/edit-user")
+    public void editUser(@PathVariable String username, @RequestBody EditUserDomain editUserDomain) {
+        userService.editUser(username, editUserDomain);
+    }
+
     /*
     @PostMapping(value = "/plant-for-user")
     public List<PlantCare> plantForUser(@RequestBody AuthConfirmDomain authConfirmDomain) {
