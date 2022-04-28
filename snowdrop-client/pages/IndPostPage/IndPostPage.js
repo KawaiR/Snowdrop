@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, Text, ScrollView, FlatList, Dimensions, Alert } from "react-native";
 import { Appbar, Chip, Portal, Dialog, IconButton, Button, Provider, TextInput } from 'react-native-paper';
 import { useIsFocused } from "@react-navigation/native";
+import AppLoading from 'expo-app-loading';
+import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
+import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 
 import styles from './IndPostPageStyle.js';
 
@@ -50,6 +53,15 @@ const IndPostPage  = ({route, navigation}) => {
         }
         
     }, [isFocused]);
+
+    let [fontsLoaded] = useFonts({
+        Alata_400Regular,
+        Lato_400Regular,
+        Lato_700Bold,
+    });
+    if (!fontsLoaded) {
+        return <AppLoading />
+    }
 
     async function getPost(id) {
         try {
@@ -335,12 +347,12 @@ const IndPostPage  = ({route, navigation}) => {
                     <View style={styles.post}>
                     <View style={styles.postContent}>
                         <View style={styles.postHeader}>
-                            <Text>{"@" + userName}</Text>
-                            <Text style={{textAlign:'right', flex: 1}}>{date}</Text>
+                            <Text style={{fontFamily: "Lato_400Regular",}}>{"@" + userName}</Text>
+                            <Text style={{textAlign:'right', flex: 1, fontFamily: "Lato_400Regular",}}>{date}</Text>
                         </View>
                         <View style={styles.lineBreak}></View>
                         <Text style={styles.title}>{title}</Text>
-                        <Text>{postContent}</Text>
+                        <Text style={{fontFamily: "Lato_400Regular",}}>{postContent}</Text>
 
                     </View>
                     <View style={styles.postVotes}>

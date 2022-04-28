@@ -51,6 +51,7 @@ export default StyleSheet.create({
         color: 'white',
         fontSize: 36,
         letterSpacing: -0.24,
+        fontFamily: "Lato_400Regular",
         fontWeight: '500',
     },
     plantsImage: {
@@ -104,6 +105,7 @@ export default StyleSheet.create({
     },
     cardText: {
         marginLeft: width * 0.07,
+        fontFamily: "Lato_400Regular",
     },
     fab: {
         position: 'absolute',

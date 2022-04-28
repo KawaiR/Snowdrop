@@ -167,13 +167,13 @@ const Page_Profile_Email_Account = ({ navigation }) => {
             <ScrollView bounces={false} showsVerticalScrollIndicator={false} style={{ height: Dimensions.get("window").height }}>
                 <View style={noneModeStyles._Page}    >
                     <Dialog.Container visible = {isDialogVisible}>
-                        <Dialog.Title>Do you want to delete your account?</Dialog.Title>
-                        <Dialog.Description>
+                        <Dialog.Title style={{fontFamily: "Lato_400Regular",}}>Do you want to delete your account?</Dialog.Title>
+                        <Dialog.Description style={{fontFamily: "Lato_400Regular",}}>
                         Please enter your password to proceed.
                         </Dialog.Description>
-                        <Dialog.Button label="Cancel"onPress={() => {setIsDialogVisible(false)}}/>
+                        <Dialog.Button label="Cancel" style={{fontFamily: "Lato_400Regular",}} onPress={() => {setIsDialogVisible(false)}}/>
                         <Dialog.Input value={password} onChangeText={onChangePassword} placeholder="Password" secureTextEntry={true}/>
-                        <Dialog.Button label= "Confirm" onPress={() => {setIsDialogVisible(false); verifyAccount();}}/>
+                        <Dialog.Button label= "Confirm"  style={{fontFamily: "Lato_400Regular",}} onPress={() => {setIsDialogVisible(false); verifyAccount();}}/>
                     </Dialog.Container>
                     <Image style={noneModeStyles._Cactus_Image} source={require("../../assets/background/cactus.png")} />
                     <Image style={noneModeStyles._Monstera_Image} source={require("../../assets/background/monstera.png")} />
@@ -255,6 +255,7 @@ const noneModeStyles = StyleSheet.create({
         fontSize: pxRD(17, height, base_height),
         fontWeight: "600",
         textAlign: "center",
+        fontFamily: "Lato_700Bold",
         color: "white",
     },
     _Sign_Out: {

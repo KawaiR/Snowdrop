@@ -44,6 +44,7 @@ export default StyleSheet.create({
     postContent: {
         marginVertical: height * 0.015,
         marginHorizontal: height * 0.015,
+        fontFamily: "Lato_400Regular",
         flex: 1,
     },
     postHeader: {
@@ -59,6 +60,7 @@ export default StyleSheet.create({
         letterSpacing: -0.24,
         fontWeight: '400',
         marginBottom: height * 0.01,
+        fontFamily: "Lato_400Regular",
     },
     chip: {
         marginRight: height * 0.008,

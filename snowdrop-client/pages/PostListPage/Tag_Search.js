@@ -168,7 +168,7 @@ const Tag_Search = ({ navigation }) => {
     const renderHeader = () => (
         <SearchBar
             containerStyle={styles.searchContainer}
-            inputContainerStyle={{ backgroundColor: 'white' }}
+            inputContainerStyle={{ backgroundColor: 'white', fontFamily: "Lato_400Regular", }}
             round
             autoFocus={true}
             searchIcon={{ size: 24 }}
@@ -268,6 +268,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderBottomColor: 'transparent',
         borderTopColor: 'transparent',
+        fontFamily: "Lato_400Regular",
     },
     bottom: {
         justifyContent: 'center',
