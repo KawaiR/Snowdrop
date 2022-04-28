@@ -155,7 +155,7 @@ const Home = ({ route, navigation }) => {
                     }
                     if (response.status == 200 || response.status == 201 || response.status == 202) {
                         response.json().then((result) => {
-                            setPosts(result.slice(0, 3))
+                            setPosts(result.reverse().slice(0, 3))
                         });
                     }
                 });
