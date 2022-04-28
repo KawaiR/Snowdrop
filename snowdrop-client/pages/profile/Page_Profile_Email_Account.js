@@ -203,11 +203,11 @@ const Page_Profile_Email_Account = ({ navigation }) => {
 						</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Edit_Account_Button]}    >
+                    {/* <TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Edit_Account_Button]}    >
                         <Text style={noneModeStyles._Main_Button_Description}   >
                             Edit Account
 						</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     <TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Change_Password_Button]} onPress={() => navigation.navigate("Page_Change_Password")}  >
                         <Text style={noneModeStyles._Main_Button_Description}   >
@@ -276,7 +276,7 @@ const noneModeStyles = StyleSheet.create({
         backgroundColor: "#A4C400",
     },
     _Delete_Account_Button: {
-        top: pxRD(596, height, base_height),
+        top: pxRD(530, height, base_height),
         backgroundColor: "#FF000099",
     },
 	_Plant_Page_Button: { 

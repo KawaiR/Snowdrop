@@ -226,6 +226,26 @@ const PlantDetailPage  = ({route, navigation}) => {
 		}
     }
 
+    function checkImage() {
+        var url = plant.plant.plantImage;
+
+        //define some image formats 
+        var types = ['jpg', 'jpeg', 'tiff', 'png', 'gif', 'bmp'];
+
+        //split the url into parts that has dots before them
+        var parts = url.split('.');
+
+        //get the last part 
+        var extension = parts[parts.length - 1];
+
+        //check if the extension matches list 
+        if (types.indexOf(extension) !== -1) {
+            return true;
+        }
+
+        plant.plant.plantImage = 'https://www.okumcmission.org/wp-content/uploads/2019/07/250-2503958_potted-plants-clipart-transparent-background-plant-logo-free.jpg';
+        return false;
+    }
 
 	return (
     <Provider>
@@ -235,7 +255,8 @@ const PlantDetailPage  = ({route, navigation}) => {
         <Appbar.Action icon="delete" color="white" style={{marginLeft: 'auto'}} onPress={() => {setDeleteVisible(true);}}/>
     </Appbar.Header>
 	<ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
-        <ImageBackground style={styles.plantsImage} source={require('snowdrop-client/assets/plant-image.jpeg')}>
+        {checkImage()}
+        <ImageBackground style={styles.plantsImage} source={{ uri: plant.plant.plantImage }}>
             <View style={styles.plantNameView}>
                 <View style={styles.plantNameContent}>
                     <Text style={styles.plantNameText}>{commonName}</Text>

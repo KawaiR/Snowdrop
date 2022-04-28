@@ -180,11 +180,11 @@ const Page_Profile_Google_Account = ({ navigation }) => {
 						</Text>
 					</TouchableOpacity>
 
-					<TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Edit_Account_Button]}    >
+					{/* <TouchableOpacity style={[noneModeStyles._Main_Navigation_Button, noneModeStyles._Edit_Account_Button]}    >
 						<Text style={noneModeStyles._Main_Button_Description}   >
 							Edit Account
 						</Text>
-					</TouchableOpacity>
+					</TouchableOpacity> */}
 
 					{/* Bottom Nav Bar */}
                     <Appbar style={noneModeStyles.bottom}>
@@ -233,7 +233,7 @@ const noneModeStyles = StyleSheet.create({
 		backgroundColor: "#A4C400",
 	},
 	_Delete_Account_Button: {
-		top: pxRD(530, height, base_height),
+		top: pxRD(463, height, base_height),
 		backgroundColor: "#FF000099",
 	},
 

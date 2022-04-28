@@ -76,6 +76,32 @@ const PlantsPage  = ({ navigation }) => {
         }
     }
 
+    function checkImage(url) {
+        //define some image formats 
+        var types = ['jpg', 'jpeg', 'tiff', 'png', 'gif', 'bmp'];
+
+        //split the url into parts that has dots before them
+        var parts = url.split('.');
+
+        //get the last part 
+        var extension = parts[parts.length - 1];
+
+        //check if the extension matches list 
+        if (types.indexOf(extension) !== -1) {
+            return true;
+        }
+        return false;
+    }
+
+    function checkAllImagesValidity() {
+        for (let index = 0; index < plantsList.length; index++) {
+            const element = plantsList[index];
+            if (!checkImage(element.plant.plantImage)) {
+                element.plant.plantImage = 'https://www.okumcmission.org/wp-content/uploads/2019/07/250-2503958_potted-plants-clipart-transparent-background-plant-logo-free.jpg';
+            }
+        }
+    }
+
 	return (
     <View style={styles.container}>
     <Appbar.Header style={styles.appbar}>
@@ -94,6 +120,7 @@ const PlantsPage  = ({ navigation }) => {
 			</Text>
         </TouchableOpacity>
 		<View style={styles.cardList}>
+            {checkAllImagesValidity()}
             {plantsList.map((plant) => 
                 <Card.Title
                     key={plant.id}
@@ -102,7 +129,7 @@ const PlantsPage  = ({ navigation }) => {
                     subtitleStyle={styles.cardText}
                     title={(plant.nickname != null) ? plant.nickname : 'No common name'}
                     subtitle={(plant.waterCurrent != null) ? plant.waterCurrent : 'No water'}
-                    left={(props) => <Avatar.Image {...props} size={height * 0.08} style={styles.cardImage} source={require('snowdrop-client/assets/golden-pothos.png')} />}
+                    left={(props) => <Avatar.Image {...props} size={height * 0.08} style={styles.cardImage} source={{ uri: plant.plant.plantImage}} />}
                     right={(props) => <IconButton {...props} icon="chevron-right" size={50} color={'#4E4E4E'} onPress={() => navigation.navigate('Page_PlantDetail', {plant: plant, id: plant.id})} />}
                 />
             
