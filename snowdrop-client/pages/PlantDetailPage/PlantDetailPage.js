@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, Text, ScrollView, Image, Dimensions, ImageBackground, Alert, TouchableOpacity } from "react-native";
 import { Appbar, Avatar, Card, FAB, IconButton, Provider, Dialog, Portal, Button, ToggleButton } from 'react-native-paper';
 import { DebugInstructions } from "react-native/Libraries/NewAppScreen";
+import AppLoading from 'expo-app-loading';
+import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
+import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import { useIsFocused } from "@react-navigation/native";
 import styles from './PlantDetailPageStyle.js';
 
@@ -157,6 +160,15 @@ const PlantDetailPage  = ({route, navigation}) => {
             }
         }
     }, [isFocused]);
+
+    let [fontsLoaded] = useFonts({
+        Alata_400Regular,
+        Lato_400Regular,
+        Lato_700Bold,
+    });
+    if (!fontsLoaded) {
+        return <AppLoading />
+    }
 
     async function waterPlant() {
         try {
@@ -328,9 +340,9 @@ const PlantDetailPage  = ({route, navigation}) => {
         </View>
         <Portal>
             <Dialog visible={waterVisible} onDismiss={hideWater}>
-                <Dialog.Title>Water</Dialog.Title>
+                <Dialog.Title style={{fontFamily: "Lato_400Regular",}}>Water</Dialog.Title>
                 <Dialog.Content>
-                <Text>Did you water your plant today?</Text>
+                <Text style={{fontFamily: "Lato_400Regular",}}>Did you water your plant today?</Text>
                 </Dialog.Content>
                 <Dialog.Actions>
                 <Button onPress={waterYes}>Yes</Button>
@@ -338,9 +350,9 @@ const PlantDetailPage  = ({route, navigation}) => {
                 </Dialog.Actions>
             </Dialog>
             <Dialog visible={fertilizerVisible} onDismiss={hideFertilizer}>
-                <Dialog.Title>Fertilizer</Dialog.Title>
+                <Dialog.Title style={{fontFamily: "Lato_400Regular",}}>Fertilizer</Dialog.Title>
                 <Dialog.Content>
-                <Text>Did you apply fertilizer today?</Text>
+                <Text style={{fontFamily: "Lato_400Regular",}}>Did you apply fertilizer today?</Text>
                 </Dialog.Content>
                 <Dialog.Actions>
                 <Button onPress={fertilizerYes}>Yes</Button>
@@ -348,7 +360,7 @@ const PlantDetailPage  = ({route, navigation}) => {
                 </Dialog.Actions>
             </Dialog>
             <Dialog visible={healthVisible} onDismiss={hideHealth}>
-                <Dialog.Title>Plant Health</Dialog.Title>
+                <Dialog.Title style={{fontFamily: "Lato_400Regular",}}>Plant Health</Dialog.Title>
                 <Dialog.Actions>
                 <Button onPress={hideHealth}>Yes</Button>
                 <Button onPress={hideHealth}>No</Button>
@@ -357,9 +369,9 @@ const PlantDetailPage  = ({route, navigation}) => {
         </Portal>
         <Portal>
             <Dialog visible={deleteVisible} onDismiss={hideDelete}>
-                <Dialog.Title>Deleting Plant</Dialog.Title>
+                <Dialog.Title style={{fontFamily: "Lato_400Regular",}}>Deleting Plant</Dialog.Title>
                 <Dialog.Content>
-                    <Text>Are you sure that you want to delete this plant?</Text>
+                    <Text style={{fontFamily: "Lato_400Regular",}}>Are you sure that you want to delete this plant?</Text>
                 </Dialog.Content>
                 <Dialog.Actions>
                 <Button onPress={deleteYes}>Yes</Button>
@@ -367,9 +379,9 @@ const PlantDetailPage  = ({route, navigation}) => {
                 </Dialog.Actions>
             </Dialog>
             <Dialog visible={sunVisible} onDismiss={hideSun}>
-                <Dialog.Title>Sunlight Exposure</Dialog.Title>
+                <Dialog.Title style={{fontFamily: "Lato_400Regular",}}>Sunlight Exposure</Dialog.Title>
                 <Dialog.Content>
-                    <Text>How much sunlight does your plant get?</Text>
+                    <Text style={{fontFamily: "Lato_400Regular",}}>How much sunlight does your plant get?</Text>
                     <ToggleButton.Row style={styles.toggle} onValueChange={value => setValue(value)} value={value}>
                         <ToggleButton icon="numeric-1" value="1" />
                         <ToggleButton icon="numeric-2" value="2" />

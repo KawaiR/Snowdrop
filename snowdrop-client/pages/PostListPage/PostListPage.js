@@ -92,12 +92,12 @@ const PostListPage  = ({route, navigation}) => {
             }}>
             <View style={styles.postContent}>
                 <View style={styles.postHeader}>
-                    <Text>{item.sender.userName}</Text>
-                    <Text style={{textAlign:'right', flex: 1}}>{item.uploadDate}</Text>
+                    <Text style={{fontFamily: "Lato_400Regular",}}>{item.sender.userName}</Text>
+                    <Text style={{textAlign:'right', flex: 1, fontFamily: "Lato_400Regular",}}>{item.uploadDate}</Text>
                 </View>
                 <View style={styles.lineBreak}></View>
                 <Text style={styles.title}>{item.postTitle}</Text>
-                <Text>{item.content}</Text>
+                <Text style={{fontFamily: "Lato_400Regular",}}>{item.content}</Text>
                 <TouchableOpacity style={styles.tagButton} onPress = {() => {}}>
                     <Text style={styles.tagText}>{item.tag.plant.plantImage === "general-tag" ? "General" : (item.tag.plant.plantImage === "advice-tag" ? "Advice" : item.tag.plant.plantName)}</Text>
                 </TouchableOpacity>

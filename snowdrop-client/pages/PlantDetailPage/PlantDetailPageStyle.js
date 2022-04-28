@@ -50,6 +50,7 @@ export default StyleSheet.create({
         color: "white",
         textAlign: 'center',
         paddingHorizontal: width * 0.05,
+        fontFamily: "Lato_400Regular",
         fontSize: 16,
         letterSpacing: -0.24,
         //paddingVertical: height * 0.0,
@@ -58,6 +59,7 @@ export default StyleSheet.create({
         justifyContent: 'flex-start',
         color: 'white',
         fontSize: 36,
+        fontFamily: "Lato_400Regular",
         letterSpacing: -0.24,
         fontWeight: '500',
     },
@@ -79,6 +81,7 @@ export default StyleSheet.create({
     upcomingText: {
         fontSize: 24,
         fontWeight: '500',
+        fontFamily: "Lato_400Regular",
         marginLeft: width * 15 / defaultW,
         marginTop: height * 20 / defaultH,
         marginBottom: height * 22 / defaultH,
@@ -96,6 +99,7 @@ export default StyleSheet.create({
     },
     cardTitle: {
         justifyContent: 'center',
+        fontFamily: "Lato_400Regular",
         flex: 1,
     },
     cardLeft: {
@@ -103,6 +107,7 @@ export default StyleSheet.create({
     },
     cardText: {
         marginLeft: width * 0.06,
+        fontFamily: "Lato_400Regular",
     },
     cardImage: {
         width: height * 0.08,

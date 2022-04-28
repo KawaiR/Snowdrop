@@ -253,5 +253,6 @@ const styles = StyleSheet.create({
     },
     cardText: {
         marginLeft: width * 0.07,
+        fontFamily: "Lato_400Regular",
     },
 }); 

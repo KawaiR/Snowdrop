@@ -72,8 +72,8 @@ const Plant_Edit  = ({route, navigation}) => {
                         source={{uri:plant.plantImage}}
                     />
                     {/* <Text style = {{top: pxRD(30,height,base_height), alignSelf:"center", fontSize: pxRD(14,width,base_width),fontWeight:"bold"}}>{global.editorPrivilege+"test"}</Text> */}
-                    <Text style = {{top: pxRD(50,height,base_height), alignSelf:"center", fontSize: pxRD(14,width,base_width),fontWeight:"bold"}}>{plant.scientificName}</Text>
-                    <Text style = {{top: pxRD(60,height,base_height), alignSelf:"center"}}>{plant.plantName}</Text>
+                    <Text style = {{top: pxRD(50,height,base_height), alignSelf:"center", fontSize: pxRD(14,width,base_width),fontWeight:"bold", fontFamily: "Lato_700Bold",}}>{plant.scientificName}</Text>
+                    <Text style = {{top: pxRD(60,height,base_height), alignSelf:"center", fontFamily: "Lato_400Regular",}}>{plant.plantName}</Text>
                     <View style = {{top: pxRD(90,height,base_height)}}>
                     <Card mode="outlined" style={styles.card}>
                         <Card.Title
@@ -209,10 +209,12 @@ const styles = StyleSheet.create({
     },
     cardTitle: {
         justifyContent: 'center',
+        fontFamily: "Lato_400Regular",
         flex: 1,
     },
     cardText: {
         marginLeft: width * 0.06,
+        fontFamily: "Lato_400Regular",
     },
     card: {
         alignSelf: 'center',

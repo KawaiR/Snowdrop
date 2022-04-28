@@ -5,6 +5,7 @@ import AppLoading from 'expo-app-loading';
 import { useFonts, Alata_400Regular } from '@expo-google-fonts/alata';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import * as Google from 'expo-google-app-auth';
+import { useIsFocused } from "@react-navigation/native";
 import { Appbar, Dialog } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -220,6 +221,7 @@ const noneModeStyles = StyleSheet.create({
 		fontSize: pxRD(17, height, base_height),
 		fontWeight: "600",
 		textAlign: "center",
+		fontFamily: "Lato700Bold",
 		color: "white",
 	},
 	_Sign_Out: {

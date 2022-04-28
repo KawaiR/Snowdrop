@@ -37,6 +37,7 @@ export default StyleSheet.create({
     noPostText: {
         fontSize: 18,
         justifyContent: 'center',
+        fontFamily: "Lato_400Regular",
 		textAlign: 'center',
 		marginBottom: 20,
 	},
@@ -45,12 +46,14 @@ export default StyleSheet.create({
         backgroundColor: 'white',
         width: width * 0.95,
         // height: height * 0.1060,
+        fontFamily: "Lato_400Regular",
         borderRadius: 25,
         margin: height * 0.01,
     },
     postContent: {
         marginVertical: height * 0.015,
         marginHorizontal: height * 0.015,
+        fontFamily: "Lato_400Regular",
         flex: 1,
     },
     postHeader: {
@@ -65,6 +68,7 @@ export default StyleSheet.create({
         fontSize: 22,
         letterSpacing: -0.24,
         fontWeight: '400',
+        fontFamily: "Lato_400Regular",
         marginBottom: height * 0.007,
     },
     tagButton: {
