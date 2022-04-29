@@ -283,6 +283,40 @@ const IndPostPage  = ({route, navigation}) => {
 		}
     }
 
+    async function voteComment(newVote, commentId) {
+        console.log(newVote);
+        try {
+			let response = await fetch('https://quiet-reef-93741.herokuapp.com/comments/' + commentId + "/vote", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    username: global.userName,
+                    upvote: newVote,
+                }),
+            })
+			.then((response) => {
+				if (response.status == 400) {
+					response.json().then((result) => {
+                        console.log('fail');
+						console.log(result.message);
+					});
+				}
+				if (response.status == 200 || response.status == 201 || response.status == 202) {
+					response.json().then((result) => {
+                        console.log('success');
+						console.log(result);
+                        getComment(id);
+					});
+				}
+			});
+		} catch (err) {
+			console.log("Fetch didnt work.");
+			console.log(err);
+		}
+    }
+
     const renderItem = ({ item }) => (
         <View style={styles.post}>
         <View style={styles.postContent}>
@@ -293,7 +327,13 @@ const IndPostPage  = ({route, navigation}) => {
             <View style={styles.lineBreak}></View>
             <Text>{item.content}</Text>
         </View>
-        {(global.userName == item.sender.userName) && <IconButton icon="trash-can" style={{marginLeft: 'auto'}} onPress={() => {setDeletingComment(item.id); setCommentDeleteVisible(true);}}></IconButton>}
+        <View style={styles.postVotes}>
+            <Chip icon="thumb-up" onPress={() => voteComment(1, item.id)} textStyle={{fontSize: 12,}} style={styles.chip}>{item.upvotes}</Chip>
+            <Chip icon="thumb-down" onPress={() => voteComment(0, item.id)} textStyle={{fontSize: 12,}} style={styles.chip}>{item.downvotes}</Chip>
+            {(global.userName == item.sender.userName) && <IconButton icon="trash-can" style={{marginLeft: 'auto'}} onPress={() => {setDeletingComment(item.id); setCommentDeleteVisible(true);}}></IconButton>}
+
+        </View>
+        {/* {(global.userName == item.sender.userName) && <IconButton icon="trash-can" style={{marginLeft: 'auto'}} onPress={() => {setDeletingComment(item.id); setCommentDeleteVisible(true);}}></IconButton>} */}
         </View>
     );
 
@@ -310,36 +350,6 @@ const IndPostPage  = ({route, navigation}) => {
         <Appbar.BackAction color="white" onPress={() => navigation.navigate("Page_PostList", {tagId: ""})}/>
         <Appbar.Content title={<Text style={styles.headerTitle}>View Post</Text>} style={styles.headerTitle} />
     </Appbar.Header>
-	{/* <ScrollView style={styles.scroll} bounces={false} showsVerticalScrollIndicator={false}>
-        <View style={styles.post}>
-        <View style={styles.postContent}>
-            <View style={styles.postHeader}>
-                <Text>{"@" + userName}</Text>
-                <Text style={{textAlign:'right', flex: 1}}>{date}</Text>
-            </View>
-            <View style={styles.lineBreak}></View>
-            <Text style={styles.title}>{title}</Text>
-            <Text>{postContent}</Text>
-
-        </View>
-        <View style={styles.postVotes}>
-            <Chip icon="thumb-up" onPress={() => voteRequest(1)} selected={upvoteSelected} textStyle={{fontSize: 12,}} style={styles.chip}>{upvote}</Chip>
-            <Chip icon="thumb-down" onPress={() => voteRequest(0)} textStyle={{fontSize: 12,}} selected={downvoteSelected} style={styles.chip}>{downvote}</Chip>
-            {(global.userName == userName) && <IconButton icon="trash-can" style={{marginLeft: 'auto'}} onPress={() => setDeleteVisible(true)}></IconButton>}
-        </View>
-        </View>
-        <View style={styles.textInputView}>
-            <TextInput
-                style={styles.textInput}
-                label="New Comment"
-                activeUnderlineColor="#005500"
-                placeholder="New comment"
-                value={newComment}
-                multiline={true}
-                onChangeText={text => setNewComment(text)}
-            />
-            {(newComment != "") && <IconButton icon="send" onPress={makeComment}></IconButton>}
-        </View> */}
 
         <FlatList
             ListHeaderComponent={
@@ -401,20 +411,6 @@ const IndPostPage  = ({route, navigation}) => {
             renderItem={renderItem}
         />
 
-        {/* <Portal>
-            <Dialog visible={deleteVisible} onDismiss={() => setDeleteVisible(false)}>
-                <Dialog.Title>Deleting Post</Dialog.Title>
-                <Dialog.Content>
-                <Text>Do you want to delete this post?</Text>
-                </Dialog.Content>
-                <Dialog.Actions>
-                <Button onPress={deletePost}>Yes</Button>
-                <Button onPress={() => setDeleteVisible(false)}>Cancel</Button>
-                </Dialog.Actions>
-            </Dialog>
-        </Portal>
-        
-	</ScrollView> */}
     <Appbar style={styles.bottom}>
         <Appbar.Action icon="home" color="#005500" size={Math.min(width * 0.09, height * 0.05)} onPress={() => navigation.navigate("Home")} />
         <Appbar.Action icon="leaf" color="#005500" size={Math.min(width * 0.09, height * 0.05)} style={{ marginLeft: '9%' }} onPress={() => navigation.navigate("Page_Plant")} />
