@@ -76,8 +76,12 @@ public class CommentService {
             System.out.println("no comment was found with this id");
             throw new CommentNotFoundException();
         }
-
         Comment comment = maybeComment.get();
+
+        List<UserCommentMappings> mappings = userCommentRepository.findByComment(comment);
+        for (UserCommentMappings m: mappings) {
+            userCommentRepository.delete(m);
+        }
         commentRepository.delete(comment);
 
         return commentId;
