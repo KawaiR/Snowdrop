@@ -502,19 +502,19 @@ public class UserService {
         if (points <= 100 && !currentLevel.equals("Novice")) {
             user.setExpertiseLevel("Novice");
             changedStatus = true;
-        } else if (points <= 1000 && !currentLevel.equals("Beginner")) {
+        } else if (points > 100 && points <= 1000 && !currentLevel.equals("Beginner")) {
             user.setExpertiseLevel("Beginner");
             changedStatus = true;
-        } else if (points <= 5000 && !currentLevel.equals("Intermediate")) {
+        } else if (points > 1000 && points <= 5000 && !currentLevel.equals("Intermediate")) {
             user.setExpertiseLevel("Intermediate");
             changedStatus = true;
-        } else if (points <= 10000 && !currentLevel.equals("Enthusiast")) {
+        } else if (points > 5000 && points <= 10000 && !currentLevel.equals("Enthusiast")) {
             user.setExpertiseLevel("Enthusiast");
             changedStatus = true;
-        } else if (points <= 100000 && !currentLevel.equals("Expert")) {
+        } else if (points > 10000 && points <= 100000 && !currentLevel.equals("Expert")) {
             user.setExpertiseLevel("Expert");
             changedStatus = true;
-        } else if (points <= 500000 && !currentLevel.equals("Advanced")) {
+        } else if (points > 100000 && points <= 500000 && !currentLevel.equals("Advanced")) {
             user.setExpertiseLevel("Advanced");
             changedStatus = true;
         }
