@@ -20,9 +20,10 @@ public class PostService {
     private final UserPostMappingsRepository userPostRepository;
     private final UserService userService;
     private final CommentRepository commentRepository;
+    private final UserCommentMappingsRepository userCommentRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, PlantRepository plantRepository, TagRepository tagRepository, UserPostMappingsRepository userPostRepository, UserService userService, CommentRepository commentRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PlantRepository plantRepository, TagRepository tagRepository, UserPostMappingsRepository userPostRepository, UserService userService, CommentRepository commentRepository, UserCommentMappingsRepository userCommentRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.plantRepository = plantRepository;
@@ -30,6 +31,7 @@ public class PostService {
         this.userPostRepository = userPostRepository;
         this.userService = userService;
         this.commentRepository = commentRepository;
+        this.userCommentRepository = userCommentRepository;
     }
 
     public List<Post> getAllPosts() {
@@ -251,6 +253,10 @@ public class PostService {
 
         List<Comment> comments = commentRepository.findByParent(post);
         for (Comment c: comments) {
+            List<UserCommentMappings> cMappings  = userCommentRepository.findByComment(c);
+            for (UserCommentMappings cm: cMappings) {
+                userCommentRepository.delete(cm);
+            }
             commentRepository.delete(c);
         }
 
